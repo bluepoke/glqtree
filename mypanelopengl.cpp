@@ -11,7 +11,7 @@ MyPanelOpenGL::MyPanelOpenGL(QWidget *parent) :
 
 void MyPanelOpenGL::initializeGL() {
     glShadeModel(GL_SMOOTH);
-    glClearColor(1.0f,1.0f,1.0f,0.0f);
+    glClearColor(0.2, 0.2, 0.2, 1.0);
     glClearDepth(1.0f);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
