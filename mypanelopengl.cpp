@@ -6,6 +6,9 @@ MyPanelOpenGL::MyPanelOpenGL(QWidget *parent) :
 {
     sides = 3;
     radius = 1.0;
+    xRotate = 0;
+    yRotate = 0;
+    zRotate = 0;
 
 }
 
@@ -45,23 +48,61 @@ void MyPanelOpenGL::resizeGL(int width, int height){
 void MyPanelOpenGL::paintGL(){
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
-    glTranslated(5.0,5.0,0.0);
+    glTranslated(5,5,.5);
+    glRotated(xRotate,1,0,0);
+    glRotated(yRotate,0,1,0);
+    glRotated(zRotate,0,0,1);
     glLineWidth(1);
-    glColor3f(0,0.7f,0.7f);
-    glBegin(GL_POLYGON);
-    for (int i=0;i<sides;i++){
-        glVertex2f(radius*cos(i*2*3.14159265/sides),
-                   radius*sin(i*2*3.14159265/sides));
-    }
+    glBegin(GL_QUADS);
+    glColor3f(1,0,0); //red
+    glVertex3f(0,0,0);
+    glVertex3f(radius,0,0);
+    glVertex3f(radius,radius,0);
+    glVertex3f(0,radius,0);
+    //opposite red
+    glVertex3f(0,0,radius);
+    glVertex3f(radius,0,radius);
+    glVertex3f(radius,radius,radius);
+    glVertex3f(0,radius,radius);
+
+    glColor3f(0,1,0); //green
+    glVertex3f(0,0,0);
+    glVertex3f(radius,0,0);
+    glVertex3f(radius,0,radius);
+    glVertex3f(0,0,radius);
+    // opposite green
+    glVertex3f(0,radius,0);
+    glVertex3f(radius,radius,0);
+    glVertex3f(radius,radius,radius);
+    glVertex3f(0,radius,radius);
+
+    glColor3f(0,0,1); //blue
+    glVertex3f(0,0,0);
+    glVertex3f(0,radius,0);
+    glVertex3f(0,radius,radius);
+    glVertex3f(0,0,radius);
+    // opposite blue
+    glVertex3f(radius,0,0);
+    glVertex3f(radius,radius,0);
+    glVertex3f(radius,radius,radius);
+    glVertex3f(radius,0,radius);
+
     glEnd();
-    glLineWidth(2);
-    glColor3f(0,1,0);
-    glBegin(GL_LINE_LOOP);
-    for (int i=0;i<sides;i++){
-        glVertex2f(radius*cos(i*2*3.14159265/sides),
-                   radius*sin(i*2*3.14159265/sides));
-    }
-    glEnd();
+
+//    glBegin(GL_POLYGON);
+//    for (int i=0;i<sides;i++){
+//        glVertex2f(radius*cos(i*2*3.14159265/sides),
+//                   radius*sin(i*2*3.14159265/sides));
+//    }
+//    glEnd();
+//    glLineWidth(2);
+//    glColor3f(0,1,0);
+//    glBegin(GL_LINE_LOOP);
+//    for (int i=0;i<sides;i++){
+//        glVertex2f(radius*cos(i*2*3.14159265/sides),
+//                   radius*sin(i*2*3.14159265/sides));
+//    }
+//    glEnd();
 }
 
 void MyPanelOpenGL::changeSides(int s){
@@ -71,5 +112,20 @@ void MyPanelOpenGL::changeSides(int s){
 
 void MyPanelOpenGL::changeRadius(double r){
     radius = r;
+    updateGL();
+}
+
+void MyPanelOpenGL::rotateX(int angle){
+    xRotate=angle;
+    updateGL();
+}
+
+void MyPanelOpenGL::rotateY(int angle){
+    yRotate=angle;
+    updateGL();
+}
+
+void MyPanelOpenGL::rotateZ(int angle){
+    zRotate=angle;
     updateGL();
 }

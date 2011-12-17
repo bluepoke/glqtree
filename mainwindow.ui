@@ -23,8 +23,6 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
-      <zorder>gridLayoutWidget</zorder>
-      <zorder>label</zorder>
      </widget>
     </item>
     <item row="0" column="1">
@@ -34,6 +32,9 @@
         <layout class="QGridLayout" name="gridLayout_2">
          <item row="0" column="1">
           <widget class="QSpinBox" name="spinBox">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="minimum">
             <number>3</number>
            </property>
@@ -44,6 +45,9 @@
          </item>
          <item row="0" column="0">
           <widget class="QLabel" name="label">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>Sides:</string>
            </property>
@@ -51,6 +55,9 @@
          </item>
          <item row="1" column="0">
           <widget class="QLabel" name="label_2">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
            <property name="text">
             <string>Radius:</string>
            </property>
@@ -58,6 +65,9 @@
          </item>
          <item row="1" column="1">
           <widget class="QDoubleSpinBox" name="doubleSpinBox">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
            <property name="minimum">
             <double>1.000000000000000</double>
            </property>
@@ -66,6 +76,57 @@
            </property>
            <property name="singleStep">
             <double>0.100000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_3">
+           <property name="text">
+            <string>rotate X:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QSlider" name="horizontalSlider">
+           <property name="maximum">
+            <number>360</number>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="label_4">
+           <property name="text">
+            <string>rotate Y:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0">
+          <widget class="QLabel" name="label_5">
+           <property name="text">
+            <string>rotate Z:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QSlider" name="horizontalSlider_2">
+           <property name="maximum">
+            <number>360</number>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="1">
+          <widget class="QSlider" name="horizontalSlider_3">
+           <property name="maximum">
+            <number>360</number>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
            </property>
           </widget>
          </item>
@@ -138,6 +199,9 @@
    <slots>
     <slot>changeSides(int)</slot>
     <slot>changeRadius(double)</slot>
+    <slot>rotateX(int)</slot>
+    <slot>rotateY(int)</slot>
+    <slot>rotateZ(int)</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -186,8 +250,8 @@
      <y>69</y>
     </hint>
     <hint type="destinationlabel">
-     <x>206</x>
-     <y>170</y>
+     <x>205</x>
+     <y>212</y>
     </hint>
    </hints>
   </connection>
@@ -202,8 +266,56 @@
      <y>93</y>
     </hint>
     <hint type="destinationlabel">
-     <x>223</x>
-     <y>238</y>
+     <x>205</x>
+     <y>280</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>panelGL</receiver>
+   <slot>rotateX(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>339</x>
+     <y>119</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>148</x>
+     <y>155</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider_2</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>panelGL</receiver>
+   <slot>rotateY(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>299</x>
+     <y>134</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>175</x>
+     <y>184</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider_3</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>panelGL</receiver>
+   <slot>rotateZ(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>337</x>
+     <y>165</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>171</x>
+     <y>251</y>
     </hint>
    </hints>
   </connection>

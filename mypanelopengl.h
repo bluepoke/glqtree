@@ -17,13 +17,18 @@ protected:
 private:
     int sides;
     double radius;
-
+    double xRotate;
+    double yRotate;
+    double zRotate;
 
 signals:
 
 public slots:
     void changeSides(int s);
     void changeRadius(double r);
+    void rotateX(int angle);
+    void rotateY(int angle);
+    void rotateZ(int angle);
 
 };
 
