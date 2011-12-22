@@ -1,7 +1,6 @@
 #include "mypanelopengl.h"
-#include <iostream>
+#include <QEvent>
 
-using namespace std;
 MyPanelOpenGL::MyPanelOpenGL(QWidget *parent) :
     QGLWidget(parent)
 {
@@ -13,7 +12,6 @@ MyPanelOpenGL::MyPanelOpenGL(QWidget *parent) :
 }
 
 void MyPanelOpenGL::initializeGL() {
-
     glShadeModel(GL_SMOOTH);
     glClearColor(0.2, 0.2, 0.2, 1.0);
     glClearDepth(1.0f);
@@ -24,7 +22,7 @@ void MyPanelOpenGL::initializeGL() {
     glEnable(GL_LIGHT0);
     glEnable(GL_LIGHTING);
     // enable color tracking
-    glEnable(GL_COLOR_MATERIAL);
+    //glEnable(GL_COLOR_MATERIAL);
     // set material properties which will be assigned by glColor
     glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 }
@@ -124,9 +122,7 @@ void MyPanelOpenGL::rotateZ(int angle){
 } 
 
 void MyPanelOpenGL::mouseMoveEvent(QMouseEvent *event){
-    // ich raffs net :(
 }
 
 void MyPanelOpenGL::wheelEvent(QWheelEvent *event){
-    // ebenso
 }

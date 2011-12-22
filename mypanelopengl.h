@@ -24,6 +24,7 @@ private:
     double zRotate;
 
 signals:
+    void statusChanged(QString message);
 
 public slots:
     void changeSides(int s);

@@ -26,6 +26,9 @@
       <property name="mouseTracking">
        <bool>false</bool>
       </property>
+      <property name="accessibleName">
+       <string>MyGLWidget</string>
+      </property>
      </widget>
     </item>
     <item>
@@ -269,6 +272,7 @@
    <header>mypanelopengl.h</header>
    <container>1</container>
    <slots>
+    <signal>statusChanged(QString)</signal>
     <slot>changeSides(int)</slot>
     <slot>changeRadius(double)</slot>
     <slot>rotateX(int)</slot>
@@ -388,6 +392,22 @@
     <hint type="destinationlabel">
      <x>171</x>
      <y>251</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>panelGL</sender>
+   <signal>statusChanged(QString)</signal>
+   <receiver>statusBar</receiver>
+   <slot>showMessage(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>126</x>
+     <y>332</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>128</x>
+     <y>382</y>
     </hint>
    </hints>
   </connection>
