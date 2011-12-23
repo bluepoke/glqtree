@@ -15,7 +15,9 @@ SOURCES += main.cpp\
     mypanelopengl.cpp
 
 HEADERS  += mainwindow.h \
-    mypanelopengl.h
+    mypanelopengl.h \
+    point3d.h
 
 FORMS    += mainwindow.ui
+
 

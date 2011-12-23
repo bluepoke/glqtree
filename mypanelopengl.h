@@ -2,6 +2,8 @@
 #define MYPANELOPENGL_H
 
 #include <QGLWidget>
+#include <QTime>
+#include "point3d.h"
 
 class MyPanelOpenGL : public QGLWidget
 {
@@ -14,7 +16,9 @@ protected:
     void resizeGL(int w, int h);
     void paintGL();
     void wheelEvent(QWheelEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent  *event);
+    void mousePressEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
 
 private:
     int sides;
@@ -22,6 +26,14 @@ private:
     double xRotate;
     double yRotate;
     double zRotate;
+
+    float distance;
+    Point3d rotation;
+    Point3d angularMomentum;
+    Point3d accumulatedMomentum;
+    QTime time;
+    int lastTime;
+    int mouseEventTime;
 
 signals:
     void statusChanged(QString message);

@@ -1,5 +1,6 @@
 #include "mypanelopengl.h"
-#include <QEvent>
+#include <QMouseEvent>
+#include <QGraphicsSceneMouseEvent>
 
 MyPanelOpenGL::MyPanelOpenGL(QWidget *parent) :
     QGLWidget(parent)
@@ -9,6 +10,11 @@ MyPanelOpenGL::MyPanelOpenGL(QWidget *parent) :
     xRotate = 0;
     yRotate = 0;
     zRotate = 0;
+
+    distance= 5.0f;
+    lastTime = 0;
+    angularMomentum.y = 40.0f;
+    time.start();
 }
 
 void MyPanelOpenGL::initializeGL() {
@@ -22,7 +28,7 @@ void MyPanelOpenGL::initializeGL() {
     glEnable(GL_LIGHT0);
     glEnable(GL_LIGHTING);
     // enable color tracking
-    //glEnable(GL_COLOR_MATERIAL);
+    glEnable(GL_COLOR_MATERIAL);
     // set material properties which will be assigned by glColor
     glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 }
@@ -41,10 +47,18 @@ void MyPanelOpenGL::paintGL(){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
-    glTranslatef(0,0,-5);
-    glRotatef(xRotate,1,0,0);
-    glRotatef(yRotate,0,1,0);
-    glRotatef(zRotate,0,0,1);
+    const int delta = time.elapsed() - lastTime;
+    rotation += angularMomentum * (delta / 1000.0);
+    lastTime += delta;
+    glTranslatef(0, 0, -distance);
+    glRotatef(rotation.x, 1, 0, 0);
+    glRotatef(rotation.y, 0, 1, 0);
+    glRotatef(rotation.z, 0, 0, 1);
+
+//    glTranslatef(0,0,-5);
+//    glRotatef(xRotate,1,0,0);
+//    glRotatef(yRotate,0,1,0);
+//    glRotatef(zRotate,0,0,1);
 
     glBegin(GL_QUADS);
 
@@ -122,7 +136,50 @@ void MyPanelOpenGL::rotateZ(int angle){
 } 
 
 void MyPanelOpenGL::mouseMoveEvent(QMouseEvent *event){
+    QGLWidget::mouseMoveEvent(event);
+    if (event->isAccepted())
+        return;
+    if (event->buttons() & Qt::LeftButton) {
+        // TODO
+        //const QPointF delta = event->scenePos() - event->lastScenePos();
+        // /TODO
+        //const Point3d angularImpulse = Point3d(delta.y(), delta.x(), 0) * 0.1;
+
+        //rotation += angularImpulse;
+        //accumulatedMomentum += angularImpulse;
+
+        event->accept();
+    }
 }
 
 void MyPanelOpenGL::wheelEvent(QWheelEvent *event){
+    QGLWidget::wheelEvent(event);
+    if (event->isAccepted())
+        return;
+
+    distance *= pow(1.2, -event->delta() / 120);
+    event->accept();
+    updateGL();
+}
+
+void MyPanelOpenGL::mousePressEvent(QMouseEvent *event){
+    QGLWidget::mousePressEvent(event);
+    if (event->isAccepted())
+        return;
+
+    mouseEventTime = time.elapsed();
+    angularMomentum = accumulatedMomentum = Point3d();
+    event->accept();
+    //emit statusChanged((QString)event->button());
+}
+
+void MyPanelOpenGL::mouseReleaseEvent(QMouseEvent *event){
+    QGLWidget::mouseReleaseEvent(event);
+    if (event->isAccepted())
+        return;
+
+    const int delta = time.elapsed() - mouseEventTime;
+    angularMomentum = accumulatedMomentum * (1000.0 / qMax(1, delta));
+    event->accept();
+    //update();
 }
