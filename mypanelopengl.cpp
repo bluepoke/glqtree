@@ -140,15 +140,13 @@ void MyPanelOpenGL::mouseMoveEvent(QMouseEvent *event){
     if (event->isAccepted())
         return;
     if (event->buttons() & Qt::LeftButton) {
-        // TODO
-        //const QPointF delta = event->scenePos() - event->lastScenePos();
-        // /TODO
-        //const Point3d angularImpulse = Point3d(delta.y(), delta.x(), 0) * 0.1;
-
-        //rotation += angularImpulse;
-        //accumulatedMomentum += angularImpulse;
+        const QPointF delta = event->globalPos() - lastPosition;
+        const Point3d angularImpulse = Point3d(delta.y(), delta.x(), 0) * 0.1;
+        rotation += angularImpulse;
+        accumulatedMomentum +=angularImpulse;
 
         event->accept();
+        updateGL();
     }
 }
 
@@ -158,6 +156,10 @@ void MyPanelOpenGL::wheelEvent(QWheelEvent *event){
         return;
 
     distance *= pow(1.2, -event->delta() / 120);
+    if (distance < MIN_DISTANCE)
+        distance = MIN_DISTANCE;
+    else if (distance > MAX_DISTANCE)
+        distance = MAX_DISTANCE;
     event->accept();
     updateGL();
 }
@@ -167,10 +169,11 @@ void MyPanelOpenGL::mousePressEvent(QMouseEvent *event){
     if (event->isAccepted())
         return;
 
+    lastPosition = event->globalPos();
     mouseEventTime = time.elapsed();
     angularMomentum = accumulatedMomentum = Point3d();
     event->accept();
-    //emit statusChanged((QString)event->button());
+    emit statusChanged("LMB clicked.");
 }
 
 void MyPanelOpenGL::mouseReleaseEvent(QMouseEvent *event){
@@ -181,5 +184,6 @@ void MyPanelOpenGL::mouseReleaseEvent(QMouseEvent *event){
     const int delta = time.elapsed() - mouseEventTime;
     angularMomentum = accumulatedMomentum * (1000.0 / qMax(1, delta));
     event->accept();
-    //update();
+    emit statusChanged("LMB released.");
+    updateGL();
 }

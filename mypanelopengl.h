@@ -3,6 +3,7 @@
 
 #include <QGLWidget>
 #include <QTime>
+#include <QPoint>
 #include "point3d.h"
 
 class MyPanelOpenGL : public QGLWidget
@@ -27,6 +28,8 @@ private:
     double yRotate;
     double zRotate;
 
+    static const float MIN_DISTANCE = 3.0f;
+    static const float MAX_DISTANCE = 25.0f;
     float distance;
     Point3d rotation;
     Point3d angularMomentum;
@@ -34,6 +37,7 @@ private:
     QTime time;
     int lastTime;
     int mouseEventTime;
+    QPoint lastPosition;
 
 signals:
     void statusChanged(QString message);
