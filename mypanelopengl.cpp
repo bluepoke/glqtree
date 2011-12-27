@@ -1,4 +1,5 @@
 #include "mypanelopengl.h"
+#include <math.h>
 #include <QMouseEvent>
 #include <QGraphicsSceneMouseEvent>
 
