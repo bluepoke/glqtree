@@ -11,10 +11,8 @@ MyPanelOpenGL::MyPanelOpenGL(QWidget *parent) :
     yRotate = 0;
     zRotate = 0;
 
-    distance= 5.0f;
-    lastTime = 0;
-    angularMomentum.y = 40.0f;
-    time.start();
+    mouseZoomDistance= 5.0f;
+    modelRotation = QPointF();
 }
 
 void MyPanelOpenGL::initializeGL() {
@@ -47,18 +45,9 @@ void MyPanelOpenGL::paintGL(){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
-    const int delta = time.elapsed() - lastTime;
-    rotation += angularMomentum * (delta / 1000.0);
-    lastTime += delta;
-    glTranslatef(0, 0, -distance);
-    glRotatef(rotation.x, 1, 0, 0);
-    glRotatef(rotation.y, 0, 1, 0);
-    glRotatef(rotation.z, 0, 0, 1);
-
-//    glTranslatef(0,0,-5);
-//    glRotatef(xRotate,1,0,0);
-//    glRotatef(yRotate,0,1,0);
-//    glRotatef(zRotate,0,0,1);
+    glTranslatef(0, 0, -mouseZoomDistance);
+    glRotatef(modelRotation.x(), 1, 0, 0);
+    glRotatef(modelRotation.y(), 0, 1, 0);
 
     glBegin(GL_QUADS);
 
@@ -139,11 +128,15 @@ void MyPanelOpenGL::mouseMoveEvent(QMouseEvent *event){
     QGLWidget::mouseMoveEvent(event);
     if (event->isAccepted())
         return;
+
     if (event->buttons() & Qt::LeftButton) {
-        const QPointF delta = event->globalPos() - lastPosition;
-        const Point3d angularImpulse = Point3d(delta.y(), delta.x(), 0) * 0.1;
-        rotation += angularImpulse;
-        accumulatedMomentum +=angularImpulse;
+        QPointF delta = event->globalPos() - mouseLastPosition;
+
+        modelRotation += QPointF(delta.y() * 0.02, delta.x() * 0.02);
+        if (modelRotation.x() > MAX_TILT_ANGLE)
+            modelRotation.setX(MAX_TILT_ANGLE);
+        if (modelRotation.x() < -1 * MAX_TILT_ANGLE)
+            modelRotation.setX(-1 * MAX_TILT_ANGLE);
 
         event->accept();
         updateGL();
@@ -155,11 +148,11 @@ void MyPanelOpenGL::wheelEvent(QWheelEvent *event){
     if (event->isAccepted())
         return;
 
-    distance *= pow(1.2, -event->delta() / 120);
-    if (distance < MIN_DISTANCE)
-        distance = MIN_DISTANCE;
-    else if (distance > MAX_DISTANCE)
-        distance = MAX_DISTANCE;
+    mouseZoomDistance *= pow(1.2, -event->delta() / 120);
+    if (mouseZoomDistance < MIN_ZOOM_DISTANCE)
+        mouseZoomDistance = MIN_ZOOM_DISTANCE;
+    else if (mouseZoomDistance > MAX_ZOOM_DISTANCE)
+        mouseZoomDistance = MAX_ZOOM_DISTANCE;
     event->accept();
     updateGL();
 }
@@ -169,9 +162,7 @@ void MyPanelOpenGL::mousePressEvent(QMouseEvent *event){
     if (event->isAccepted())
         return;
 
-    lastPosition = event->globalPos();
-    mouseEventTime = time.elapsed();
-    angularMomentum = accumulatedMomentum = Point3d();
+    mouseLastPosition = event->globalPos();
     event->accept();
     emit statusChanged("LMB clicked.");
 }
@@ -181,8 +172,6 @@ void MyPanelOpenGL::mouseReleaseEvent(QMouseEvent *event){
     if (event->isAccepted())
         return;
 
-    const int delta = time.elapsed() - mouseEventTime;
-    angularMomentum = accumulatedMomentum * (1000.0 / qMax(1, delta));
     event->accept();
     emit statusChanged("LMB released.");
     updateGL();
