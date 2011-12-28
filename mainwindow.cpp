@@ -6,11 +6,15 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
+    connect(ui->optionsButton, SIGNAL(clicked()), this, SLOT(toggleOptionsWindow()));
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::toggleOptionsWindow() {
+    ow.isVisible() ? ow.hide() : ow.show();
 }
 

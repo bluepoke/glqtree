@@ -1,16 +1,11 @@
 #include "mypanelopengl.h"
 #include <math.h>
 #include <QMouseEvent>
-#include <QGraphicsSceneMouseEvent>
 
 MyPanelOpenGL::MyPanelOpenGL(QWidget *parent) :
     QGLWidget(parent)
 {
-    sides = 3;
     radius = 1.0;
-    xRotate = 0;
-    yRotate = 0;
-    zRotate = 0;
 
     mouseZoomDistance= 5.0f;
     modelRotation = QPointF();
@@ -100,30 +95,10 @@ void MyPanelOpenGL::paintGL(){
     glEnd();
 }
 
-void MyPanelOpenGL::changeSides(int s){
-    sides = s;
-    updateGL();
-}
-
 void MyPanelOpenGL::changeRadius(double r){
     radius = r;
     updateGL();
 }
-
-void MyPanelOpenGL::rotateX(int angle){
-    xRotate=angle;
-    updateGL();
-}
-
-void MyPanelOpenGL::rotateY(int angle){
-    yRotate=angle;
-    updateGL();
-}
-
-void MyPanelOpenGL::rotateZ(int angle){
-    zRotate=angle;
-    updateGL();
-} 
 
 void MyPanelOpenGL::mouseMoveEvent(QMouseEvent *event){
     QGLWidget::mouseMoveEvent(event);
@@ -136,7 +111,7 @@ void MyPanelOpenGL::mouseMoveEvent(QMouseEvent *event){
         modelRotation += QPointF(delta.y() * 0.02, delta.x() * 0.02);
         if (modelRotation.x() > MAX_TILT_ANGLE)
             modelRotation.setX(MAX_TILT_ANGLE);
-        if (modelRotation.x() < -1 * MAX_TILT_ANGLE)
+        else if (modelRotation.x() < -1 * MAX_TILT_ANGLE)
             modelRotation.setX(-1 * MAX_TILT_ANGLE);
 
         event->accept();

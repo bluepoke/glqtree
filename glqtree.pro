@@ -12,12 +12,30 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
+    optionswindow.cpp \
     mypanelopengl.cpp
 
 HEADERS  += mainwindow.h \
-    mypanelopengl.h \
-    point3d.h
+    optionswindow.h \
+    mypanelopengl.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    optionswindow.ui
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
