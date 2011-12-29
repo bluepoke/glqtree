@@ -29,22 +29,24 @@
    <widget class="QTableWidget" name="tableWidget">
     <property name="geometry">
      <rect>
-      <x>140</x>
-      <y>40</y>
-      <width>256</width>
-      <height>192</height>
+      <x>5</x>
+      <y>11</y>
+      <width>391</width>
+      <height>221</height>
      </rect>
     </property>
+    <property name="sortingEnabled">
+     <bool>false</bool>
+    </property>
     <property name="rowCount">
-     <number>2</number>
+     <number>0</number>
     </property>
     <property name="columnCount">
-     <number>2</number>
+     <number>0</number>
     </property>
-    <row/>
-    <row/>
-    <column/>
-    <column/>
+    <attribute name="verticalHeaderVisible">
+     <bool>false</bool>
+    </attribute>
    </widget>
   </widget>
   <widget class="QWidget" name="tab2">

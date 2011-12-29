@@ -2,6 +2,9 @@
 #define OPTIONSWINDOW_H
 
 #include <QTabWidget>
+#include <QDoubleSpinBox>
+#include <QLabel>
+#include <QPushButton>
 
 namespace Ui {
     class OptionsWindow;
@@ -17,6 +20,17 @@ public:
 
 private:
     Ui::OptionsWindow *ui;
+    QStringList list;
+    QDoubleSpinBox *doubleSpin;
+    QSpinBox *singleSpin;
+    QLabel *lbl;
+    QPushButton *btnAdd;
+    QPushButton *btnDel;
+
+public slots:
+    void addRow();
+    void delRow();
+
 };
 
 #endif // OPTIONSWINDOW_H
