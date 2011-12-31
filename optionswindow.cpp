@@ -2,7 +2,7 @@
 #include "ui_optionswindow.h"
 #include <QMessageBox>
 #include <QDebug>
-
+#include "optionswindowlayout.h"
 
 OptionsWindow::OptionsWindow(QWidget *parent) :
     QTabWidget(parent),
@@ -66,6 +66,7 @@ OptionsWindow::OptionsWindow(QWidget *parent) :
     ui->tableWidget->setCellWidget(2, 2, singleSpin);
     ui->tableWidget->setCellWidget(2, 3, btnAdd);
 
+    OptionsWindowLayout *tab2Layout = new OptionsWindowLayout(ui->tab2);
 }
 
 OptionsWindow::~OptionsWindow()

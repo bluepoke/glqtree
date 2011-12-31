@@ -6,6 +6,7 @@
 #include <QLabel>
 #include <QPushButton>
 
+
 namespace Ui {
     class OptionsWindow;
 }
