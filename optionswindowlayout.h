@@ -3,6 +3,7 @@
 
 #include <QGridLayout>
 #include <QTableWidget>
+#include <QHeaderView>
 #include <QPushButton>
 #include <QDoubleSpinBox>
 #include <QLabel>
@@ -26,7 +27,7 @@ private:
     QDoubleSpinBox *doubleSpin;
     QSpinBox *singleSpin;
     QLabel *lbl;
-    void initBranching(QString valueName = 0, bool probabilityColumn = 0,
+    void initValue(int row = 0, QString valueName = 0, bool probabilityColumn = 0,
                        vector<double> ranges = vector<double> (0),
                        vector<double> probabilities = vector<double> (0),
                        vector<int> values = vector<int> (0));

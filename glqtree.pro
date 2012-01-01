@@ -14,17 +14,17 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     optionswindow.cpp \
     mypanelopengl.cpp \
-    mytablewidget.cpp \
     optionswindowlayout.cpp
 
 HEADERS  += mainwindow.h \
     optionswindow.h \
     mypanelopengl.h \
-    mytablewidget.h \
     optionswindowlayout.h
 
 FORMS    += mainwindow.ui \
     optionswindow.ui
+
+
 
 
 

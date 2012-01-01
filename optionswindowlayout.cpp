@@ -1,16 +1,17 @@
 #include "optionswindowlayout.h"
+// just for some debugging messages
 #include <QDebug>
 
 OptionsWindowLayout::OptionsWindowLayout(QWidget *parent) :
     QGridLayout(parent)
 {
-    // this is where a call to load some default xml values is made
+    // this is where a call to load all default xml values is made
     initValues();
 }
 
 void OptionsWindowLayout::initValues() {
     // this is where handling the xml should be done and calls to the different
-    // display initialzations for each option should be done as exampled by the branching call
+    // display initialzations for each option should be done as exampled by the two following calls
 
     // if you find a better way to hand over the values, for example as a single container object,
     // by all means do it, there must be something better than arrays
@@ -36,10 +37,31 @@ void OptionsWindowLayout::initValues() {
     values.push_back(10);
     values.push_back(12);
 
-    initBranching(QString("Branching"), true, ranges, probabilities, values);
+    // position integer deciding where on the optionspanel's layout the widget is placed
+    int row = 0;
+
+    initValue(row, QString("Branching"), true, ranges, probabilities, values);
+
+    ranges.clear();
+    probabilities.clear();
+    values.clear();
+    ranges.push_back(0.0);
+    ranges.push_back(0.3);
+    ranges.push_back(1.0);
+    probabilities.push_back(0.5);
+    probabilities.push_back(0.2);
+    probabilities.push_back(0.7);
+    values.push_back(2);
+    values.push_back(1);
+    values.push_back(19);
+
+    row = 1;
+
+    initValue(row, QString("Thickness"), false, ranges, probabilities, values);
+
 }
 
-void OptionsWindowLayout::initBranching(QString valueName, bool probabilityColumn,
+void OptionsWindowLayout::initValue(int row, QString valueName, bool probabilityColumn,
                                         vector<double> ranges,
                                         vector<double> probabilities,
                                         vector<int> values) {
@@ -48,31 +70,28 @@ void OptionsWindowLayout::initBranching(QString valueName, bool probabilityColum
     QTableWidget *table = new QTableWidget;
 
     // the button is a placeholder item for now and will be replaced with a
-    // graphical visualization of the table contents
+    // graphical visualization of the table's contents
     QPushButton *aBtn = new QPushButton;
-    aBtn->setText("Push");
+    aBtn->setText("Smthg.");
 
     // adding display placeholder and table
-    addWidget(aBtn, 0, 0);
-    addWidget(table, 0, 1);
+    addWidget(aBtn, row, 0);
+    addWidget(table, row, 1);
 
     // decide on the column count
     probabilityColumn ? table->setColumnCount(4) : table->setColumnCount(3);
     table->setRowCount(1);
-    // add headers
+    // headers and sorting
     QStringList list;
     list << "Range";
     if (probabilityColumn) list << "Probability";
     list << valueName << "";
     table->setHorizontalHeaderLabels(list);
-
     table->setSortingEnabled(false);
-    int column = 0;
+    table->verticalHeader()->hide();
 
-    // a button to add new lines
-    addBtn = new QPushButton;
-    addBtn->setText("Add");
-    connect(addBtn, SIGNAL(clicked()), this, SLOT(addRow()));
+    // serves to add items to different columns
+    int column = 0;
 
     // a spinner for the range to be added
     doubleSpin = new QDoubleSpinBox;
@@ -89,12 +108,17 @@ void OptionsWindowLayout::initBranching(QString valueName, bool probabilityColum
         doubleSpin->setValue(0.0);
         table->setCellWidget(0, column++, doubleSpin);
     }
+
     // a spinner for the value to be added
     singleSpin = new QSpinBox;
     singleSpin->setRange(0, 20);
     singleSpin->setSingleStep(1);
     singleSpin->setValue(0);
     table->setCellWidget(0, column++, singleSpin);
+
+    // a button to add new lines
+    addBtn = new QPushButton("Add", table);
+    connect(addBtn, SIGNAL(clicked()), this, SLOT(addRow()));
     table->setCellWidget(0, column++, addBtn);
 
     // add the initial data to the table
@@ -113,10 +137,15 @@ void OptionsWindowLayout::initBranching(QString valueName, bool probabilityColum
         singleSpin->setSingleStep(1);
         singleSpin->setValue(values.back());
 
+        // serves to add items to different columns
         column = 0;
+
         // add the row
         table->insertRow(0);
+
+        // add the different items
         table->setCellWidget(0, column++, lbl);
+
         if (probabilityColumn) {
             table->setCellWidget(0, column++, doubleSpin);
         }
@@ -127,13 +156,12 @@ void OptionsWindowLayout::initBranching(QString valueName, bool probabilityColum
             table->setCellWidget(0, column++, lbl);
         }
         else {
-            delBtn = new QPushButton;
-            delBtn->setText("Delete");
+            delBtn = new QPushButton("Delete", table);
             connect(delBtn, SIGNAL(clicked()), this, SLOT(delRow()));
             table->setCellWidget(0, column++, delBtn);
         }
 
-        // remove the last elements
+        // remove the just added elements from the containers holding them
         ranges.pop_back();
         probabilities.pop_back();
         values.pop_back();
@@ -141,6 +169,12 @@ void OptionsWindowLayout::initBranching(QString valueName, bool probabilityColum
 }
 
 void OptionsWindowLayout::addRow() {
+    // decide who is adding which where
+    QPushButton *btnAdd = qobject_cast<QPushButton *>(QObject::sender());
+    // Apparently, the parent of the button is not the table but a scrollarea surrounding the button
+    // qDebug() << btn->parentWidget()->parentWidget();
+    QTableWidget *table = (QTableWidget*)(btnAdd->parentWidget()->parentWidget());
+
     int rowCount = table->rowCount();
     int columnCount = table->columnCount();
 
@@ -201,8 +235,7 @@ void OptionsWindowLayout::addRow() {
                         singleSpin->setRange(0, 20);
                         singleSpin->setSingleStep(1);
                         singleSpin->setValue(iAmount);
-                        delBtn = new QPushButton;
-                        delBtn->setText("Delete");
+                        delBtn = new QPushButton("Delete", table);
                         connect(delBtn, SIGNAL(clicked()), this, SLOT(delRow()));
 
                         // add the row
@@ -226,5 +259,21 @@ void OptionsWindowLayout::addRow() {
 }
 
 void OptionsWindowLayout::delRow() {
+    // decide who deletes what and where
+    QPushButton *btnDel = qobject_cast<QPushButton *>(QObject::sender());
+    // Apparently, the parent of the button is not the table but the scrollarea surrounding the button
+    QTableWidget *table = (QTableWidget*)(btnDel->parentWidget()->parentWidget());
 
+    int rowCount = table->rowCount();
+    int columnCount = table->columnCount();
+    // find the buttons row
+    for (int row = 0; row < rowCount; row++) {
+        for (int col = 0; col < columnCount; col++) {
+            if (sender() == table->cellWidget(row, col)) {
+                // remove the whole row
+                table->removeRow(row);
+                return;
+            }
+        }
+    }
 }

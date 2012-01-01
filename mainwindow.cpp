@@ -6,6 +6,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    // the options button needs to do something
     connect(ui->optionsButton, SIGNAL(clicked()), this, SLOT(toggleOptionsWindow()));
 }
 
@@ -15,6 +16,7 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::toggleOptionsWindow() {
+    // show or hide? that is the question!
     ow.isVisible() ? ow.hide() : ow.show();
 }
 
