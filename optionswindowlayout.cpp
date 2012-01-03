@@ -1,6 +1,4 @@
 #include "optionswindowlayout.h"
-// just for some debugging messages
-#include <QDebug>
 
 OptionsWindowLayout::OptionsWindowLayout(QWidget *parent) :
     QGridLayout(parent)
@@ -22,7 +20,6 @@ void OptionsWindowLayout::initValues() {
     // 3. range values have to be in sorted order
     // 4. there must be one tupel for range = 0.0 and one for range = 1.0
 
-    // const int valuesCount = 3;
     vector<double> ranges;
     vector<double> probabilities;
     vector<int> values;
@@ -40,7 +37,7 @@ void OptionsWindowLayout::initValues() {
     // position integer deciding where on the optionspanel's layout the widget is placed
     int row = 0;
 
-    initValue(row, QString("Branching"), true, ranges, probabilities, values);
+    initValue(row++, QString("Branching"), true, ranges, probabilities, values);
 
     ranges.clear();
     probabilities.clear();
@@ -55,9 +52,7 @@ void OptionsWindowLayout::initValues() {
     values.push_back(1);
     values.push_back(19);
 
-    row = 1;
-
-    initValue(row, QString("Thickness"), false, ranges, probabilities, values);
+    initValue(row++, QString("Thickness"), false, ranges, probabilities, values);
 
 }
 
@@ -69,13 +64,13 @@ void OptionsWindowLayout::initValue(int row, QString valueName, bool probability
     // the table is where all changable display of values is to be done
     QTableWidget *table = new QTableWidget;
 
-    // the button is a placeholder item for now and will be replaced with a
     // graphical visualization of the table's contents
-    QPushButton *aBtn = new QPushButton;
-    aBtn->setText("Smthg.");
+    GraphWidget *graph = new GraphWidget(table);
+    // connect updates on the graph to signals we emit here
+    connect(this, SIGNAL(valuesChanged()), graph, SLOT(update()));
 
-    // adding display placeholder and table
-    addWidget(aBtn, row, 0);
+    // adding graph and table
+    addWidget(graph, row, 0);
     addWidget(table, row, 1);
 
     // decide on the column count
@@ -131,11 +126,13 @@ void OptionsWindowLayout::initValue(int row, QString valueName, bool probability
             doubleSpin->setRange(0.0, 1.0);
             doubleSpin->setSingleStep(0.01);
             doubleSpin->setValue(probabilities.back());
+            connect(doubleSpin, SIGNAL(valueChanged(double)), graph, SLOT(update()));
         }
         singleSpin = new QSpinBox;
         singleSpin->setRange(0, 20);
         singleSpin->setSingleStep(1);
         singleSpin->setValue(values.back());
+        connect(singleSpin, SIGNAL(valueChanged(int)), graph, SLOT(update()));
 
         // serves to add items to different columns
         column = 0;
@@ -172,7 +169,6 @@ void OptionsWindowLayout::addRow() {
     // decide who is adding which where
     QPushButton *btnAdd = qobject_cast<QPushButton *>(QObject::sender());
     // Apparently, the parent of the button is not the table but a scrollarea surrounding the button
-    // qDebug() << btn->parentWidget()->parentWidget();
     QTableWidget *table = (QTableWidget*)(btnAdd->parentWidget()->parentWidget());
 
     int rowCount = table->rowCount();
@@ -230,11 +226,13 @@ void OptionsWindowLayout::addRow() {
                             doubleSpin->setRange(0.0, 1.0);
                             doubleSpin->setSingleStep(0.01);
                             doubleSpin->setValue(dProbability);
+                            connect(doubleSpin, SIGNAL(valueChanged(double)), graph, SLOT(update()));
                         }
                         singleSpin = new QSpinBox;
                         singleSpin->setRange(0, 20);
                         singleSpin->setSingleStep(1);
                         singleSpin->setValue(iAmount);
+                        connect(singleSpin, SIGNAL(valueChanged(int)), graph, SLOT(update()));
                         delBtn = new QPushButton("Delete", table);
                         connect(delBtn, SIGNAL(clicked()), this, SLOT(delRow()));
 
@@ -250,6 +248,7 @@ void OptionsWindowLayout::addRow() {
                             table->setCellWidget(next, 1, singleSpin);
                             table->setCellWidget(next, 2, delBtn);
                         }
+                        emit valuesChanged();
                         return;
                     }
                 }
@@ -272,6 +271,7 @@ void OptionsWindowLayout::delRow() {
             if (sender() == table->cellWidget(row, col)) {
                 // remove the whole row
                 table->removeRow(row);
+                emit valuesChanged();
                 return;
             }
         }

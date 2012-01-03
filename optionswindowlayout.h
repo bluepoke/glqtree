@@ -8,6 +8,7 @@
 #include <QDoubleSpinBox>
 #include <QLabel>
 #include <QMessageBox>
+#include "graphwidget.h"
 
 using namespace std;
 
@@ -20,8 +21,8 @@ public:
     void initValues();
 
 private:
-    // static const int valuesCount;
     QTableWidget *table;
+    GraphWidget *graph;
     QPushButton *addBtn;
     QPushButton *delBtn;
     QDoubleSpinBox *doubleSpin;
@@ -31,6 +32,9 @@ private:
                        vector<double> ranges = vector<double> (0),
                        vector<double> probabilities = vector<double> (0),
                        vector<int> values = vector<int> (0));
+
+signals:
+    void valuesChanged();
 
 public slots:
     void addRow();
