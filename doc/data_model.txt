@@ -21,3 +21,16 @@ gravitationalInfluence(age) // influence of gravitation, branches bend towards e
 growthInterruption(age, probability) // an interrutption in growth, leaving some years out
 
 wobbliness(age, deviation) // curved branches
+
+
+
+
+leafLevels(age) // how many "rings" of lefas per branch
+
+leafCountPerLevel(age) // how many leafs per "ring"
+
+leafAngle(age) // how steep/flat the leafs stand
+
+leafLength(age)
+
+leafWidth(age)
