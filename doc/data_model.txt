@@ -1,0 +1,23 @@
+required values:
+
+maximum age: recursion depth --> int
+
+
+other values have to be defined for at lesat max and min age (0)
+
+
+thickness(age, probability) // regular thickness and its deviation
+
+length(age, probability) // length of the branches and some deviation (sligthly longer/shorter branches)
+
+branching(age)[number of branches and probability] (tripel)
+
+branchingAngle(age) // flat or steep
+
+branchingRotation(age) // random deviation of exact rotation angle (360°/numOfBranches +- deviation)
+
+gravitationInfluence(age) // influence of gravitation, branches bend towards earth
+
+growthInterruption(age, probability) // an interrutption in growth, leaving some years out
+
+wobbliness(age, probability) // curved branches
