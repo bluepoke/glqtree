@@ -28,8 +28,8 @@ private:
     QDoubleSpinBox *doubleSpin;
     QSpinBox *singleSpin;
     QLabel *lbl;
-    void initValue(int row = 0, QString valueName = 0, bool probabilityColumn = 0,
-                       vector<double> ranges = vector<double> (0),
+    void initValue(int row = 0, QString valueName = 0, int maxAge = 0, bool probabilityColumn = 0,
+                       vector<int> ages = vector<int> (0),
                        vector<double> probabilities = vector<double> (0),
                        vector<int> values = vector<int> (0));
 
