@@ -17,6 +17,9 @@ void PersistenceManager::readPlant(QString fileName) {
             }
             if(token == QXmlStreamReader::StartElement) {
                 qDebug()<<reader.name().toString();
+                if (reader.name().toString()=="plant") {
+                    qDebug() << reader.attributes().size();
+                }
             }
         }
         if (reader.hasError()) {
