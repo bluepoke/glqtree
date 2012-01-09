@@ -15,7 +15,7 @@ void PersistenceManager::readPlant(QString fileName) {
             if(token == QXmlStreamReader::StartDocument) {
                 continue;
             }
-            if(token == QXmlStreamReader::StartElement || token == QXmlStreamReader::EndElement) {
+            if(token == QXmlStreamReader::StartElement) {
                 qDebug()<<reader.name().toString();
             }
         }

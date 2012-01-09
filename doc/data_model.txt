@@ -1,6 +1,7 @@
 required values:
 
 maximum age: recursion depth --> int
+name, random seed
 
 
 other values have to be defined for at lesat max and min age (0)
