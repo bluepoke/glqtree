@@ -9,6 +9,7 @@
 #include <QLabel>
 #include <QMessageBox>
 #include "graphwidget.h"
+#include "tabbedoptionsdialog.h"
 
 using namespace std;
 
@@ -21,6 +22,7 @@ public:
     void initValues();
 
 private:
+    TabbedOptionsDialog *dialog;
     QTableWidget *table;
     GraphWidget *graph;
     QPushButton *addBtn;

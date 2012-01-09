@@ -29,6 +29,7 @@ public:
     explicit TabbedOptionsDialog(QWidget *parent = 0);
 
 private:
+    bool updated;
     QTabWidget *tabWidget;
     QDialogButtonBox *buttonBox;
     QPushButton *btnClose;
@@ -36,6 +37,7 @@ private:
     QPushButton *btnSave;
 
 public slots:
+    void valuesChanged();
     void closeDialog();
     void openFromXML();
     void saveToXML();

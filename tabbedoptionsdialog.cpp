@@ -1,17 +1,22 @@
 #include "tabbedoptionsdialog.h"
 #include "optionsdialogtablayout.h"
 #include <QVBoxLayout>
+#include <QMessageBox>
+#include <QDebug>
 
 TabbedOptionsDialog::TabbedOptionsDialog(QWidget *parent) :
     QDialog(parent)
 {
+    // this bool decides whether closing this dialog is possible
+    updated = false;
+
     tabWidget = new QTabWidget;
 
-    OptionsDialogTabLayout *tab1Layout = new OptionsDialogTabLayout;
+    OptionsDialogTabLayout *tab1Layout = new OptionsDialogTabLayout(this);
     QVBoxLayout *tab2LayoutStub = new QVBoxLayout;
 
     // organize tab1Layout contents here like this:
-    // tab1Layout.initValues();
+    tab1Layout->initValues();
 
     tabWidget->addTab(new Tab1(this, tab1Layout), "Options 1");
     tabWidget->addTab(new Tab2(this, tab2LayoutStub), "Options 2");
@@ -58,11 +63,38 @@ Tab2::Tab2(QWidget *parent, QLayout *mainLayout)
 }
 
 void TabbedOptionsDialog::closeDialog() {
-    this->close();
+    if (updated) {
+        // at least have the courtesy to ask before descarding any changes
+        int ret = QMessageBox(QMessageBox::Question, "Save values?",
+                    "There are unsaved values.\nDo you want to save them now?",
+                              QMessageBox::Cancel | QMessageBox::Save | QMessageBox::Discard).exec();
+
+        switch (ret) {
+        case QMessageBox::Discard: this->close(); break;
+        case QMessageBox::Save: this->saveToXML(); break;
+        default: break;
+        }
+    }
+    else {
+        updated = false;
+        // TODO: reload currently loaded values here
+        this->close();
+    }
 }
 
 void TabbedOptionsDialog::openFromXML() {
+    QMessageBox(QMessageBox::Information, "Open info", "Open was invoked", QMessageBox::Ok).exec();
+    updated = false;
+    // TODO: load new values here
 }
 
 void TabbedOptionsDialog::saveToXML() {
+    QMessageBox(QMessageBox::Information, "Save info", "Save was invoked", QMessageBox::Ok).exec();
+    updated = false;
+    // TODO: save to XML here
+    closeDialog();
+}
+
+void TabbedOptionsDialog::valuesChanged() {
+    updated = true;
 }

@@ -1,10 +1,11 @@
 #include "optionsdialogtablayout.h"
+#include <QDebug>
+#include <graphwidget.h>
 
 OptionsDialogTabLayout::OptionsDialogTabLayout(QWidget *parent) :
     QGridLayout(parent)
 {
-    // this is where a call to load all default xml values is made
-    initValues();
+    dialog = (TabbedOptionsDialog*)parent;
 }
 
 void OptionsDialogTabLayout::initValues() {
@@ -72,10 +73,14 @@ void OptionsDialogTabLayout::initValue(int row, QString valueName, int maxAge, b
     // the table is where all changable display of values is to be done
     QTableWidget *table = new QTableWidget;
 
-    // graphical visualization of the table's contents
+    // graphical visualization of the table's contents and a name for finding it later
     GraphWidget *graph = new GraphWidget(table);
+    qDebug() << graph;
+
     // connect updates on the graph to signals we emit here
     connect(this, SIGNAL(valuesChanged()), graph, SLOT(update()));
+    // connect any changes to the dialog close button
+    connect(this, SIGNAL(valuesChanged()), parentWidget(), SLOT(valuesChanged()));
 
     // adding graph and table
     addWidget(graph, row, 0);
@@ -134,13 +139,17 @@ void OptionsDialogTabLayout::initValue(int row, QString valueName, int maxAge, b
             doubleSpin->setRange(0.0, 1.0);
             doubleSpin->setSingleStep(0.01);
             doubleSpin->setValue(probabilities.back());
+            // connect any changes to the dialog close button and the graph
             connect(doubleSpin, SIGNAL(valueChanged(double)), graph, SLOT(update()));
+            connect(doubleSpin, SIGNAL(valueChanged(double)), parentWidget(), SLOT(valuesChanged()));
         }
         singleSpin = new QSpinBox;
         singleSpin->setRange(0, 20);
         singleSpin->setSingleStep(1);
         singleSpin->setValue(values.back());
+        // connect any changes to the dialog close button and the graph
         connect(singleSpin, SIGNAL(valueChanged(int)), graph, SLOT(update()));
+        connect(singleSpin, SIGNAL(valueChanged(int)), parentWidget(), SLOT(valuesChanged()));
 
         // serves to add items to different columns
         column = 0;
@@ -178,6 +187,8 @@ void OptionsDialogTabLayout::addRow() {
     QPushButton *btnAdd = qobject_cast<QPushButton *>(QObject::sender());
     // Apparently, the parent of the button is not the table but a scrollarea surrounding the button
     QTableWidget *table = (QTableWidget*)(btnAdd->parentWidget()->parentWidget());
+    GraphWidget *graph = this->graph;
+    qDebug() << graph;
 
     int rowCount = table->rowCount();
     int columnCount = table->columnCount();
@@ -210,7 +221,7 @@ void OptionsDialogTabLayout::addRow() {
                     else if (iNextAge == iAge) {
                         QMessageBox(QMessageBox::Critical, "Duplicate entry",
                                     "There is already an entry for this age!", QMessageBox::Ok).exec();
-                        return;
+                        return ;
                     }
                     // otherwise add the values
                     else {
@@ -232,13 +243,17 @@ void OptionsDialogTabLayout::addRow() {
                             doubleSpin->setRange(0.0, 1.0);
                             doubleSpin->setSingleStep(0.01);
                             doubleSpin->setValue(dProbability);
+                            // connect any changes to the dialog close button and the graph
                             connect(doubleSpin, SIGNAL(valueChanged(double)), graph, SLOT(update()));
+                            connect(doubleSpin, SIGNAL(valueChanged(double)), dialog, SLOT(valuesChanged()));
                         }
                         singleSpin = new QSpinBox;
                         singleSpin->setRange(0, 20);
                         singleSpin->setSingleStep(1);
                         singleSpin->setValue(iAmount);
+                        // connect any changes to the dialog close button and the graph
                         connect(singleSpin, SIGNAL(valueChanged(int)), graph, SLOT(update()));
+                        connect(singleSpin, SIGNAL(valueChanged(int)), dialog, SLOT(valuesChanged()));
                         delBtn = new QPushButton("Delete", table);
                         connect(delBtn, SIGNAL(clicked()), this, SLOT(delRow()));
 
