@@ -57,28 +57,30 @@ void GraphWidget::paintEvent(QPaintEvent *event) {
 
     // arrays to hold the data
     int values[dataRowCount];
-    double ranges[dataRowCount];
+    int ages[dataRowCount];
     double probabilities[dataRowCount];
 
     // fill them with the data
     for (int i= 0; i < dataRowCount; i++) {
         values[i] = ((QSpinBox*)table->cellWidget(i, valueColumn))->value();
-        ranges[i] = ((QLabel*)table->cellWidget(i, 0))->text().toDouble();
+        ages[i] = ((QLabel*)table->cellWidget(i, 0))->text().toInt();
         // if there is a probability column ...
         if (probabilityColumn)
             probabilities[i] = ((QDoubleSpinBox*)table->cellWidget(i, valueColumn - 1))->value();
     }
 
-    // find the maximum value and calculate a stepping
+    // find the maximum values and calculate a stepping
     int maxValue = *max_element(values, values + dataRowCount);
-    double valueQuot = (float)HEIGHT / (float)maxValue;
+    int maxAge = ages[dataRowCount - 1];
+    double valueQuot = (double)HEIGHT / (double)maxValue;
+    double agesQuot = (double)HEIGHT / (double)maxAge;
 
     QPainterPath valueGraph;
 
     // paint lines for all the values
-    valueGraph.moveTo(MARGIN + ranges[0] * WIDTH, MARGIN + HEIGHT - (int)(values[0] * valueQuot));
+    valueGraph.moveTo(MARGIN + ages[0] * agesQuot, MARGIN + HEIGHT - (int)(values[0] * valueQuot));
     for (int i = 1; i < dataRowCount; i++) {
-        valueGraph.lineTo(MARGIN + ranges[i] * WIDTH, MARGIN + HEIGHT - (int)(values[i] * valueQuot));
+        valueGraph.lineTo(MARGIN + ages[i] * agesQuot, MARGIN + HEIGHT - (int)(values[i] * valueQuot));
     }
 
     painter.setPen(penRed);
@@ -87,9 +89,9 @@ void GraphWidget::paintEvent(QPaintEvent *event) {
     // paint lines for all the probabilities if there are any
     if (probabilityColumn) {
         QPainterPath probabilitiesGraph;
-        probabilitiesGraph.moveTo(MARGIN + ranges[0] * WIDTH, MARGIN + HEIGHT - (int)(probabilities[0] * HEIGHT));
+        probabilitiesGraph.moveTo(MARGIN + ages[0] * agesQuot, MARGIN + HEIGHT - (int)(probabilities[0] * HEIGHT));
         for (int i = 1; i < dataRowCount; i++) {
-            probabilitiesGraph.lineTo(MARGIN + ranges[i] * WIDTH, MARGIN + HEIGHT - (int)(probabilities[i] * HEIGHT));
+            probabilitiesGraph.lineTo(MARGIN + ages[i] * agesQuot, MARGIN + HEIGHT - (int)(probabilities[i] * HEIGHT));
         }
         painter.setPen(penBlue);
         painter.drawPath(probabilitiesGraph);
@@ -97,7 +99,7 @@ void GraphWidget::paintEvent(QPaintEvent *event) {
 
     // put some text underneath
     painter.setPen(penBlack);
-    painter.drawText(QRect(MARGIN, MARGIN + HEIGHT, WIDTH, MARGIN), Qt::AlignCenter, "Range");
+    painter.drawText(QRect(MARGIN, MARGIN + HEIGHT, WIDTH, MARGIN), Qt::AlignCenter, QString("Age [0 .. " + QString::number(maxAge) + "]"));
 
     // and on the left axis
     painter.setPen(penRed);

@@ -15,18 +15,26 @@ void OptionsWindowLayout::initValues() {
     // by all means do it, there must be something better than arrays
 
     // for now I declare that the data to be handed over has to:
-    // 1. there can not be any ambigious range values
+    // 1. there can not be any ambigious age values
     // 2. there has to be a probability value (even if we do not use those through the boolean operator)
-    // 3. range values have to be in sorted order
-    // 4. there must be one tupel for range = 0.0 and one for range = 1.0
+    // 3. age values have to be in sorted order
+    // 4. there must be one tupel for age = 0 and one for age = max_age
 
-    vector<double> ranges;
+    // I assume there will be an age spinner somewhere to enter the max age
+    // Though I could re-calculate all the values in the table when the max_age happens, I cannot
+    // be sure as to what happens, shrinking the whole age range and floor to nearest int will
+    // most likely result in duplicate age values which contradict the rules I set.
+
+    // I might simply cut the top off in this case, and increase it when the max age changes upwards
+
+    int maxAge = 50;
+    vector<int> ages;
     vector<double> probabilities;
     vector<int> values;
 
-    ranges.push_back(0.0);
-    ranges.push_back(0.5);
-    ranges.push_back(1.0);
+    ages.push_back(0);
+    ages.push_back(25);
+    ages.push_back(50);
     probabilities.push_back(0.2);
     probabilities.push_back(0.1);
     probabilities.push_back(0.5);
@@ -37,14 +45,14 @@ void OptionsWindowLayout::initValues() {
     // position integer deciding where on the optionspanel's layout the widget is placed
     int row = 0;
 
-    initValue(row++, QString("Branching"), true, ranges, probabilities, values);
+    initValue(row++, QString("Branching"), maxAge, true, ages, probabilities, values);
 
-    ranges.clear();
+    ages.clear();
     probabilities.clear();
     values.clear();
-    ranges.push_back(0.0);
-    ranges.push_back(0.3);
-    ranges.push_back(1.0);
+    ages.push_back(0);
+    ages.push_back(20);
+    ages.push_back(50);
     probabilities.push_back(0.5);
     probabilities.push_back(0.2);
     probabilities.push_back(0.7);
@@ -52,12 +60,12 @@ void OptionsWindowLayout::initValues() {
     values.push_back(1);
     values.push_back(19);
 
-    initValue(row++, QString("Thickness"), false, ranges, probabilities, values);
+    initValue(row++, QString("Thickness"), maxAge, false, ages, probabilities, values);
 
 }
 
-void OptionsWindowLayout::initValue(int row, QString valueName, bool probabilityColumn,
-                                        vector<double> ranges,
+void OptionsWindowLayout::initValue(int row, QString valueName, int maxAge, bool probabilityColumn,
+                                        vector<int> ages,
                                         vector<double> probabilities,
                                         vector<int> values) {
 
@@ -78,7 +86,7 @@ void OptionsWindowLayout::initValue(int row, QString valueName, bool probability
     table->setRowCount(1);
     // headers and sorting
     QStringList list;
-    list << "Range";
+    list << "Age";
     if (probabilityColumn) list << "Probability";
     list << valueName << "";
     table->setHorizontalHeaderLabels(list);
@@ -88,12 +96,12 @@ void OptionsWindowLayout::initValue(int row, QString valueName, bool probability
     // serves to add items to different columns
     int column = 0;
 
-    // a spinner for the range to be added
-    doubleSpin = new QDoubleSpinBox;
-    doubleSpin->setRange(0.0, 1.0);
-    doubleSpin->setSingleStep(0.01);
-    doubleSpin->setValue(0.0);
-    table->setCellWidget(0, column++, doubleSpin);
+    // a spinner for the age to be added
+    singleSpin = new QSpinBox;
+    singleSpin->setRange(0, maxAge);
+    singleSpin->setSingleStep(1);
+    singleSpin->setValue(0);
+    table->setCellWidget(0, column++, singleSpin);
 
     // a spinner for the probability to be added (if there is one needed)
     if (probabilityColumn) {
@@ -117,10 +125,10 @@ void OptionsWindowLayout::initValue(int row, QString valueName, bool probability
     table->setCellWidget(0, column++, addBtn);
 
     // add the initial data to the table
-    while (!ranges.empty()) {
+    while (!ages.empty()) {
         // prepare a new row
         lbl = new QLabel;
-        lbl->setNum(ranges.back());
+        lbl->setNum(ages.back());
         if (probabilityColumn) {
             doubleSpin = new QDoubleSpinBox;
             doubleSpin->setRange(0.0, 1.0);
@@ -148,7 +156,7 @@ void OptionsWindowLayout::initValue(int row, QString valueName, bool probability
         }
         table->setCellWidget(0, column++, singleSpin);
 
-        if (ranges.back() == 0.0 || ranges.back() == 1.0) {
+        if (ages.back() == 0 || ages.back() == maxAge) {
             lbl = new QLabel;
             table->setCellWidget(0, column++, lbl);
         }
@@ -159,7 +167,7 @@ void OptionsWindowLayout::initValue(int row, QString valueName, bool probability
         }
 
         // remove the just added elements from the containers holding them
-        ranges.pop_back();
+        ages.pop_back();
         probabilities.pop_back();
         values.pop_back();
     }
@@ -180,7 +188,7 @@ void OptionsWindowLayout::addRow() {
             if (sender() == table->cellWidget(row, col)) {
 
                 // remember the values to be added
-                double dRange = ((QDoubleSpinBox*)table->cellWidget(row, 0))->value();
+                double iAge = ((QSpinBox*)table->cellWidget(row, 0))->value();
                 double dProbability = 0.0;
                 int iAmount = 0;
                 if (columnCount == 4) {
@@ -193,23 +201,23 @@ void OptionsWindowLayout::addRow() {
 
                 // find the correct row where the values need to be added to
                 for (int next = 0; next < rowCount - 1; next++) {
-                    // if the rows range value is lower, step over it
-                    double dNextRange = ((QLabel*)table->cellWidget(next, 0))->text().toDouble();
-                    if (dNextRange < dRange) {
+                    // if the rows age value is lower, step over it
+                    int iNextAge = ((QLabel*)table->cellWidget(next, 0))->text().toInt();
+                    if (iNextAge < iAge) {
                         continue;
                     }
                     // if it equals, warn that nothing can be added
-                    else if (dNextRange == dRange) {
+                    else if (iNextAge == iAge) {
                         QMessageBox* msgBox = new QMessageBox();
                         msgBox->setWindowTitle("Error");
-                        msgBox->setText("There is already a row for this range!");
+                        msgBox->setText("There is already a row for this age!");
                         msgBox->exec();
                         return;
                     }
                     // otherwise add the values
                     else {
                         // clear the fields
-                        ((QDoubleSpinBox*)table->cellWidget(row, 0))->setValue(0.0);
+                        ((QSpinBox*)table->cellWidget(row, 0))->setValue(0);
                         if (columnCount == 4) {
                             ((QDoubleSpinBox*)table->cellWidget(row, 1))->setValue(0.0);
                             ((QSpinBox*)table->cellWidget(row, 2))->setValue(0);
@@ -220,7 +228,7 @@ void OptionsWindowLayout::addRow() {
 
                         // prepare a new row
                         lbl = new QLabel;
-                        lbl->setNum(dRange);
+                        lbl->setNum(iAge);
                         if (columnCount == 4) {
                             doubleSpin = new QDoubleSpinBox;
                             doubleSpin->setRange(0.0, 1.0);
