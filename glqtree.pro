@@ -12,21 +12,20 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    optionswindow.cpp \
     mypanelopengl.cpp \
-    optionswindowlayout.cpp \
     graphwidget.cpp \
-    persistencemanager.cpp
+    persistencemanager.cpp \
+    tabbedoptionsdialog.cpp \
+    optionsdialogtablayout.cpp
 
 HEADERS  += mainwindow.h \
-    optionswindow.h \
     mypanelopengl.h \
-    optionswindowlayout.h \
     graphwidget.h \
-    persistencemanager.h
+    persistencemanager.h \
+    tabbedoptionsdialog.h \
+    optionsdialogtablayout.h
 
-FORMS    += mainwindow.ui \
-    optionswindow.ui
+FORMS    += mainwindow.ui
 
 
 

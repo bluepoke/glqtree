@@ -34,7 +34,7 @@ void PersistenceManager::readPlant(QString fileName) {
 
 
 // test main for xml reading
-int main(int argc, char *argv[])
-{
-    PersistenceManager::readPlant(QString ("D:\\default.xml"));
-}
+//int main(int argc, char *argv[])
+//{
+//    PersistenceManager::readPlant(QString ("D:\\default.xml"));
+//}

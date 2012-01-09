@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "optionswindow.h"
+#include "tabbedoptionsdialog.h"
 
 namespace Ui {
     class MainWindow;
@@ -18,10 +18,11 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    OptionsWindow ow;
+    TabbedOptionsDialog *tabs;
+
 
 public slots:
-    void toggleOptionsWindow();
+    void showOptionsDialog();
 };
 
 #endif // MAINWINDOW_H

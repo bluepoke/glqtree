@@ -1,5 +1,5 @@
-#ifndef OPTIONSWINDOWLAYOUT_H
-#define OPTIONSWINDOWLAYOUT_H
+#ifndef OPTIONSDIALOGTABLAYOUT_H
+#define OPTIONSDIALOGTABLAYOUT_H
 
 #include <QGridLayout>
 #include <QTableWidget>
@@ -12,12 +12,12 @@
 
 using namespace std;
 
-class OptionsWindowLayout : public QGridLayout
+class OptionsDialogTabLayout : public QGridLayout
 {
     Q_OBJECT
 
 public:
-    explicit OptionsWindowLayout(QWidget *parent = 0);
+    explicit OptionsDialogTabLayout(QWidget *parent = 0);
     void initValues();
 
 private:
@@ -41,4 +41,4 @@ public slots:
     void delRow();
 };
 
-#endif // OPTIONSWINDOWLAYOUT_H
+#endif // OPTIONSDIALOGTABLAYOUT_H

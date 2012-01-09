@@ -1,13 +1,13 @@
-#include "optionswindowlayout.h"
+#include "optionsdialogtablayout.h"
 
-OptionsWindowLayout::OptionsWindowLayout(QWidget *parent) :
+OptionsDialogTabLayout::OptionsDialogTabLayout(QWidget *parent) :
     QGridLayout(parent)
 {
     // this is where a call to load all default xml values is made
     initValues();
 }
 
-void OptionsWindowLayout::initValues() {
+void OptionsDialogTabLayout::initValues() {
     // this is where handling the xml should be done and calls to the different
     // display initialzations for each option should be done as exampled by the two following calls
 
@@ -64,7 +64,7 @@ void OptionsWindowLayout::initValues() {
 
 }
 
-void OptionsWindowLayout::initValue(int row, QString valueName, int maxAge, bool probabilityColumn,
+void OptionsDialogTabLayout::initValue(int row, QString valueName, int maxAge, bool probabilityColumn,
                                         vector<int> ages,
                                         vector<double> probabilities,
                                         vector<int> values) {
@@ -173,7 +173,7 @@ void OptionsWindowLayout::initValue(int row, QString valueName, int maxAge, bool
     }
 }
 
-void OptionsWindowLayout::addRow() {
+void OptionsDialogTabLayout::addRow() {
     // decide who is adding which where
     QPushButton *btnAdd = qobject_cast<QPushButton *>(QObject::sender());
     // Apparently, the parent of the button is not the table but a scrollarea surrounding the button
@@ -265,7 +265,7 @@ void OptionsWindowLayout::addRow() {
     }
 }
 
-void OptionsWindowLayout::delRow() {
+void OptionsDialogTabLayout::delRow() {
     // decide who deletes what and where
     QPushButton *btnDel = qobject_cast<QPushButton *>(QObject::sender());
     // Apparently, the parent of the button is not the table but the scrollarea surrounding the button
