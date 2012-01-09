@@ -15,13 +15,15 @@ SOURCES += main.cpp\
     optionswindow.cpp \
     mypanelopengl.cpp \
     optionswindowlayout.cpp \
-    graphwidget.cpp
+    graphwidget.cpp \
+    persistencemanager.cpp
 
 HEADERS  += mainwindow.h \
     optionswindow.h \
     mypanelopengl.h \
     optionswindowlayout.h \
-    graphwidget.h
+    graphwidget.h \
+    persistencemanager.h
 
 FORMS    += mainwindow.ui \
     optionswindow.ui
