@@ -208,10 +208,8 @@ void OptionsDialogTabLayout::addRow() {
                     }
                     // if it equals, warn that nothing can be added
                     else if (iNextAge == iAge) {
-                        QMessageBox* msgBox = new QMessageBox();
-                        msgBox->setWindowTitle("Error");
-                        msgBox->setText("There is already a row for this age!");
-                        msgBox->exec();
+                        QMessageBox(QMessageBox::Critical, "Duplicate entry",
+                                    "There is already an entry for this age!", QMessageBox::Ok).exec();
                         return;
                     }
                     // otherwise add the values

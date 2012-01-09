@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QPushButton>
 #include "tabbedoptionsdialog.h"
 
 namespace Ui {
@@ -19,7 +20,8 @@ public:
 private:
     Ui::MainWindow *ui;
     TabbedOptionsDialog *tabs;
-
+    QPushButton *btnQuit;
+    QPushButton *btnOptions;
 
 public slots:
     void showOptionsDialog();

@@ -19,8 +19,6 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event);
 
 private:
-    double radius;
-
     static const float MIN_ZOOM_DISTANCE = 3.0f;
     static const float MAX_ZOOM_DISTANCE = 25.0f;
     static const float MAX_TILT_ANGLE = 90.0f;
@@ -31,9 +29,6 @@ private:
 
 signals:
     void statusChanged(QString message);
-
-public slots:
-    void changeRadius(double r);
 };
 
 #endif // MYPANELOPENGL_H

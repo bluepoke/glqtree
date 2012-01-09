@@ -5,9 +5,6 @@
 MyPanelOpenGL::MyPanelOpenGL(QWidget *parent) :
     QGLWidget(parent)
 {
-    // a placeholder signalling value
-    radius = 1.0;
-
     // mouse navigation values
     mouseZoomDistance= 5.0f;
     modelRotation = QPointF();
@@ -56,7 +53,7 @@ void MyPanelOpenGL::paintGL(){
 
     glBegin(GL_QUADS);
 
-        GLfloat p = radius / 2;
+        GLfloat p = 0.5;
 
         // testing normal vectors on this face
         glColor4f(1,0,0,1);
@@ -103,12 +100,6 @@ void MyPanelOpenGL::paintGL(){
         glVertex3f( p, p, p);
 
     glEnd();
-}
-
-void MyPanelOpenGL::changeRadius(double r) {
-    // update the models radius, placeholder signal/slot function
-    radius = r;
-    updateGL();
 }
 
 void MyPanelOpenGL::mouseMoveEvent(QMouseEvent *event) {
