@@ -31,3 +31,6 @@ desktop.ini
 
 # User settings
 *.pro.user
+
+# Autosave
+*.autosave
