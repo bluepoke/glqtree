@@ -26,6 +26,17 @@ private:
     float mouseZoomDistance;
     QPoint mouseLastPosition;
     QPointF modelRotation;
+    GLuint objList;
+
+    GLdouble eyeX;
+    GLdouble eyeY;
+    GLdouble eyeZ;
+    GLdouble centerX;
+    GLdouble centerY;
+    GLdouble centerZ;
+    GLdouble upX;
+    GLdouble upY;
+    GLdouble upZ;
 
 signals:
     void statusChanged(QString message);
