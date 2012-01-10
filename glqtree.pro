@@ -16,14 +16,16 @@ SOURCES += main.cpp\
     graphwidget.cpp \
     persistencemanager.cpp \
     tabbedoptionsdialog.cpp \
-    optionsdialogtablayout.cpp
+    optionsdialogtablayout.cpp \
+    plant.cpp
 
 HEADERS  += mainwindow.h \
     mypanelopengl.h \
     graphwidget.h \
     persistencemanager.h \
     tabbedoptionsdialog.h \
-    optionsdialogtablayout.h
+    optionsdialogtablayout.h \
+    plant.h
 
 FORMS    += mainwindow.ui
 
