@@ -51,6 +51,9 @@ public:
     }
 
 private:
+
+
+public:
     QString name;
     int seed;
     int maxAge;
@@ -70,7 +73,6 @@ private:
     QList<Tupel2> leafLength;
     QList<Tupel2> leafWidth;
 
-public:
     void addBranchThickness(int age, int thickness, double rel_deviation);
     void addBranchLength(int age, int length, double rel_deviation);
     void addBranching(int age, int count, double probability);
@@ -85,6 +87,8 @@ public:
     void addLeafAngle(int age, int angle);
     void addLeafLength(int age, int length);
     void addLeafWidth(int age, int width);
+
+    QList<Tupel3> getBranchThickness();
 
 signals:
     
