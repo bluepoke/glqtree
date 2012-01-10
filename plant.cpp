@@ -4,11 +4,8 @@
 #include <QDebug>
 
 Plant::Plant(QObject *parent, int seed, QString name, int maxAge) :
-    QObject(parent)
+    QObject(parent), name(name), seed(seed), maxAge(maxAge)
 {
-    this->seed = seed;
-    this->name = name;
-    this->maxAge = maxAge;
 }
 
 void addTupel2(QList<Tupel2> *list, Tupel2 *tupel) {
@@ -137,12 +134,16 @@ void Plant::addLeafWidth(int age, int width)
     addTupel2(&leafWidth, &t);
 }
 
+QList<Tupel3> Plant::getBranchThickness()
+{
+    return branchThickness;
+}
+
 // implementations for tupels
 
-Tupel2::Tupel2(int age, int value)
+Tupel2::Tupel2(int age, int value) :
+    age(age), value(value)
 {
-    this->age=age;
-    this->value=value;
 }
 
 QString Tupel2::toString()
@@ -150,11 +151,9 @@ QString Tupel2::toString()
     return QString::number(age)+"|"+QString::number(value);
 }
 
-Tupel3::Tupel3(int age, int value, double probability)
+Tupel3::Tupel3(int age, int value, double probability) :
+    age(age), value(value), probability(probability)
 {
-    this->age=age;
-    this->value=value;
-    this->probability=probability;
 }
 
 QString Tupel3::toString()
