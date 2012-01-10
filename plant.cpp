@@ -1,6 +1,7 @@
 #include "plant.h"
 #include <QList>
 #include <iterator>
+#include <QDebug>
 
 Plant::Plant(QObject *parent, int seed, QString name, int maxAge) :
     QObject(parent)
@@ -10,109 +11,130 @@ Plant::Plant(QObject *parent, int seed, QString name, int maxAge) :
     this->maxAge = maxAge;
 }
 
-void addTupel2(QList<Tupel2> list, Tupel2 tupel) {
-    if (list.size()==0) {
+void addTupel2(QList<Tupel2> *list, Tupel2 *tupel) {
+    if (list->size()==0) {
         // no tupels in list, simply append
-        list.append(tupel);
+        list->append(*tupel);
     } else {
         QList<Tupel2>::iterator i;
-        for (i = list.begin(); i != list.end(); ++i) {
+        bool added = false;
+        for (i = list->begin(); i != list->end(); ++i) {
             Tupel2 t = *i;
-            if (t.age<tupel.age) {
+            if (t.age<tupel->age) {
                 continue;
             } else {
-                list.insert(i,tupel);
-                return;
+                list->insert(i,*tupel);
+                added = true;
+                break;
             }
         }
-        // all tupels for smaller age, append
-        list.append(tupel);
+        if (!added) {
+            // all tupels for smaller age, append
+            list->append(*tupel);
+        }
     }
 }
 
-void addTupel3(QList<Tupel3> list, Tupel3 tupel) {
-    if (list.size()==0) {
+void addTupel3(QList<Tupel3> *list, Tupel3 *tupel) {
+    if (list->size()==0) {
         // no tupels in list, simply append
-        list.append(tupel);
+        list->append(*tupel);
     } else {
         QList<Tupel3>::iterator i;
-        for (i = list.begin(); i != list.end(); ++i) {
+        bool added = false;
+        for (i = list->begin(); i != list->end(); ++i) {
             Tupel3 t = *i;
-            if (t.age<tupel.age) {
+            if (t.age<tupel->age) {
                 continue;
             } else {
-                list.insert(i,tupel);
-                return;
+                list->insert(i,*tupel);
+                added = true;
+                break;
             }
         }
-        // all tupels for smaller age, append
-        list.append(tupel);
+        if (!added) {
+            // all tupels for smaller age, append
+            list->append(*tupel);
+        }
     }
 }
 
 void Plant::addBranchThickness(int age, int thickness, double rel_deviation)
 {
-    addTupel3(branchThickness, Tupel3(age,thickness,rel_deviation));
+    Tupel3 t(age,thickness,rel_deviation);
+    addTupel3(&branchThickness, &t);
 }
 
 void Plant::addBranchLength(int age, int length, double rel_deviation)
 {
-    addTupel3(branchLength, Tupel3(age, length, rel_deviation));
+    Tupel3 t(age, length, rel_deviation);
+    addTupel3(&branchLength, &t);
 }
 
 void Plant::addBranching(int age, int count, double probability)
 {
-    addTupel3(branching,Tupel3(age,count,probability));
+    Tupel3 t(age,count,probability);
+    addTupel3(&branching,&t);
 }
 
 void Plant::addBranchingAngle(int age, int angle, double rel_deviation)
 {
-    addTupel3(branchingAngle,Tupel3(age,angle,rel_deviation));
+    Tupel3 t(age,angle,rel_deviation);
+    addTupel3(&branchingAngle,&t);
 }
 
 void Plant::addBranchingRotation(int age, int angle, double rel_deviation)
 {
-    addTupel3(branchingRotation,Tupel3(age,angle,rel_deviation));
+    Tupel3 t(age,angle,rel_deviation);
+    addTupel3(&branchingRotation,&t);
 }
 
 void Plant::addGravitationalInfluence(int age, int influence)
 {
-    addTupel2(gravitationalInfluence,Tupel2(age,influence));
+    Tupel2 t(age,influence);
+    addTupel2(&gravitationalInfluence,&t);
 }
 
 void Plant::addGrowthInterruption(int age, int duration, double probability)
 {
-    addTupel3(growthInterruption,Tupel3(age,duration,probability));
+    Tupel3 t(age,duration,probability);
+    addTupel3(&growthInterruption,&t);
 }
 
 void Plant::addBranchWobbliness(int age, int wobble, double rel_deviation)
 {
-    addTupel3(branchWobbliness,Tupel3(age,wobble,rel_deviation));
+    Tupel3 t(age,wobble,rel_deviation);
+    addTupel3(&branchWobbliness,&t);
 }
 
 void Plant::addLeafLevels(int age, int count)
 {
-    addTupel2(leafLevels,Tupel2(age,count));
+    Tupel2 t(age,count);
+    addTupel2(&leafLevels,&t);
 }
 
 void Plant::addLeafCountPerLevel(int age, int count)
 {
-    addTupel2(leafCountPerLevel,Tupel2(age,count));
+    Tupel2 t(age,count);
+    addTupel2(&leafCountPerLevel,&t);
 }
 
 void Plant::addLeafAngle(int age, int angle)
 {
-    addTupel2(leafAngle,Tupel2(age,angle));
+    Tupel2 t(age,angle);
+    addTupel2(&leafAngle,&t);
 }
 
 void Plant::addLeafLength(int age, int length)
 {
-    addTupel2(leafLength, Tupel2(age,length));
+    Tupel2 t(age,length);
+    addTupel2(&leafLength, &t);
 }
 
 void Plant::addLeafWidth(int age, int width)
 {
-    addTupel2(leafWidth, Tupel2(age,width));
+    Tupel2 t(age,width);
+    addTupel2(&leafWidth, &t);
 }
 
 // implementations for tupels
@@ -123,9 +145,20 @@ Tupel2::Tupel2(int age, int value)
     this->value=value;
 }
 
+QString Tupel2::toString()
+{
+    return QString::number(age)+"|"+QString::number(value);
+}
+
 Tupel3::Tupel3(int age, int value, double probability)
 {
     this->age=age;
     this->value=value;
     this->probability=probability;
 }
+
+QString Tupel3::toString()
+{
+    return QString::number(age)+"|"+QString::number(value)+"|"+QString::number(probability);
+}
+

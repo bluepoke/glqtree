@@ -10,6 +10,7 @@ class Tupel2
 
 public:
     explicit Tupel2(int age, int value);
+    QString toString();
     int age;
     int value;
 
@@ -24,6 +25,7 @@ class Tupel3
 
 public:
     explicit Tupel3(int age=0, int value=0, double probability=0);
+    QString toString();
     int age;
     int value;
     double probability;
