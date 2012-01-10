@@ -9,7 +9,7 @@ class Tupel2
 {
 
 public:
-    explicit Tupel2(int age, int value);
+    explicit Tupel2(int age=0, int value=0);
     QString toString();
     int age;
     int value;
@@ -90,6 +90,7 @@ public:
 
     QList<Tupel3> getBranchThickness();
 
+    int getBranchThicknessAt(int *age);
 signals:
     
 public slots:

@@ -56,10 +56,56 @@ void addTupel3(QList<Tupel3> *list, Tupel3 *tupel) {
     }
 }
 
+int interpolateValue3(QList<Tupel3> *list, int *age) {
+    Tupel3 lastTupel;
+    QList<Tupel3>::iterator i;
+    for (i = list->begin(); i!= list->end(); ++i) {
+        Tupel3 t = *i;
+        if (t.age==*age) {
+            return t.value;
+        }
+        if (t.age<*age) {
+            lastTupel = t;
+        }
+        if (t.age>*age) {
+            Tupel3 currentTupel = t;
+            double m = (((double)currentTupel.value-lastTupel.value))/(((double)currentTupel.age-lastTupel.age));
+            double v = ((*age-lastTupel.age)*m)+lastTupel.value;
+            int x = v;
+            return x;
+        }
+    }
+    return NULL;
+}
+
+int interpolateValue2(QList<Tupel2> *list, int *age) {
+    Tupel2 lastTupel;
+    QList<Tupel2>::iterator i;
+    for (i = list->begin(); i!= list->end(); ++i) {
+        Tupel2 t = *i;
+        if (t.age==*age) {
+            return t.value;
+        }
+        if (t.age<*age) {
+            lastTupel = t;
+        }
+        if (t.age>*age) {
+            Tupel2 currentTupel = t;
+            double m = (currentTupel.value-lastTupel.value)/(currentTupel.age-lastTupel.age);
+            return ((*age-lastTupel.age)*m)+lastTupel.age;
+        }
+    }
+    return NULL;
+}
+
 void Plant::addBranchThickness(int age, int thickness, double rel_deviation)
 {
     Tupel3 t(age,thickness,rel_deviation);
     addTupel3(&branchThickness, &t);
+}
+
+int Plant::getBranchThicknessAt(int *age) {
+    return interpolateValue3(&branchThickness, age);
 }
 
 void Plant::addBranchLength(int age, int length, double rel_deviation)
