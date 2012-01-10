@@ -2,7 +2,6 @@
 #include "optionsdialogtablayout.h"
 #include <QVBoxLayout>
 #include <QMessageBox>
-#include <QDebug>
 
 TabbedOptionsDialog::TabbedOptionsDialog(QWidget *parent) :
     QDialog(parent)
@@ -71,7 +70,7 @@ void TabbedOptionsDialog::closeDialog() {
 
         switch (ret) {
         case QMessageBox::Discard: this->close(); break;
-        case QMessageBox::Save: this->saveToXML(); break;
+        case QMessageBox::Save: this->saveToXML(); this->close(); break;
         default: break;
         }
     }
@@ -92,7 +91,6 @@ void TabbedOptionsDialog::saveToXML() {
     QMessageBox(QMessageBox::Information, "Save info", "Save was invoked", QMessageBox::Ok).exec();
     updated = false;
     // TODO: save to XML here
-    closeDialog();
 }
 
 void TabbedOptionsDialog::valuesChanged() {

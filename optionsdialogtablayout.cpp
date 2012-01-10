@@ -1,11 +1,16 @@
 #include "optionsdialogtablayout.h"
-#include <QDebug>
 #include <graphwidget.h>
 
 OptionsDialogTabLayout::OptionsDialogTabLayout(QWidget *parent) :
     QGridLayout(parent)
 {
     dialog = (TabbedOptionsDialog*)parent;
+}
+
+ValuesTable::ValuesTable(QWidget *parent) :
+    QTableWidget(parent)
+{
+
 }
 
 void OptionsDialogTabLayout::initValues() {
@@ -71,16 +76,20 @@ void OptionsDialogTabLayout::initValue(int row, QString valueName, int maxAge, b
                                         vector<int> values) {
 
     // the table is where all changable display of values is to be done
-    QTableWidget *table = new QTableWidget;
+    // QTableWidget *table = new QTableWidget;
+    ValuesTable *table = new ValuesTable;
 
     // graphical visualization of the table's contents and a name for finding it later
-    GraphWidget *graph = new GraphWidget(table);
-    qDebug() << graph;
+    GraphWidget *graph = new GraphWidget;
+
+    // make the widgets know each other
+    graph->table = table;
+    table->graph = graph;
 
     // connect updates on the graph to signals we emit here
     connect(this, SIGNAL(valuesChanged()), graph, SLOT(update()));
     // connect any changes to the dialog close button
-    connect(this, SIGNAL(valuesChanged()), parentWidget(), SLOT(valuesChanged()));
+    connect(this, SIGNAL(valuesChanged()), dialog, SLOT(valuesChanged()));
 
     // adding graph and table
     addWidget(graph, row, 0);
@@ -141,7 +150,7 @@ void OptionsDialogTabLayout::initValue(int row, QString valueName, int maxAge, b
             doubleSpin->setValue(probabilities.back());
             // connect any changes to the dialog close button and the graph
             connect(doubleSpin, SIGNAL(valueChanged(double)), graph, SLOT(update()));
-            connect(doubleSpin, SIGNAL(valueChanged(double)), parentWidget(), SLOT(valuesChanged()));
+            connect(doubleSpin, SIGNAL(valueChanged(double)), dialog, SLOT(valuesChanged()));
         }
         singleSpin = new QSpinBox;
         singleSpin->setRange(0, 20);
@@ -149,7 +158,7 @@ void OptionsDialogTabLayout::initValue(int row, QString valueName, int maxAge, b
         singleSpin->setValue(values.back());
         // connect any changes to the dialog close button and the graph
         connect(singleSpin, SIGNAL(valueChanged(int)), graph, SLOT(update()));
-        connect(singleSpin, SIGNAL(valueChanged(int)), parentWidget(), SLOT(valuesChanged()));
+        connect(singleSpin, SIGNAL(valueChanged(int)), dialog, SLOT(valuesChanged()));
 
         // serves to add items to different columns
         column = 0;
@@ -186,9 +195,9 @@ void OptionsDialogTabLayout::addRow() {
     // decide who is adding which where
     QPushButton *btnAdd = qobject_cast<QPushButton *>(QObject::sender());
     // Apparently, the parent of the button is not the table but a scrollarea surrounding the button
-    QTableWidget *table = (QTableWidget*)(btnAdd->parentWidget()->parentWidget());
-    GraphWidget *graph = this->graph;
-    qDebug() << graph;
+    ValuesTable *table = (ValuesTable*)(btnAdd->parentWidget()->parentWidget());
+    GraphWidget *graph = table->graph;
+
 
     int rowCount = table->rowCount();
     int columnCount = table->columnCount();
