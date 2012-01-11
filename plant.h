@@ -88,9 +88,19 @@ public:
     void addLeafLength(int age, int length);
     void addLeafWidth(int age, int width);
 
-    QList<Tupel3> getBranchThickness();
-
     int getBranchThicknessAt(int *age);
+    int getBranchLengthAt(int *age);
+    int getBranchingRotationAt(int *age);
+    int getBranchingAngle(int *age);
+    int getBranchingAt(int *age);
+    int getGravitationalInfluenceAt(int *age);
+    int getGrowthInterruptionAt(int *age);
+    int getBranchWobblinessAt(int *age);
+    int getLeafLevelsAt(int *age);
+    int getLeafCountPerLevelAt(int *age);
+    int getLeafAngleAt(int *age);
+    int getLeafLengthAt(int *age);
+    int getLeafWidthAt(int *age);
 signals:
     
 public slots:

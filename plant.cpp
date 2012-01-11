@@ -114,10 +114,18 @@ void Plant::addBranchLength(int age, int length, double rel_deviation)
     addTupel3(&branchLength, &t);
 }
 
+int Plant::getBranchLengthAt(int *age) {
+    return interpolateValue3(&branchLength, age);
+}
+
 void Plant::addBranching(int age, int count, double probability)
 {
     Tupel3 t(age,count,probability);
     addTupel3(&branching,&t);
+}
+
+int Plant::getBranchingAt(int *age) {
+    return interpolateValue3(&branching, age);
 }
 
 void Plant::addBranchingAngle(int age, int angle, double rel_deviation)
@@ -126,10 +134,18 @@ void Plant::addBranchingAngle(int age, int angle, double rel_deviation)
     addTupel3(&branchingAngle,&t);
 }
 
+int Plant::getBranchingAngle(int *age) {
+    return interpolateValue3(&branchingAngle, age);
+}
+
 void Plant::addBranchingRotation(int age, int angle, double rel_deviation)
 {
     Tupel3 t(age,angle,rel_deviation);
     addTupel3(&branchingRotation,&t);
+}
+
+int Plant::getBranchingRotationAt(int *age) {
+    return interpolateValue3(&branchingRotation, age);
 }
 
 void Plant::addGravitationalInfluence(int age, int influence)
@@ -138,10 +154,18 @@ void Plant::addGravitationalInfluence(int age, int influence)
     addTupel2(&gravitationalInfluence,&t);
 }
 
+int Plant::getGravitationalInfluenceAt(int *age) {
+    return interpolateValue2(&gravitationalInfluence, age);
+}
+
 void Plant::addGrowthInterruption(int age, int duration, double probability)
 {
     Tupel3 t(age,duration,probability);
     addTupel3(&growthInterruption,&t);
+}
+
+int Plant::getGrowthInterruptionAt(int *age) {
+    return interpolateValue3(&growthInterruption, age);
 }
 
 void Plant::addBranchWobbliness(int age, int wobble, double rel_deviation)
@@ -150,10 +174,18 @@ void Plant::addBranchWobbliness(int age, int wobble, double rel_deviation)
     addTupel3(&branchWobbliness,&t);
 }
 
+int Plant::getBranchWobblinessAt(int *age) {
+    return interpolateValue3(&branchWobbliness, age);
+}
+
 void Plant::addLeafLevels(int age, int count)
 {
     Tupel2 t(age,count);
     addTupel2(&leafLevels,&t);
+}
+
+int Plant::getLeafLevelsAt(int *age) {
+    return interpolateValue2(&leafLevels, age);
 }
 
 void Plant::addLeafCountPerLevel(int age, int count)
@@ -162,10 +194,18 @@ void Plant::addLeafCountPerLevel(int age, int count)
     addTupel2(&leafCountPerLevel,&t);
 }
 
+int Plant::getLeafCountPerLevelAt(int *age) {
+    return interpolateValue2(&leafCountPerLevel, age);
+}
+
 void Plant::addLeafAngle(int age, int angle)
 {
     Tupel2 t(age,angle);
     addTupel2(&leafAngle,&t);
+}
+
+int Plant::getLeafAngleAt(int *age) {
+    return interpolateValue2(&leafAngle, age);
 }
 
 void Plant::addLeafLength(int age, int length)
@@ -174,15 +214,18 @@ void Plant::addLeafLength(int age, int length)
     addTupel2(&leafLength, &t);
 }
 
+int Plant::getLeafLengthAt(int *age) {
+    return interpolateValue2(&leafLength, age);
+}
+
 void Plant::addLeafWidth(int age, int width)
 {
     Tupel2 t(age,width);
     addTupel2(&leafWidth, &t);
 }
 
-QList<Tupel3> Plant::getBranchThickness()
-{
-    return branchThickness;
+int Plant::getLeafWidthAt(int *age) {
+    return interpolateValue2(&leafWidth, age);
 }
 
 // implementations for tupels
