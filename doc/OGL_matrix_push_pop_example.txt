@@ -1,0 +1,28 @@
+The matrix stack can be more than one ''layer'' deep. Which means that you can do some fairly complex translations/rotations without upsetting everything. Here''s an example of a solar system ...
+
+glLoadIdentity();
+glTranslatef(0,0,-100);
+DrawSphere //sun
+glPushMatrix();
+....glRotatef(0,angle,0); //angle = orbit round sun
+....glTranslatef(0,0,50);
+....DrawSphere //earth
+....glRotatef(0,angle,0); //angle = orbit round earth
+....glTranslatef(0,0,5);
+....DrawSphere //moon
+glPopMatrix(); //back at sun (0,0,-100)
+glPushMatrix();
+....glRotatef(0,angle,0); //angle = orbit round sun
+....glTranslatef(0,0,80);
+....DrawSphere //mars
+....glPushMatrix();
+........glRotatef(0,angle,0); //angle = orbit round mars
+........glTranslatef(0,0,4);
+........DrawSphere //phobos
+....glPopMatrix(); //back at mars
+....glRotatef(0,angle,0); //angle = orbit round mars
+....glTranslatef(0,0,5);
+....DrawSphere //Deimos (or however you spell it )
+glPopMatrix(); //back at sun (0,0,-100)
+
+Get the idea? 

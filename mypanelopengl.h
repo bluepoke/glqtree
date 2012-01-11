@@ -25,7 +25,9 @@ private:
 
     float mouseZoomDistance;
     QPoint mouseLastPosition;
-    QPointF modelRotation;
+    QPointF modelBaseRotation;
+    QPointF modelAccumulatedRotation;
+    GLuint objList;
 
 signals:
     void statusChanged(QString message);

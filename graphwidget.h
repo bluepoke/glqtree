@@ -15,9 +15,9 @@ class GraphWidget : public QWidget
     Q_OBJECT
 public:
     explicit GraphWidget(QWidget *parent = 0);
+    QTableWidget *table;
 
 private:
-    QTableWidget *table;
     static const int MARGIN = 17;
     static const int HEIGHT = 100;
     static const int WIDTH = 100;

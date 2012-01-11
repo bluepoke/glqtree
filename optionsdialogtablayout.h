@@ -13,6 +13,16 @@
 
 using namespace std;
 
+class ValuesTable : public QTableWidget
+{
+    Q_OBJECT
+
+public:
+    explicit ValuesTable(QWidget *parent = 0);
+    GraphWidget *graph;
+
+};
+
 class OptionsDialogTabLayout : public QGridLayout
 {
     Q_OBJECT

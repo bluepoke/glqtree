@@ -1,31 +1,68 @@
 #include "mypanelopengl.h"
 #include <math.h>
 #include <QMouseEvent>
+#include <QDebug>
 
 MyPanelOpenGL::MyPanelOpenGL(QWidget *parent) :
     QGLWidget(parent)
 {
     // mouse navigation values
     mouseZoomDistance= 5.0f;
-    modelRotation = QPointF();
+    // initial rotation here, none by default
+    modelBaseRotation = QPointF();
+    // initially, no accumulated rotation given
+    modelAccumulatedRotation = QPointF();
 }
 
 void MyPanelOpenGL::initializeGL() {
     // everything regarding the openGL initialization should be done here
     glShadeModel(GL_SMOOTH);
+
     // this would be the background colour of sorts
     glClearColor(0.2, 0.2, 0.2, 1.0);
     glClearDepth(1.0f);
+
+    // depth testing
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+
+    // setting material attributes
+    GLfloat mat_ambient[] = { 0.5, 0.5, 0.5, 1.0 };
+    GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+    GLfloat mat_shininess[] = { 50.0 };
+    GLfloat light_position[] = { 1.0, 1.0, 1.0, 0.0 };
+    GLfloat model_ambient[] = { 0.5, 0.5, 0.5, 1.0 };
+
+    glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+    glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, model_ambient);
+
     // enable lighting
     glEnable(GL_LIGHT0);
     glEnable(GL_LIGHTING);
+
     // enable color tracking
     glEnable(GL_COLOR_MATERIAL);
     // set material properties which will be assigned by glColor
     glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+
+    // a quadric object
+    GLUquadricObj *qobj;
+
+    // create one list for the object
+    objList = glGenLists(1);
+    qobj = gluNewQuadric();
+    gluQuadricCallback(qobj, GLU_ERROR, NULL);
+    gluQuadricDrawStyle(qobj, GLU_FILL);
+    gluQuadricNormals(qobj, GLU_SMOOTH);
+
+    // create the list
+    glNewList(objList, GL_COMPILE);
+        gluCylinder(qobj, 0.5, 0.3, 1.0, 15, 5);
+    glEndList();
 }
 
 void MyPanelOpenGL::resizeGL(int width, int height){
@@ -43,63 +80,82 @@ void MyPanelOpenGL::resizeGL(int width, int height){
 }
 
 void MyPanelOpenGL::paintGL(){
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    // basic display settings
+    glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glShadeModel (GL_SMOOTH);
+    // move the model, load default identity
+    glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+
+    // calculate resulting movement
+    QPointF modelRotation = modelBaseRotation + modelAccumulatedRotation;
 
     // move and rotate this basic model according to mouse actions
     glTranslatef(0, 0, -mouseZoomDistance);
     glRotatef(modelRotation.x(), 1, 0, 0);
     glRotatef(modelRotation.y(), 0, 1, 0);
 
-    glBegin(GL_QUADS);
+    // load the cylinder in red
+    glColor4f(1, 0, 0, 0);
 
-        GLfloat p = 0.5;
+    glPushMatrix();
+    // center and rotate appropriately before loading
+        glRotatef(-90.0, 1.0, 0.0, 0.0);
+        glTranslatef(0.0, 0.0, -0.5);
+        glCallList(objList);
+    glPopMatrix();
 
-        // testing normal vectors on this face
-        glColor4f(1,0,0,1);
-        glNormal3f(-1,-1,-1);
-        glVertex3f(-p,-p,-p);
-        glNormal3f( 1,-1,-1);
-        glVertex3f( p,-p,-p);
-        glNormal3f( 1, 1,-1);
-        glVertex3f( p, p,-p);
-        glNormal3f(-1, 1,-1);
-        glVertex3f(-p, p,-p);
+//    glBegin(GL_QUADS);
 
-        // the rest adds up to a standard cube
-        glNormal3f( 0, 0, 1);
-        glVertex3f(-p,-p, p);
-        glVertex3f( p,-p, p);
-        glVertex3f( p, p, p);
-        glVertex3f(-p, p, p);
+//    GLfloat p = 0.5;
 
-        glColor4f(0,1,0,1);
-        glNormal3f(-1, 0, 0);
-        glVertex3f(-p,-p, p);
-        glVertex3f(-p,-p,-p);
-        glVertex3f(-p, p,-p);
-        glVertex3f(-p, p, p);
+//    // testing normal vectors on this face
+//    glColor4f(1,0,0,1);
+//    glNormal3f(-1,-1,-1);
+//    glVertex3f(-p,-p,-p);
+//    glNormal3f( 1,-1,-1);
+//    glVertex3f( p,-p,-p);
+//    glNormal3f( 1, 1,-1);
+//    glVertex3f( p, p,-p);
+//    glNormal3f(-1, 1,-1);
+//    glVertex3f(-p, p,-p);
 
-        glNormal3f( 1, 0, 0);
-        glVertex3f( p,-p, p);
-        glVertex3f( p,-p,-p);
-        glVertex3f( p, p,-p);
-        glVertex3f( p, p, p);
+//    // the rest adds up to a standard cube
+//    glNormal3f( 0, 0, 1);
+//    glVertex3f(-p,-p, p);
+//    glVertex3f( p,-p, p);
+//    glVertex3f( p, p, p);
+//    glVertex3f(-p, p, p);
 
-        glColor4f(0,0,1,1);
-        glNormal3f( 0,-1, 0);
-        glVertex3f(-p,-p, p);
-        glVertex3f(-p,-p,-p);
-        glVertex3f( p,-p,-p);
-        glVertex3f( p,-p, p);
+//    glColor4f(0,1,0,1);
+//    glNormal3f(-1, 0, 0);
+//    glVertex3f(-p,-p, p);
+//    glVertex3f(-p,-p,-p);
+//    glVertex3f(-p, p,-p);
+//    glVertex3f(-p, p, p);
 
-        glNormal3f( 0, 1, 0);
-        glVertex3f(-p, p, p);
-        glVertex3f(-p, p,-p);
-        glVertex3f( p, p,-p);
-        glVertex3f( p, p, p);
+//    glNormal3f( 1, 0, 0);
+//    glVertex3f( p,-p, p);
+//    glVertex3f( p,-p,-p);
+//    glVertex3f( p, p,-p);
+//    glVertex3f( p, p, p);
 
-    glEnd();
+//    glColor4f(0,0,1,1);
+//    glNormal3f( 0,-1, 0);
+//    glVertex3f(-p,-p, p);
+//    glVertex3f(-p,-p,-p);
+//    glVertex3f( p,-p,-p);
+//    glVertex3f( p,-p, p);
+
+//    glNormal3f( 0, 1, 0);
+//    glVertex3f(-p, p, p);
+//    glVertex3f(-p, p,-p);
+//    glVertex3f( p, p,-p);
+//    glVertex3f( p, p, p);
+
+//    glEnd();
+
+    glFlush();
 }
 
 void MyPanelOpenGL::mouseMoveEvent(QMouseEvent *event) {
@@ -114,12 +170,12 @@ void MyPanelOpenGL::mouseMoveEvent(QMouseEvent *event) {
         QPointF delta = event->globalPos() - mouseLastPosition;
 
         // calculate an appropriat rotation vector
-        modelRotation += QPointF(delta.y() * 0.02, delta.x() * 0.02);
+        modelAccumulatedRotation = 0.5 * QPointF(delta.y(), delta.x());
         // we do not want to tilt the model over the top or the bottom to prevent confusion with the x axis
-        if (modelRotation.x() > MAX_TILT_ANGLE)
-            modelRotation.setX(MAX_TILT_ANGLE);
-        else if (modelRotation.x() < -1 * MAX_TILT_ANGLE)
-            modelRotation.setX(-1 * MAX_TILT_ANGLE);
+        if ((modelBaseRotation.x() + modelAccumulatedRotation.x()) > MAX_TILT_ANGLE)
+            modelAccumulatedRotation.setX(MAX_TILT_ANGLE - modelBaseRotation.x());
+        else if ((modelBaseRotation.x() + modelAccumulatedRotation.x()) < -1 * MAX_TILT_ANGLE)
+            modelAccumulatedRotation.setX((-1 * MAX_TILT_ANGLE) - modelBaseRotation.x());
 
         // execute
         event->accept();
@@ -159,6 +215,7 @@ void MyPanelOpenGL::mousePressEvent(QMouseEvent *event) {
 
     // remember the position of the 1st click
     mouseLastPosition = event->globalPos();
+    modelAccumulatedRotation = QPointF();
 
     // execute
     event->accept();
@@ -170,6 +227,9 @@ void MyPanelOpenGL::mouseReleaseEvent(QMouseEvent *event) {
     QGLWidget::mouseReleaseEvent(event);
     if (event->isAccepted())
         return;
+
+    modelBaseRotation += modelAccumulatedRotation;
+    modelAccumulatedRotation = QPointF();
 
     // TODO handle RMB movement for panning the camera
     // we're done
