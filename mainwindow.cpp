@@ -1,11 +1,21 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    // define a QGLFormat with multisampling and alpha blending
+    QGLFormat fmt;
+    fmt.setAlpha(true);
+    fmt.setSampleBuffers(true);
+    fmt.setSamples(8);
+
+    // apply default format before creation of the QGLWidget (done in the ui setup)
+    QGLFormat::setDefaultFormat(fmt);
     ui->setupUi(this);
+
     // some buttons for the button box
     btnQuit = new QPushButton("Quit");
     btnOptions = new QPushButton("Options");

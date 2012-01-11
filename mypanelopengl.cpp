@@ -18,6 +18,10 @@ void MyPanelOpenGL::initializeGL() {
     // everything regarding the openGL initialization should be done here
     glShadeModel(GL_SMOOTH);
 
+    // alpha blending for possible transparency
+    glEnable (GL_BLEND);
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     // this would be the background colour of sorts
     glClearColor(0.2, 0.2, 0.2, 1.0);
     glClearDepth(1.0f);
@@ -96,7 +100,7 @@ void MyPanelOpenGL::paintGL(){
     glRotatef(modelRotation.y(), 0, 1, 0);
 
     // load the cylinder in red
-    glColor4f(1, 0, 0, 0);
+    glColor4f(1, 0, 0, 1);
 
     glPushMatrix();
     // center and rotate appropriately before loading
@@ -105,55 +109,55 @@ void MyPanelOpenGL::paintGL(){
         glCallList(objList);
     glPopMatrix();
 
-//    glBegin(GL_QUADS);
+    glBegin(GL_QUADS);
 
-//    GLfloat p = 0.5;
+    GLfloat p = 0.75;
 
-//    // testing normal vectors on this face
-//    glColor4f(1,0,0,1);
-//    glNormal3f(-1,-1,-1);
-//    glVertex3f(-p,-p,-p);
-//    glNormal3f( 1,-1,-1);
-//    glVertex3f( p,-p,-p);
-//    glNormal3f( 1, 1,-1);
-//    glVertex3f( p, p,-p);
-//    glNormal3f(-1, 1,-1);
-//    glVertex3f(-p, p,-p);
+    // testing normal vectors on this face
+    glColor4f(1,0,0,0.5);
+    glNormal3f(-1,-1,-1);
+    glVertex3f(-p,-p,-p);
+    glNormal3f( 1,-1,-1);
+    glVertex3f( p,-p,-p);
+    glNormal3f( 1, 1,-1);
+    glVertex3f( p, p,-p);
+    glNormal3f(-1, 1,-1);
+    glVertex3f(-p, p,-p);
 
-//    // the rest adds up to a standard cube
-//    glNormal3f( 0, 0, 1);
-//    glVertex3f(-p,-p, p);
-//    glVertex3f( p,-p, p);
-//    glVertex3f( p, p, p);
-//    glVertex3f(-p, p, p);
+    // the rest adds up to a standard cube
+    glNormal3f( 0, 0, 1);
+    glVertex3f(-p,-p, p);
+    glVertex3f( p,-p, p);
+    glVertex3f( p, p, p);
+    glVertex3f(-p, p, p);
 
-//    glColor4f(0,1,0,1);
-//    glNormal3f(-1, 0, 0);
-//    glVertex3f(-p,-p, p);
-//    glVertex3f(-p,-p,-p);
-//    glVertex3f(-p, p,-p);
-//    glVertex3f(-p, p, p);
+    glColor4f(0,1,0,1);
+    glNormal3f(-1, 0, 0);
+    glVertex3f(-p,-p, p);
+    glVertex3f(-p,-p,-p);
+    glVertex3f(-p, p,-p);
+    glVertex3f(-p, p, p);
 
-//    glNormal3f( 1, 0, 0);
-//    glVertex3f( p,-p, p);
-//    glVertex3f( p,-p,-p);
-//    glVertex3f( p, p,-p);
-//    glVertex3f( p, p, p);
+    glNormal3f( 1, 0, 0);
+    glVertex3f( p,-p, p);
+    glVertex3f( p,-p,-p);
+    glVertex3f( p, p,-p);
+    glVertex3f( p, p, p);
 
-//    glColor4f(0,0,1,1);
-//    glNormal3f( 0,-1, 0);
-//    glVertex3f(-p,-p, p);
-//    glVertex3f(-p,-p,-p);
-//    glVertex3f( p,-p,-p);
-//    glVertex3f( p,-p, p);
+    glColor4f(0,0,1,1);
+    glNormal3f( 0,-1, 0);
+    glVertex3f(-p,-p, p);
+    glVertex3f(-p,-p,-p);
+    glVertex3f( p,-p,-p);
+    glVertex3f( p,-p, p);
 
-//    glNormal3f( 0, 1, 0);
-//    glVertex3f(-p, p, p);
-//    glVertex3f(-p, p,-p);
-//    glVertex3f( p, p,-p);
-//    glVertex3f( p, p, p);
+    glNormal3f( 0, 1, 0);
+    glVertex3f(-p, p, p);
+    glVertex3f(-p, p,-p);
+    glVertex3f( p, p,-p);
+    glVertex3f( p, p, p);
 
-//    glEnd();
+    glEnd();
 
     glFlush();
 }
