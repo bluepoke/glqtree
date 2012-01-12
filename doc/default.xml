@@ -2,179 +2,179 @@
 <plant name="Default" max_age="50" random_seed="3253466">
   <thickness>
     <min>
-      <probability/>
-      <value/>
+      <probability>0.2</probability>
+      <value>5</value>
     </min>
     <max>
-      <probability/>
-      <value/>
+      <probability>0.1</probability>
+      <value>22</value>
     </max>
     <tupel>
-      <age/>
-      <probability/>
-      <value/>
+      <age>10</age>
+      <probability>0.15</probability>
+      <value>15</value>
     </tupel>
   </thickness>
   <length>
     <min>
-      <probability/>
-      <value/>
+      <probability>0.1</probability>
+      <value>6</value>
     </min>
     <max>
-      <probability/>
-      <value/>
+      <probability>0.24</probability>
+      <value>17</value>
     </max>
     <tupel>
-      <age/>
-      <probability/>
-      <value/>
+      <age>6</age>
+      <probability>0.15</probability>
+      <value>16</value>
     </tupel>
   </length>
   <branching>
     <min>
-      <probability/>
-      <value/>
+      <probability>0.2</probability>
+      <value>5</value>
     </min>
     <max>
-      <probability/>
-      <value/>
+      <probability>0.1</probability>
+      <value>22</value>
     </max>
     <tupel>
-      <age/>
-      <probability/>
-      <value/>
+      <age>10</age>
+      <probability>0.15</probability>
+      <value>15</value>
     </tupel>
   </branching>
   <branching_angle>
     <min>
-      <probability/>
-      <value/>
+      <probability>0.2</probability>
+      <value>5</value>
     </min>
     <max>
-      <probability/>
-      <value/>
+      <probability>0.1</probability>
+      <value>22</value>
     </max>
     <tupel>
-      <age/>
-      <probability/>
-      <value/>
+      <age>10</age>
+      <probability>0.15</probability>
+      <value>15</value>
     </tupel>
   </branching_angle>
   <branching_rotation>
     <min>
-      <probability/>
-      <value/>
+      <probability>0.2</probability>
+      <value>5</value>
     </min>
     <max>
-      <probability/>
-      <value/>
+      <probability>0.1</probability>
+      <value>22</value>
     </max>
     <tupel>
-      <age/>
-      <probability/>
-      <value/>
+      <age>10</age>
+      <probability>0.15</probability>
+      <value>15</value>
     </tupel>
   </branching_rotation>
   <gravitational_influence>
     <min>
-      <value/>
+      <value>5</value>
     </min>
     <max>
-      <value/>
+      <value>22</value>
     </max>
     <tupel>
-      <age/>
-      <value/>
+      <age>10</age>
+      <value>15</value>
     </tupel>
   </gravitational_influence>
   <growth_interruption>
     <min>
-      <probability/>
-      <value/>
+      <probability>0.2</probability>
+      <value>5</value>
     </min>
     <max>
-      <probability/>
-      <value/>
+      <probability>0.1</probability>
+      <value>22</value>
     </max>
     <tupel>
-      <age/>
-      <probability/>
-      <value/>
+      <age>10</age>
+      <probability>0.15</probability>
+      <value>15</value>
     </tupel>
   </growth_interruption>
   <wobbliness>
     <min>
-      <probability/>
-      <value/>
+      <probability>0.2</probability>
+      <value>5</value>
     </min>
     <max>
-      <probability/>
-      <value/>
+      <probability>0.1</probability>
+      <value>22</value>
     </max>
     <tupel>
-      <age/>
-      <probability/>
-      <value/>
+      <age>10</age>
+      <probability>0.15</probability>
+      <value>15</value>
     </tupel>
   </wobbliness>
   <leaf_levels>
     <min>
-      <value/>
+      <value>5</value>
     </min>
     <max>
-      <value/>
+      <value>22</value>
     </max>
     <tupel>
-      <age/>
-      <value/>
+      <age>10</age>
+      <value>15</value>
     </tupel>
   </leaf_levels>
   <leaf_count_per_level>
     <min>
-      <value/>
+      <value>1</value>
     </min>
     <max>
-      <value/>
+      <value>5</value>
     </max>
     <tupel>
-      <age/>
-      <value/>
+      <age>3</age>
+      <value>4</value>
     </tupel>
   </leaf_count_per_level>
   <leaf_angle>
     <min>
-      <value/>
+      <value>5</value>
     </min>
     <max>
-      <value/>
+      <value>34</value>
     </max>
     <tupel>
-      <age/>
-      <value/>
+      <age>1</age>
+      <value>11</value>
     </tupel>
   </leaf_angle>
   <leaf_length>
     <min>
-      <value/>
+      <value>3</value>
     </min>
     <max>
-      <value/>
+      <value>14</value>
     </max>
     <tupel>
-      <age/>
-      <value/>
+      <age>12</age>
+      <value>4</value>
     </tupel>
   </leaf_length>
   <leaf_width>
     <min>
-      <value/>
+      <value>3</value>
     </min>
     <max>
-      <value/>
+      <value>34</value>
     </max>
     <tupel>
-      <age/>
-      <value/>
+      <age>4</age>
+      <value>6</value>
     </tupel>
   </leaf_width>
 </plant>
