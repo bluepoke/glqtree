@@ -3,11 +3,6 @@
 #include <iterator>
 #include <QDebug>
 
-Plant::Plant(QObject *parent, int seed, QString name, int maxAge) :
-    QObject(parent), name(name), seed(seed), maxAge(maxAge)
-{
-}
-
 void addTupel2(QList<Tupel2> *list, Tupel2 *tupel) {
     if (list->size()==0) {
         // no tupels in list, simply append
@@ -98,6 +93,10 @@ int interpolateValue2(QList<Tupel2> *list, int *age) {
         }
     }
     return NULL;
+}
+
+Plant::Plant(int maxAge, QString name, int seed) : name(name), seed(seed), maxAge(maxAge)
+{
 }
 
 void Plant::addBranchThickness(int age, int thickness, double rel_deviation)

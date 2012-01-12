@@ -38,11 +38,10 @@ public slots:
 
 // class for plant
 
-class Plant : public QObject
+class Plant
 {
-    Q_OBJECT
 public:
-    explicit Plant(QObject *parent = 0,int seed = 0, QString name = 0, int maxAge = 0);
+    explicit Plant(int maxAge = 0, QString name = "0", int seed = 0);
     int getSeed() {
         return seed;
     }
@@ -51,7 +50,6 @@ public:
     }
 
 private:
-
 
 public:
     QString name;
