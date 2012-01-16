@@ -4,9 +4,8 @@
 
 SceneObject::SceneObject(SceneObject *parent) : parent(parent)
 {
-    children = new QList<SceneObject>;
-    rotationAxis = new QVector3D;
-    rotationAngles = new QVector3D;
+    children = new QList<SceneObject*>;
+    rotation = new QVector3D;
     translation = new QVector3D;
 }
 
@@ -24,8 +23,43 @@ void BranchSection::render()
 //    gluQuadricDrawStyle(qobj, GLU_FILL);
 //    gluQuadricNormals(qobj, GLU_SMOOTH);
 
-    // centered on the y-axis for now
-    glRotatef(-90.0, 1.0, 0.0, 0.0);
-    glTranslatef(0.0, 0.0, length/-2.0);
+    // build all along the positive z-axis
     gluCylinder(qobj, radBottom, radTop, length, 15, 5);
+
+//    qobj = gluNewQuadric();
+//    glPushMatrix();
+//    glTranslatef(0, 0, length);
+//    gluSphere(qobj, radTop, 15, 5);
+//    glPopMatrix();
+
+}
+
+
+Scene::Scene(Plant *plant) {
+    root = initScene(plant);
+}
+
+SceneObject* Scene::initScene(Plant *plant) {
+    // TODO load from static plant object here
+
+    // define a temp root object
+    SceneObject *root;
+    root = new BranchSection(0, 0.5, 0.3, 1);
+    root->rotation = new QVector3D(0, 25, 0);
+    root->translation = new QVector3D(-2, 0, 0);
+
+    // example child nodes
+    SceneObject *child;
+    child = new BranchSection(root, 0.3, 0.2, 1.5);
+    child->rotation = new QVector3D(-25, 15, 0);
+    child->translation = new QVector3D(0, 0, ((BranchSection*)root)->length);
+    root->children->append(child);
+
+    child = new BranchSection(root, 0.3, 0.05, 2);
+    child->rotation = new QVector3D(15, -35, 0);
+    child->translation = new QVector3D(0, 0, ((BranchSection*)root)->length);
+    root->children->append(child);
+
+    // return root
+    return root;
 }

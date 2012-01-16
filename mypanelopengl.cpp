@@ -2,6 +2,7 @@
 #include <math.h>
 #include <QMouseEvent>
 #include <QDebug>
+#include <QList>
 
 MyPanelOpenGL::MyPanelOpenGL(QWidget *parent) :
     QGLWidget(parent)
@@ -53,8 +54,8 @@ void MyPanelOpenGL::initializeGL() {
     // set material properties which will be assigned by glColor
     glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 
-    // define a temp root object
-    root = new BranchSection(0, 0.5, 0.3, 2);
+    // load a scene to display
+    scene = new Scene;
 }
 
 void MyPanelOpenGL::resizeGL(int width, int height){
@@ -91,7 +92,10 @@ void MyPanelOpenGL::paintGL(){
     glColor4f(1, 0, 0, 1);
 
     // render scene, starting with the root
-    renderObject(root);
+    glPushMatrix();
+    glRotatef(-90.0, 1.0, 0.0, 0.0);
+    renderObject(scene->root);
+    glPopMatrix();
 
     glBegin(GL_QUADS);
 
@@ -148,14 +152,24 @@ void MyPanelOpenGL::paintGL(){
 
 void MyPanelOpenGL::renderObject(SceneObject *obj) {
     glPushMatrix();
-        // do all local transformations
-        // glMultMatrix(pObj->getTransform());
-        obj->render();
-        // render all children individually
-        for(int i=0; i < obj->children->size(); i++) {
-            SceneObject child = obj->children->at(i);
-            renderObject(&child);
-        }
+
+    // do all local transformations
+    QVector3D *v = obj->translation;
+    glTranslatef(v->x(), v->y(), v->z());
+
+    v = obj->rotation;
+    if (v->x() != 0) glRotatef(v->x(), 1, 0, 0);
+    if (v->y() != 0) glRotatef(v->y(), 0, 1, 0);
+    if (v->z() != 0) glRotatef(v->z(), 0, 0, 1);
+
+    // render the parent
+    obj->render();
+    // render all children
+    for(int i=0; i < obj->children->size(); i++) {
+        SceneObject *child;
+        child = obj->children->at(i);
+        renderObject(child);
+    }
 
     glPopMatrix();
 }

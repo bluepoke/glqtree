@@ -3,6 +3,7 @@
 
 #include <QVector3D>
 #include <QList>
+#include "plant.h"
 
 class SceneObject
 {
@@ -11,9 +12,8 @@ public:
     virtual void render() {}
 
     SceneObject *parent;
-    QList<SceneObject> *children;
-    QVector3D *rotationAxis;
-    QVector3D *rotationAngles;
+    QList<SceneObject*> *children;
+    QVector3D *rotation;
     QVector3D *translation;
 };
 
@@ -27,6 +27,15 @@ public:
     double radBottom;
     double radTop;
     double length;
+};
+
+class Scene
+{
+public:
+    Scene(Plant *plant = 0);
+
+    SceneObject *initScene(Plant *plant = 0);
+    SceneObject *root;
 };
 
 #endif // SCENE_H

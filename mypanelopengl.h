@@ -29,7 +29,9 @@ private:
     QPoint mouseLastPosition;
     QPointF modelBaseRotation;
     QPointF modelAccumulatedRotation;
-    SceneObject *root;
+//    SceneObject *root;
+//    SceneObject *child;
+    Scene *scene;
 
 signals:
     void statusChanged(QString message);
