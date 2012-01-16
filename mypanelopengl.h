@@ -30,6 +30,7 @@ private:
     QPointF modelBaseRotation;
     QPointF modelAccumulatedRotation;
     SceneObject *root;
+    SceneObject *child;
 
 signals:
     void statusChanged(QString message);

@@ -4,9 +4,8 @@
 
 SceneObject::SceneObject(SceneObject *parent) : parent(parent)
 {
-    children = new QList<SceneObject>;
-    rotationAxis = new QVector3D;
-    rotationAngles = new QVector3D;
+    children = new QList<SceneObject*>;
+    rotation = new QVector3D;
     translation = new QVector3D;
 }
 
@@ -24,8 +23,6 @@ void BranchSection::render()
 //    gluQuadricDrawStyle(qobj, GLU_FILL);
 //    gluQuadricNormals(qobj, GLU_SMOOTH);
 
-    // centered on the y-axis for now
-    glRotatef(-90.0, 1.0, 0.0, 0.0);
-    glTranslatef(0.0, 0.0, length/-2.0);
+    // build all along the positive z-axis
     gluCylinder(qobj, radBottom, radTop, length, 15, 5);
 }

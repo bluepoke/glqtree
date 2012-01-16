@@ -11,9 +11,8 @@ public:
     virtual void render() {}
 
     SceneObject *parent;
-    QList<SceneObject> *children;
-    QVector3D *rotationAxis;
-    QVector3D *rotationAngles;
+    QList<SceneObject*> *children;
+    QVector3D *rotation;
     QVector3D *translation;
 };
 
