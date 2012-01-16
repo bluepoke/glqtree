@@ -7,7 +7,8 @@ class PersistenceManager
 {
 public:
     PersistenceManager();
-    static Plant readPlant(QString fileName);
+    static Plant *readPlant(QString fileName);
+    static bool writePlant(QString fileName, Plant *p);
 };
 
 #endif // PERSISTENCEMANAGER_H
