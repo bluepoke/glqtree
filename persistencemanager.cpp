@@ -270,6 +270,10 @@ bool PersistenceManager::writePlant(QString fileName, Plant *p){
         successful = false;
     } else {
         QXmlStreamWriter *writer = new QXmlStreamWriter(&file);
+        // beautifully indented XML
+        writer->setAutoFormatting(true);
+        // indentation. positive = spaces, negative = tabs
+        writer->setAutoFormattingIndent(-1); // 1 tab
         // start document
         writer->writeStartDocument();
         // <PLANT>
