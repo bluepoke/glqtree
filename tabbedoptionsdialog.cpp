@@ -2,6 +2,7 @@
 #include "optionsdialogtablayout.h"
 #include <QVBoxLayout>
 #include <QMessageBox>
+#include <QFileDialog>
 
 TabbedOptionsDialog::TabbedOptionsDialog(QWidget *parent) :
     QDialog(parent)
@@ -82,13 +83,15 @@ void TabbedOptionsDialog::closeDialog() {
 }
 
 void TabbedOptionsDialog::openFromXML() {
-    QMessageBox(QMessageBox::Information, "Open info", "Open was invoked", QMessageBox::Ok).exec();
+    QString fileName = QFileDialog::getOpenFileName(this,"Open plant from XML file","","XML files (*.xml)");
+    // QMessageBox(QMessageBox::Information, "Open info", "Open was invoked", QMessageBox::Ok).exec();
     updated = false;
     // TODO: load new values here
 }
 
 void TabbedOptionsDialog::saveToXML() {
-    QMessageBox(QMessageBox::Information, "Save info", "Save was invoked", QMessageBox::Ok).exec();
+    QString fileName = QFileDialog::getSaveFileName(this,"Save plant configuration to XML file","","XML files (*.xml)");
+    //QMessageBox(QMessageBox::Information, "Save info", "Save was invoked", QMessageBox::Ok).exec();
     updated = false;
     // TODO: save to XML here
 }
