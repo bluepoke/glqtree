@@ -33,11 +33,6 @@ static const Qt::CaseSensitivity CI = Qt::CaseInsensitive;
 static const QXmlStreamReader::TokenType E_START = QXmlStreamReader::StartElement;
 static const QXmlStreamReader::TokenType E_END = QXmlStreamReader::EndElement;
 
-PersistenceManager::PersistenceManager() {
-
-}
-
-
 // reads the data from the xml file fileName and returns a pointer
 // to a new Plant containing the data
 Plant* PersistenceManager::readPlant(QString fileName) {
@@ -268,13 +263,17 @@ Plant* PersistenceManager::readPlant(QString fileName) {
 
 
 // write the data of Plant p to the file located at fileName
-bool writePlant(QString fileName, Plant *p){
+bool PersistenceManager::writePlant(QString fileName, Plant *p){
     bool successful = true;
     QFile file(fileName);
     if (!file.open(QIODevice::WriteOnly)) {
         successful = false;
     } else {
         QXmlStreamWriter *writer = new QXmlStreamWriter(&file);
+        // beautifully indented XML
+        writer->setAutoFormatting(true);
+        // indentation. positive = spaces, negative = tabs
+        writer->setAutoFormattingIndent(-1); // 1 tab
         // start document
         writer->writeStartDocument();
         // <PLANT>
@@ -288,7 +287,7 @@ bool writePlant(QString fileName, Plant *p){
 
         // <THICKNESS>
         writer->writeStartElement(THICK_TAG);
-        for (int i=0; i<p->branchThickness.size()-1; i++) {
+        for (int i=0; i<p->branchThickness.size(); i++) {
             if (i==0) {
                 // <MIN>
                 writer->writeStartElement(MIN_TAG);
@@ -314,7 +313,7 @@ bool writePlant(QString fileName, Plant *p){
 
         // <LENGTH>
         writer->writeStartElement(LEN_TAG);
-        for (int i=0; i<p->branchLength.size()-1; i++) {
+        for (int i=0; i<p->branchLength.size(); i++) {
             if (i==0) {
                 // <MIN>
                 writer->writeStartElement(MIN_TAG);
@@ -340,7 +339,7 @@ bool writePlant(QString fileName, Plant *p){
 
         // <BRANCHING>
         writer->writeStartElement(B_TAG);
-        for (int i=0; i<p->branching.size()-1; i++) {
+        for (int i=0; i<p->branching.size(); i++) {
             if (i==0) {
                 // <MIN>
                 writer->writeStartElement(MIN_TAG);
@@ -366,7 +365,7 @@ bool writePlant(QString fileName, Plant *p){
 
         // <BRANCHING_ANGLE>
         writer->writeStartElement(B_ANGLE_TAG);
-        for (int i=0; i<p->branchingAngle.size()-1; i++) {
+        for (int i=0; i<p->branchingAngle.size(); i++) {
             if (i==0) {
                 // <MIN>
                 writer->writeStartElement(MIN_TAG);
@@ -392,7 +391,7 @@ bool writePlant(QString fileName, Plant *p){
 
         // <GROWTH_INTERRUPTION>
         writer->writeStartElement(GROWTH_INTERRUT_TAG);
-        for (int i=0; i<p->growthInterruption.size()-1; i++) {
+        for (int i=0; i<p->growthInterruption.size(); i++) {
             if (i==0) {
                 // <MIN>
                 writer->writeStartElement(MIN_TAG);
@@ -418,7 +417,7 @@ bool writePlant(QString fileName, Plant *p){
 
         // <WOBBLINESS>
         writer->writeStartElement(WOBBLE_TAG);
-        for (int i=0; i<p->branchWobbliness.size()-1; i++) {
+        for (int i=0; i<p->branchWobbliness.size(); i++) {
             if (i==0) {
                 // <MIN>
                 writer->writeStartElement(MIN_TAG);
@@ -444,7 +443,7 @@ bool writePlant(QString fileName, Plant *p){
 
         // <GRAVITATIONAL_INFLUENCE>
         writer->writeStartElement(GRAV_TAG);
-        for (int i=0; i<p->gravitationalInfluence.size()-1; i++) {
+        for (int i=0; i<p->gravitationalInfluence.size(); i++) {
             if (i==0) {
                 // <MIN>
                 writer->writeStartElement(MIN_TAG);
@@ -469,7 +468,7 @@ bool writePlant(QString fileName, Plant *p){
 
         // <LEAF_LEVELS>
         writer->writeStartElement(L_LEVELS_TAG);
-        for (int i=0; i<p->leafLevels.size()-1; i++) {
+        for (int i=0; i<p->leafLevels.size(); i++) {
             if (i==0) {
                 // <MIN>
                 writer->writeStartElement(MIN_TAG);
@@ -494,7 +493,7 @@ bool writePlant(QString fileName, Plant *p){
 
         // <LEAF_COUNT_PER_LEVEL>
         writer->writeStartElement(L_COUNT_P_LEVEL_TAG);
-        for (int i=0; i<p->leafCountPerLevel.size()-1; i++) {
+        for (int i=0; i<p->leafCountPerLevel.size(); i++) {
             if (i==0) {
                 // <MIN>
                 writer->writeStartElement(MIN_TAG);
@@ -519,7 +518,7 @@ bool writePlant(QString fileName, Plant *p){
 
         // <LEAF_ANGLE>
         writer->writeStartElement(L_ANGLE_TAG);
-        for (int i=0; i<p->leafAngle.size()-1; i++) {
+        for (int i=0; i<p->leafAngle.size(); i++) {
             if (i==0) {
                 // <MIN>
                 writer->writeStartElement(MIN_TAG);
@@ -544,7 +543,7 @@ bool writePlant(QString fileName, Plant *p){
 
         // <LEAF_LENGTH>
         writer->writeStartElement(L_LEN_TAG);
-        for (int i=0; i<p->leafLength.size()-1; i++) {
+        for (int i=0; i<p->leafLength.size(); i++) {
             if (i==0) {
                 // <MIN>
                 writer->writeStartElement(MIN_TAG);
@@ -569,7 +568,7 @@ bool writePlant(QString fileName, Plant *p){
 
         // <LEAF_WIDTH>
         writer->writeStartElement(L_WIDTH_TAG);
-        for (int i=0; i<p->leafWidth.size()-1; i++) {
+        for (int i=0; i<p->leafWidth.size(); i++) {
             if (i==0) {
                 // <MIN>
                 writer->writeStartElement(MIN_TAG);
