@@ -33,9 +33,9 @@ static const Qt::CaseSensitivity CI = Qt::CaseInsensitive;
 static const QXmlStreamReader::TokenType E_START = QXmlStreamReader::StartElement;
 static const QXmlStreamReader::TokenType E_END = QXmlStreamReader::EndElement;
 
-Plant PersistenceManager::readPlant(QString fileName) {
+Plant *PersistenceManager::readPlant(QString fileName) {
     QFile file (fileName);
-    Plant p(0,0,0);
+    Plant *p = new Plant(0,0,0);
     int pMaxAge = 0;
     if (file.open(QFile::ReadOnly)) {
         QXmlStreamReader reader(&file);
@@ -56,16 +56,16 @@ Plant PersistenceManager::readPlant(QString fileName) {
                         QXmlStreamAttribute attrib = *i;
                         // set plant's name
                         if (attrib.name().toString().compare(NAME_ATTRIB,CI)==0) {
-                            p.name=attrib.value().toString();
+                            p->name=attrib.value().toString();
                         }
                         // set plant's maximum age
                         else if (attrib.name().toString().compare(MAX_AGE_ATTRIB,CI)==0) {
-                            p.maxAge=attrib.value().toString().toInt();
+                            p->maxAge=attrib.value().toString().toInt();
                             pMaxAge = attrib.value().toString().toInt();
                         }
                         // set plant's random seed
                         else if (attrib.name().toString().compare(SEED_ATTRIB,CI)==0) {
-                            p.seed = attrib.value().toString().toInt();
+                            p->seed = attrib.value().toString().toInt();
                         }
                     }
                     // gather all the rest of the data
@@ -141,106 +141,106 @@ Plant PersistenceManager::readPlant(QString fileName) {
                             // add collected values to the list
                             // <THICKNESS>
                             if (tagName.compare(THICK_TAG,CI)==0) {
-                                p.addBranchThickness(0,minValue,minProb);
-                                p.addBranchThickness(p.maxAge,maxValue,maxProb);
+                                p->addBranchThickness(0,minValue,minProb);
+                                p->addBranchThickness(p->maxAge,maxValue,maxProb);
                                 for (int i=0; i<tupelAges.size(); i++) {
-                                    p.addBranchThickness(tupelAges.at(i),tupelValues.at(i),tupelProbs.at(i));
+                                    p->addBranchThickness(tupelAges.at(i),tupelValues.at(i),tupelProbs.at(i));
                                 }
                             }
                             // <LENGTH>
                             else if (tagName.compare(LEN_TAG,CI)==0) {
-                                p.addBranchLength(0,minValue,minProb);
-                                p.addBranchLength(p.maxAge,maxValue,maxProb);
+                                p->addBranchLength(0,minValue,minProb);
+                                p->addBranchLength(p->maxAge,maxValue,maxProb);
                                 for (int i=0; i<tupelAges.size(); i++) {
-                                    p.addBranchLength(tupelAges.at(i),tupelValues.at(i),tupelProbs.at(i));
+                                    p->addBranchLength(tupelAges.at(i),tupelValues.at(i),tupelProbs.at(i));
                                 }
                             }
                             // <BRANCHING>
                             else if (tagName.compare(B_TAG,CI)==0) {
-                                p.addBranching(0,minValue,minProb);
-                                p.addBranching(p.maxAge,maxValue,maxProb);
+                                p->addBranching(0,minValue,minProb);
+                                p->addBranching(p->maxAge,maxValue,maxProb);
                                 for (int i=0; i<tupelAges.size(); i++) {
-                                    p.addBranching(tupelAges.at(i),tupelValues.at(i),tupelProbs.at(i));
+                                    p->addBranching(tupelAges.at(i),tupelValues.at(i),tupelProbs.at(i));
                                 }
                             }
                             // <BRANCHING_ANGLE>
                             else if (tagName.compare(B_ANGLE_TAG,CI)==0) {
-                                p.addBranchingAngle(0,minValue,minProb);
-                                p.addBranchingAngle(p.maxAge,maxValue,maxProb);
+                                p->addBranchingAngle(0,minValue,minProb);
+                                p->addBranchingAngle(p->maxAge,maxValue,maxProb);
                                 for (int i=0; i<tupelAges.size(); i++) {
-                                    p.addBranchingAngle(tupelAges.at(i),tupelValues.at(i),tupelProbs.at(i));
+                                    p->addBranchingAngle(tupelAges.at(i),tupelValues.at(i),tupelProbs.at(i));
                                 }
                             }
                             // <BRANCHING_ROTATION>
                             else if (tagName.compare(B_ROT_TAG,CI)==0) {
-                                p.addBranchingRotation(0,minValue,minProb);
-                                p.addBranchingRotation(p.maxAge,maxValue,maxProb);
+                                p->addBranchingRotation(0,minValue,minProb);
+                                p->addBranchingRotation(p->maxAge,maxValue,maxProb);
                                 for (int i=0; i<tupelAges.size(); i++) {
-                                    p.addBranchingRotation(tupelAges.at(i),tupelValues.at(i),tupelProbs.at(i));
+                                    p->addBranchingRotation(tupelAges.at(i),tupelValues.at(i),tupelProbs.at(i));
                                 }
                             }
                             // <GRAVITATIONAL_INFLUENCE>
                             else if (tagName.compare(GRAV_TAG,CI)==0) {
-                                p.addGravitationalInfluence(0,minValue);
-                                p.addGravitationalInfluence(p.maxAge,maxValue);
+                                p->addGravitationalInfluence(0,minValue);
+                                p->addGravitationalInfluence(p->maxAge,maxValue);
                                 for (int i=0; i<tupelAges.size(); i++) {
-                                    p.addGravitationalInfluence(tupelAges.at(i),tupelValues.at(i));
+                                    p->addGravitationalInfluence(tupelAges.at(i),tupelValues.at(i));
                                 }
                             }
                             // <GROWTH_INTERRUPTION>
                             else if (tagName.compare(GROWTH_INTERRUT_TAG,CI)==0) {
-                                p.addGrowthInterruption(0,minValue,minProb);
-                                p.addGrowthInterruption(p.maxAge,maxValue,maxProb);
+                                p->addGrowthInterruption(0,minValue,minProb);
+                                p->addGrowthInterruption(p->maxAge,maxValue,maxProb);
                                 for (int i=0; i<tupelAges.size(); i++) {
-                                    p.addGrowthInterruption(tupelAges.at(i),tupelValues.at(i),tupelProbs.at(i));
+                                    p->addGrowthInterruption(tupelAges.at(i),tupelValues.at(i),tupelProbs.at(i));
                                 }
                             }
                             // <WOBBLINESS>
                             else if (tagName.compare(WOBBLE_TAG,CI)==0) {
-                                p.addBranchWobbliness(0,minValue,minProb);
-                                p.addBranchWobbliness(p.maxAge,maxValue,maxProb);
+                                p->addBranchWobbliness(0,minValue,minProb);
+                                p->addBranchWobbliness(p->maxAge,maxValue,maxProb);
                                 for (int i=0; i<tupelAges.size(); i++) {
-                                    p.addBranchWobbliness(tupelAges.at(i),tupelValues.at(i),tupelProbs.at(i));
+                                    p->addBranchWobbliness(tupelAges.at(i),tupelValues.at(i),tupelProbs.at(i));
                                 }
                             }
                             // <LEAF_LEVELS>
                             else if (tagName.compare(L_LEVELS_TAG,CI)==0) {
-                                p.addLeafLevels(0,minValue);
-                                p.addLeafLevels(p.maxAge,maxValue);
+                                p->addLeafLevels(0,minValue);
+                                p->addLeafLevels(p->maxAge,maxValue);
                                 for (int i=0; i<tupelAges.size(); i++) {
-                                    p.addLeafLevels(tupelAges.at(i),tupelValues.at(i));
+                                    p->addLeafLevels(tupelAges.at(i),tupelValues.at(i));
                                 }
                             }
                             // <LEAF_COUNT_PER_LEVEL>
                             else if (tagName.compare(L_COUNT_P_LEVEL_TAG,CI)==0) {
-                                p.addLeafCountPerLevel(0,minValue);
-                                p.addLeafCountPerLevel(p.maxAge,maxValue);
+                                p->addLeafCountPerLevel(0,minValue);
+                                p->addLeafCountPerLevel(p->maxAge,maxValue);
                                 for (int i=0; i<tupelAges.size(); i++) {
-                                    p.addLeafCountPerLevel(tupelAges.at(i),tupelValues.at(i));
+                                    p->addLeafCountPerLevel(tupelAges.at(i),tupelValues.at(i));
                                 }
                             }
                             // <LEAF_ANGLE>
                             else if (tagName.compare(L_ANGLE_TAG,CI)==0) {
-                                p.addLeafAngle(0,minValue);
-                                p.addLeafAngle(p.maxAge,maxValue);
+                                p->addLeafAngle(0,minValue);
+                                p->addLeafAngle(p->maxAge,maxValue);
                                 for (int i=0; i<tupelAges.size(); i++) {
-                                    p.addLeafAngle(tupelAges.at(i),tupelValues.at(i));
+                                    p->addLeafAngle(tupelAges.at(i),tupelValues.at(i));
                                 }
                             }
                             // <LEAF_LENGTH>
                             else if (tagName.compare(L_LEN_TAG,CI)==0) {
-                                p.addLeafLength(0,minValue);
-                                p.addLeafLength(p.maxAge,maxValue);
+                                p->addLeafLength(0,minValue);
+                                p->addLeafLength(p->maxAge,maxValue);
                                 for (int i=0; i<tupelAges.size(); i++) {
-                                    p.addLeafLength(tupelAges.at(i),tupelValues.at(i));
+                                    p->addLeafLength(tupelAges.at(i),tupelValues.at(i));
                                 }
                             }
                             // <LEAF_WIDTH>
                             else if (tagName.compare(L_WIDTH_TAG,CI)==0) {
-                                p.addLeafWidth(0,minValue);
-                                p.addLeafWidth(p.maxAge,maxValue);
+                                p->addLeafWidth(0,minValue);
+                                p->addLeafWidth(p->maxAge,maxValue);
                                 for (int i=0; i<tupelAges.size(); i++) {
-                                    p.addLeafWidth(tupelAges.at(i),tupelValues.at(i));
+                                    p->addLeafWidth(tupelAges.at(i),tupelValues.at(i));
                                 }
                             }
                         }
