@@ -99,6 +99,9 @@ public:
     int getLeafAngleAt(int *age);
     int getLeafLengthAt(int *age);
     int getLeafWidthAt(int *age);
+    void randomize();
+    double getBranchingProbabilityAt(int *age);
+    double getGrowthInterruptionProbabilityAt(int *age);
 signals:
     
 public slots:

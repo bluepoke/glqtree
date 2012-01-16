@@ -53,24 +53,108 @@ void addTupel3(QList<Tupel3> *list, Tupel3 *tupel) {
 
 int interpolateValue3(QList<Tupel3> *list, int *age) {
     Tupel3 lastTupel;
+    Tupel3 interpolatedTupel;
     QList<Tupel3>::iterator i;
     for (i = list->begin(); i!= list->end(); ++i) {
         Tupel3 t = *i;
+        // found exact value
         if (t.age==*age) {
-            return t.value;
+            interpolatedTupel = t;
         }
          else if (t.age<*age) {
             lastTupel = t;
         }
+        // interpolate
          else if (t.age>*age) {
             Tupel3 currentTupel = t;
-            double m = (((double)currentTupel.value-lastTupel.value))/(((double)currentTupel.age-lastTupel.age));
-            double v = ((*age-lastTupel.age)*m)+lastTupel.value;
-            int x = v;
-            return x;
+            // elevation of value
+            double m_v = (((double)currentTupel.value-lastTupel.value))/(((double)currentTupel.age-lastTupel.age));
+            // value
+            double v_v = ((*age-lastTupel.age)*m_v)+lastTupel.value;
+            int x = v_v;
+            // elevation of deviation
+            double m_d = (currentTupel.probability-lastTupel.probability)/(currentTupel.age-lastTupel.age);
+            // deviation
+            double d = ((*age-lastTupel.age)*m_d)+lastTupel.probability;
+            interpolatedTupel.age=*age;
+            interpolatedTupel.value=x;
+            interpolatedTupel.probability=d;
         }
     }
-    return NULL;
+    return interpolatedTupel.value;
+}
+
+int interpolateDeviatedValue3(QList<Tupel3> *list, int *age) {
+    Tupel3 lastTupel;
+    Tupel3 interpolatedTupel;
+    QList<Tupel3>::iterator i;
+    for (i = list->begin(); i!= list->end(); ++i) {
+        Tupel3 t = *i;
+        // found exact value
+        if (t.age==*age) {
+            interpolatedTupel = t;
+        }
+         else if (t.age<*age) {
+            lastTupel = t;
+        }
+        // interpolate
+         else if (t.age>*age) {
+            Tupel3 currentTupel = t;
+            // elevation of value
+            double m_v = (((double)currentTupel.value-lastTupel.value))/(((double)currentTupel.age-lastTupel.age));
+            // value
+            double v_v = ((*age-lastTupel.age)*m_v)+lastTupel.value;
+            int x = v_v;
+            // elevation of deviation
+            double m_d = (currentTupel.probability-lastTupel.probability)/(currentTupel.age-lastTupel.age);
+            // deviation
+            double d = ((*age-lastTupel.age)*m_d)+lastTupel.probability;
+            interpolatedTupel.age=*age;
+            interpolatedTupel.value=x;
+            interpolatedTupel.probability=d;
+        }
+    }
+    // range of deviation can be value*deviation in positive and negative direction
+    int deviationRange = (double)interpolatedTupel.value*interpolatedTupel.probability;
+    // calculate deviation.
+    int deviation = qrand()%(2*deviationRange) - deviationRange;
+    // add deviation to exact value
+    return interpolatedTupel.value + deviation;
+}
+
+double interpolateProbability3(QList<Tupel3> *list, int *age) {
+    Tupel3 lastTupel;
+    Tupel3 interpolatedTupel;
+    QList<Tupel3>::iterator i;
+    for (i = list->begin(); i!= list->end(); ++i) {
+        Tupel3 t = *i;
+        // found exact value
+        if (t.age==*age) {
+            interpolatedTupel = t;
+        }
+         else if (t.age<*age) {
+            lastTupel = t;
+        }
+        // interpolate
+         else if (t.age>*age) {
+            Tupel3 currentTupel = t;
+            // elevation of value
+            double m_v = (((double)currentTupel.value-lastTupel.value))/(((double)currentTupel.age-lastTupel.age));
+            // value
+            double v_v = ((*age-lastTupel.age)*m_v)+lastTupel.value;
+            int x = v_v;
+            // elevation of deviation
+            double m_d = (currentTupel.probability-lastTupel.probability)/((double)currentTupel.age-lastTupel.age);
+            qDebug() << m_d;
+            // deviation
+            double d = (((double)*age-lastTupel.age)*m_d)+lastTupel.probability;
+            qDebug() << d;
+            interpolatedTupel.age=*age;
+            interpolatedTupel.value=x;
+            interpolatedTupel.probability=d;
+        }
+    }
+    return interpolatedTupel.probability;
 }
 
 int interpolateValue2(QList<Tupel2> *list, int *age) {
@@ -97,6 +181,12 @@ int interpolateValue2(QList<Tupel2> *list, int *age) {
 
 Plant::Plant(int maxAge, QString name, int seed) : name(name), seed(seed), maxAge(maxAge)
 {
+    randomize();
+}
+
+// initialize random number generator
+void Plant::randomize() {
+    qsrand(this->seed);
 }
 
 void Plant::addBranchThickness(int age, int thickness, double rel_deviation)
@@ -106,7 +196,7 @@ void Plant::addBranchThickness(int age, int thickness, double rel_deviation)
 }
 
 int Plant::getBranchThicknessAt(int *age) {
-    return interpolateValue3(&branchThickness, age);
+    return interpolateDeviatedValue3(&branchThickness, age);
 }
 
 void Plant::addBranchLength(int age, int length, double rel_deviation)
@@ -116,7 +206,7 @@ void Plant::addBranchLength(int age, int length, double rel_deviation)
 }
 
 int Plant::getBranchLengthAt(int *age) {
-    return interpolateValue3(&branchLength, age);
+    return interpolateDeviatedValue3(&branchLength, age);
 }
 
 void Plant::addBranching(int age, int count, double probability)
@@ -129,6 +219,10 @@ int Plant::getBranchingAt(int *age) {
     return interpolateValue3(&branching, age);
 }
 
+double Plant::getBranchingProbabilityAt(int *age) {
+    return interpolateProbability3(&branching, age);
+}
+
 void Plant::addBranchingAngle(int age, int angle, double rel_deviation)
 {
     Tupel3 t(age,angle,rel_deviation);
@@ -136,7 +230,7 @@ void Plant::addBranchingAngle(int age, int angle, double rel_deviation)
 }
 
 int Plant::getBranchingAngle(int *age) {
-    return interpolateValue3(&branchingAngle, age);
+    return interpolateDeviatedValue3(&branchingAngle, age);
 }
 
 void Plant::addBranchingRotation(int age, int angle, double rel_deviation)
@@ -146,7 +240,7 @@ void Plant::addBranchingRotation(int age, int angle, double rel_deviation)
 }
 
 int Plant::getBranchingRotationAt(int *age) {
-    return interpolateValue3(&branchingRotation, age);
+    return interpolateDeviatedValue3(&branchingRotation, age);
 }
 
 void Plant::addGravitationalInfluence(int age, int influence)
@@ -169,6 +263,10 @@ int Plant::getGrowthInterruptionAt(int *age) {
     return interpolateValue3(&growthInterruption, age);
 }
 
+double Plant::getGrowthInterruptionProbabilityAt(int *age) {
+    return interpolateProbability3(&growthInterruption, age);
+}
+
 void Plant::addBranchWobbliness(int age, int wobble, double rel_deviation)
 {
     Tupel3 t(age,wobble,rel_deviation);
@@ -176,7 +274,7 @@ void Plant::addBranchWobbliness(int age, int wobble, double rel_deviation)
 }
 
 int Plant::getBranchWobblinessAt(int *age) {
-    return interpolateValue3(&branchWobbliness, age);
+    return interpolateDeviatedValue3(&branchWobbliness, age);
 }
 
 void Plant::addLeafLevels(int age, int count)
