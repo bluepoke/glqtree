@@ -3,6 +3,7 @@
 
 #include <QVector3D>
 #include <QList>
+#include "plant.h"
 
 class SceneObject
 {
@@ -26,6 +27,15 @@ public:
     double radBottom;
     double radTop;
     double length;
+};
+
+class Scene
+{
+public:
+    Scene(Plant *plant = 0);
+
+    SceneObject *initScene(Plant *plant = 0);
+    SceneObject *root;
 };
 
 #endif // SCENE_H
