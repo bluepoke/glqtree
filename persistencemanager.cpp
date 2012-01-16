@@ -33,7 +33,14 @@ static const Qt::CaseSensitivity CI = Qt::CaseInsensitive;
 static const QXmlStreamReader::TokenType E_START = QXmlStreamReader::StartElement;
 static const QXmlStreamReader::TokenType E_END = QXmlStreamReader::EndElement;
 
-Plant *PersistenceManager::readPlant(QString fileName) {
+PersistenceManager::PersistenceManager() {
+
+}
+
+
+// reads the data from the xml file fileName and returns a pointer
+// to a new Plant containing the data
+Plant* PersistenceManager::readPlant(QString fileName) {
     QFile file (fileName);
     Plant *p = new Plant(0,0,0);
     int pMaxAge = 0;
@@ -255,7 +262,341 @@ Plant *PersistenceManager::readPlant(QString fileName) {
     } else {
         qDebug() << "failed to open file " << fileName;
     }
-
     file.close();
     return p;
+}
+
+
+// write the data of Plant p to the file located at fileName
+bool writePlant(QString fileName, Plant *p){
+    bool successful = true;
+    QFile file(fileName);
+    if (!file.open(QIODevice::WriteOnly)) {
+        successful = false;
+    } else {
+        QXmlStreamWriter *writer = new QXmlStreamWriter(&file);
+        // start document
+        writer->writeStartDocument();
+        // <PLANT>
+        writer->writeStartElement(P_TAG);
+        // attributes
+        writer->writeAttribute(NAME_ATTRIB,p->name);
+        writer->writeAttribute(MAX_AGE_ATTRIB,QString::number(p->maxAge));
+        writer->writeAttribute(SEED_ATTRIB,QString::number(p->seed));
+
+        bool writeAge = true;
+
+        // <THICKNESS>
+        writer->writeStartElement(THICK_TAG);
+        for (int i=0; i<p->branchThickness.size()-1; i++) {
+            if (i==0) {
+                // <MIN>
+                writer->writeStartElement(MIN_TAG);
+                writeAge=false;
+            } else if (i==p->branchThickness.size()-1) {
+                // <MAX>
+                writer->writeStartElement(MAX_TAG);
+                writeAge=false;
+            } else {
+                // <TUPEL>
+                writer->writeStartElement(TUPEL_TAG);
+                writeAge=true;
+            }
+            if (writeAge) {
+                writer->writeTextElement(AGE_TAG,QString::number(p->branchThickness.at(i).age));
+            }
+            writer->writeTextElement(V_TAG,QString::number(p->branchThickness.at(i).value));
+            writer->writeTextElement(PROB_TAG,QString::number(p->branchThickness.at(i).probability));
+            writer->writeEndElement();
+        }
+        // </THICKNESS>
+        writer->writeEndElement();
+
+        // <LENGTH>
+        writer->writeStartElement(LEN_TAG);
+        for (int i=0; i<p->branchLength.size()-1; i++) {
+            if (i==0) {
+                // <MIN>
+                writer->writeStartElement(MIN_TAG);
+                writeAge=false;
+            } else if (i==p->branchLength.size()-1) {
+                // <MAX>
+                writer->writeStartElement(MAX_TAG);
+                writeAge=false;
+            } else {
+                // <TUPEL>
+                writer->writeStartElement(TUPEL_TAG);
+                writeAge=true;
+            }
+            if (writeAge) {
+                writer->writeTextElement(AGE_TAG,QString::number(p->branchLength.at(i).age));
+            }
+            writer->writeTextElement(V_TAG,QString::number(p->branchLength.at(i).value));
+            writer->writeTextElement(PROB_TAG,QString::number(p->branchLength.at(i).probability));
+            writer->writeEndElement();
+        }
+        // </LENGTH>
+        writer->writeEndElement();
+
+        // <BRANCHING>
+        writer->writeStartElement(B_TAG);
+        for (int i=0; i<p->branching.size()-1; i++) {
+            if (i==0) {
+                // <MIN>
+                writer->writeStartElement(MIN_TAG);
+                writeAge=false;
+            } else if (i==p->branching.size()-1) {
+                // <MAX>
+                writer->writeStartElement(MAX_TAG);
+                writeAge=false;
+            } else {
+                // <TUPEL>
+                writer->writeStartElement(TUPEL_TAG);
+                writeAge=true;
+            }
+            if (writeAge) {
+                writer->writeTextElement(AGE_TAG,QString::number(p->branching.at(i).age));
+            }
+            writer->writeTextElement(V_TAG,QString::number(p->branching.at(i).value));
+            writer->writeTextElement(PROB_TAG,QString::number(p->branching.at(i).probability));
+            writer->writeEndElement();
+        }
+        // </BRANCHING>
+        writer->writeEndElement();
+
+        // <BRANCHING_ANGLE>
+        writer->writeStartElement(B_ANGLE_TAG);
+        for (int i=0; i<p->branchingAngle.size()-1; i++) {
+            if (i==0) {
+                // <MIN>
+                writer->writeStartElement(MIN_TAG);
+                writeAge=false;
+            } else if (i==p->branchingAngle.size()-1) {
+                // <MAX>
+                writer->writeStartElement(MAX_TAG);
+                writeAge=false;
+            } else {
+                // <TUPEL>
+                writer->writeStartElement(TUPEL_TAG);
+                writeAge=true;
+            }
+            if (writeAge) {
+                writer->writeTextElement(AGE_TAG,QString::number(p->branchingAngle.at(i).age));
+            }
+            writer->writeTextElement(V_TAG,QString::number(p->branchingAngle.at(i).value));
+            writer->writeTextElement(PROB_TAG,QString::number(p->branchingAngle.at(i).probability));
+            writer->writeEndElement();
+        }
+        // </BRANCHING_ANGLE>
+        writer->writeEndElement();
+
+        // <GROWTH_INTERRUPTION>
+        writer->writeStartElement(GROWTH_INTERRUT_TAG);
+        for (int i=0; i<p->growthInterruption.size()-1; i++) {
+            if (i==0) {
+                // <MIN>
+                writer->writeStartElement(MIN_TAG);
+                writeAge=false;
+            } else if (i==p->growthInterruption.size()-1) {
+                // <MAX>
+                writer->writeStartElement(MAX_TAG);
+                writeAge=false;
+            } else {
+                // <TUPEL>
+                writer->writeStartElement(TUPEL_TAG);
+                writeAge=true;
+            }
+            if (writeAge) {
+                writer->writeTextElement(AGE_TAG,QString::number(p->growthInterruption.at(i).age));
+            }
+            writer->writeTextElement(V_TAG,QString::number(p->growthInterruption.at(i).value));
+            writer->writeTextElement(PROB_TAG,QString::number(p->growthInterruption.at(i).probability));
+            writer->writeEndElement();
+        }
+        // </GROWTH_INTERRUPTION>
+        writer->writeEndElement();
+
+        // <WOBBLINESS>
+        writer->writeStartElement(WOBBLE_TAG);
+        for (int i=0; i<p->branchWobbliness.size()-1; i++) {
+            if (i==0) {
+                // <MIN>
+                writer->writeStartElement(MIN_TAG);
+                writeAge=false;
+            } else if (i==p->branchWobbliness.size()-1) {
+                // <MAX>
+                writer->writeStartElement(MAX_TAG);
+                writeAge=false;
+            } else {
+                // <TUPEL>
+                writer->writeStartElement(TUPEL_TAG);
+                writeAge=true;
+            }
+            if (writeAge) {
+                writer->writeTextElement(AGE_TAG,QString::number(p->branchWobbliness.at(i).age));
+            }
+            writer->writeTextElement(V_TAG,QString::number(p->branchWobbliness.at(i).value));
+            writer->writeTextElement(PROB_TAG,QString::number(p->branchWobbliness.at(i).probability));
+            writer->writeEndElement();
+        }
+        // </WOBBLINESS>
+        writer->writeEndElement();
+
+        // <GRAVITATIONAL_INFLUENCE>
+        writer->writeStartElement(GRAV_TAG);
+        for (int i=0; i<p->gravitationalInfluence.size()-1; i++) {
+            if (i==0) {
+                // <MIN>
+                writer->writeStartElement(MIN_TAG);
+                writeAge=false;
+            } else if (i==p->gravitationalInfluence.size()-1) {
+                // <MAX>
+                writer->writeStartElement(MAX_TAG);
+                writeAge=false;
+            } else {
+                // <TUPEL>
+                writer->writeStartElement(TUPEL_TAG);
+                writeAge=true;
+            }
+            if (writeAge) {
+                writer->writeTextElement(AGE_TAG,QString::number(p->gravitationalInfluence.at(i).age));
+            }
+            writer->writeTextElement(V_TAG,QString::number(p->gravitationalInfluence.at(i).value));
+            writer->writeEndElement();
+        }
+        // </GRAVITATIONAL_INFLUENCE>
+        writer->writeEndElement();
+
+        // <LEAF_LEVELS>
+        writer->writeStartElement(L_LEVELS_TAG);
+        for (int i=0; i<p->leafLevels.size()-1; i++) {
+            if (i==0) {
+                // <MIN>
+                writer->writeStartElement(MIN_TAG);
+                writeAge=false;
+            } else if (i==p->leafLevels.size()-1) {
+                // <MAX>
+                writer->writeStartElement(MAX_TAG);
+                writeAge=false;
+            } else {
+                // <TUPEL>
+                writer->writeStartElement(TUPEL_TAG);
+                writeAge=true;
+            }
+            if (writeAge) {
+                writer->writeTextElement(AGE_TAG,QString::number(p->leafLevels.at(i).age));
+            }
+            writer->writeTextElement(V_TAG,QString::number(p->leafLevels.at(i).value));
+            writer->writeEndElement();
+        }
+        // </LEAF_LEVELS>
+        writer->writeEndElement();
+
+        // <LEAF_COUNT_PER_LEVEL>
+        writer->writeStartElement(L_COUNT_P_LEVEL_TAG);
+        for (int i=0; i<p->leafCountPerLevel.size()-1; i++) {
+            if (i==0) {
+                // <MIN>
+                writer->writeStartElement(MIN_TAG);
+                writeAge=false;
+            } else if (i==p->leafCountPerLevel.size()-1) {
+                // <MAX>
+                writer->writeStartElement(MAX_TAG);
+                writeAge=false;
+            } else {
+                // <TUPEL>
+                writer->writeStartElement(TUPEL_TAG);
+                writeAge=true;
+            }
+            if (writeAge) {
+                writer->writeTextElement(AGE_TAG,QString::number(p->leafCountPerLevel.at(i).age));
+            }
+            writer->writeTextElement(V_TAG,QString::number(p->leafCountPerLevel.at(i).value));
+            writer->writeEndElement();
+        }
+        // </LEAF_COUNT_PER_LEVEL>
+        writer->writeEndElement();
+
+        // <LEAF_ANGLE>
+        writer->writeStartElement(L_ANGLE_TAG);
+        for (int i=0; i<p->leafAngle.size()-1; i++) {
+            if (i==0) {
+                // <MIN>
+                writer->writeStartElement(MIN_TAG);
+                writeAge=false;
+            } else if (i==p->leafAngle.size()-1) {
+                // <MAX>
+                writer->writeStartElement(MAX_TAG);
+                writeAge=false;
+            } else {
+                // <TUPEL>
+                writer->writeStartElement(TUPEL_TAG);
+                writeAge=true;
+            }
+            if (writeAge) {
+                writer->writeTextElement(AGE_TAG,QString::number(p->leafAngle.at(i).age));
+            }
+            writer->writeTextElement(V_TAG,QString::number(p->leafAngle.at(i).value));
+            writer->writeEndElement();
+        }
+        // </LEAF_ANGLE>
+        writer->writeEndElement();
+
+        // <LEAF_LENGTH>
+        writer->writeStartElement(L_LEN_TAG);
+        for (int i=0; i<p->leafLength.size()-1; i++) {
+            if (i==0) {
+                // <MIN>
+                writer->writeStartElement(MIN_TAG);
+                writeAge=false;
+            } else if (i==p->leafLength.size()-1) {
+                // <MAX>
+                writer->writeStartElement(MAX_TAG);
+                writeAge=false;
+            } else {
+                // <TUPEL>
+                writer->writeStartElement(TUPEL_TAG);
+                writeAge=true;
+            }
+            if (writeAge) {
+                writer->writeTextElement(AGE_TAG,QString::number(p->leafLength.at(i).age));
+            }
+            writer->writeTextElement(V_TAG,QString::number(p->leafLength.at(i).value));
+            writer->writeEndElement();
+        }
+        // </LEAF_LENGTH>
+        writer->writeEndElement();
+
+        // <LEAF_WIDTH>
+        writer->writeStartElement(L_WIDTH_TAG);
+        for (int i=0; i<p->leafWidth.size()-1; i++) {
+            if (i==0) {
+                // <MIN>
+                writer->writeStartElement(MIN_TAG);
+                writeAge=false;
+            } else if (i==p->leafWidth.size()-1) {
+                // <MAX>
+                writer->writeStartElement(MAX_TAG);
+                writeAge=false;
+            } else {
+                // <TUPEL>
+                writer->writeStartElement(TUPEL_TAG);
+                writeAge=true;
+            }
+            if (writeAge) {
+                writer->writeTextElement(AGE_TAG,QString::number(p->leafWidth.at(i).age));
+            }
+            writer->writeTextElement(V_TAG,QString::number(p->leafWidth.at(i).value));
+            writer->writeEndElement();
+        }
+        // </LEAF_WIDTH>
+        writer->writeEndElement();
+
+        // </PLANT>
+        writer->writeEndElement();
+        // finish Doc
+        writer->writeEndDocument();
+    }
+    file.close();
+    return successful;
 }
