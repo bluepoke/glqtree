@@ -7,7 +7,7 @@ MyPanelOpenGL::MyPanelOpenGL(QWidget *parent) :
     QGLWidget(parent)
 {
     // mouse navigation values
-    mouseZoomDistance= 5.0f;
+    mouseZoomDistance = 5.0f;
     // initial rotation here, none by default
     modelBaseRotation = QPointF();
     // initially, no accumulated rotation given
@@ -53,20 +53,8 @@ void MyPanelOpenGL::initializeGL() {
     // set material properties which will be assigned by glColor
     glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 
-    // a quadric object
-    GLUquadricObj *qobj;
-
-    // create one list for the object
-    objList = glGenLists(1);
-    qobj = gluNewQuadric();
-    gluQuadricCallback(qobj, GLU_ERROR, NULL);
-    gluQuadricDrawStyle(qobj, GLU_FILL);
-    gluQuadricNormals(qobj, GLU_SMOOTH);
-
-    // create the list
-    glNewList(objList, GL_COMPILE);
-        gluCylinder(qobj, 0.5, 0.3, 1.0, 15, 5);
-    glEndList();
+    // define a temp root object
+    root = new BranchSection(0, 0.5, 0.3, 2);
 }
 
 void MyPanelOpenGL::resizeGL(int width, int height){
@@ -99,15 +87,11 @@ void MyPanelOpenGL::paintGL(){
     glRotatef(modelRotation.x(), 1, 0, 0);
     glRotatef(modelRotation.y(), 0, 1, 0);
 
-    // load the cylinder in red
+    // load the scene in red
     glColor4f(1, 0, 0, 1);
 
-    glPushMatrix();
-    // center and rotate appropriately before loading
-        glRotatef(-90.0, 1.0, 0.0, 0.0);
-        glTranslatef(0.0, 0.0, -0.5);
-        glCallList(objList);
-    glPopMatrix();
+    // render scene, starting with the root
+    renderObject(root);
 
     glBegin(GL_QUADS);
 
@@ -160,6 +144,20 @@ void MyPanelOpenGL::paintGL(){
     glEnd();
 
     glFlush();
+}
+
+void MyPanelOpenGL::renderObject(SceneObject *obj) {
+    glPushMatrix();
+        // do all local transformations
+        // glMultMatrix(pObj->getTransform());
+        obj->render();
+        // render all children individually
+        for(int i=0; i < obj->children->size(); i++) {
+            SceneObject child = obj->children->at(i);
+            renderObject(&child);
+        }
+
+    glPopMatrix();
 }
 
 void MyPanelOpenGL::mouseMoveEvent(QMouseEvent *event) {

@@ -17,7 +17,8 @@ SOURCES += main.cpp\
     persistencemanager.cpp \
     tabbedoptionsdialog.cpp \
     optionsdialogtablayout.cpp \
-    plant.cpp
+    plant.cpp \
+    scene.cpp
 
 HEADERS  += mainwindow.h \
     mypanelopengl.h \
@@ -25,7 +26,8 @@ HEADERS  += mainwindow.h \
     persistencemanager.h \
     tabbedoptionsdialog.h \
     optionsdialogtablayout.h \
-    plant.h
+    plant.h \
+    scene.h
 
 FORMS    += mainwindow.ui
 

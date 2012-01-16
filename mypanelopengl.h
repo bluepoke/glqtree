@@ -2,6 +2,7 @@
 #define MYPANELOPENGL_H
 
 #include <QGLWidget>
+#include "scene.h"
 
 class MyPanelOpenGL : public QGLWidget
 {
@@ -17,6 +18,7 @@ protected:
     void mouseMoveEvent(QMouseEvent  *event);
     void mousePressEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
+    void renderObject(SceneObject *obj);
 
 private:
     static const float MIN_ZOOM_DISTANCE = 3.0f;
@@ -27,7 +29,7 @@ private:
     QPoint mouseLastPosition;
     QPointF modelBaseRotation;
     QPointF modelAccumulatedRotation;
-    GLuint objList;
+    SceneObject *root;
 
 signals:
     void statusChanged(QString message);
