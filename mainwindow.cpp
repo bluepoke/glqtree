@@ -1,11 +1,14 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QDebug>
+#include "persistencemanager.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    Plant::activePlant = PersistenceManager::readPlant("default.xml");
+
     // define a QGLFormat with multisampling and alpha blending
     QGLFormat fmt;
     fmt.setAlpha(true);

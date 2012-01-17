@@ -2,8 +2,9 @@
 #include <QList>
 #include <iterator>
 #include <QDebug>
+#include "persistencemanager.h"
 
-Plant* Plant::activePlant = new Plant();
+Plant* Plant::activePlant = 0; //PersistenceManager::readPlant("default.xml");
 
 // add Tupel2 into list at correct position (regarding age)
 void addTupel2(QList<Tupel2> *list, Tupel2 *tupel) {
