@@ -24,6 +24,7 @@ static const QString TUPEL_TAG = "TUPEL";
 static const QString V_TAG = "VALUE";
 static const QString AGE_TAG = "AGE";
 static const QString PROB_TAG = "PROBABILITY";
+static const QString REL_DEV_TAG = "RELATIVE_DEVIATION";
 
 static const QString NAME_ATTRIB = "NAME";
 static const QString MAX_AGE_ATTRIB = "MAX_AGE";
@@ -97,8 +98,8 @@ Plant* PersistenceManager::readPlant(QString fileName) {
                                         if (token == E_START && reader.name().compare(V_TAG,CI)==0) {
                                             minValue = reader.readElementText().toInt();
                                         }
-                                        // <SOMETHING><MIN><PROBABILITY>
-                                        else if (token == E_START && reader.name().compare(PROB_TAG,CI)==0){
+                                        // <SOMETHING><MIN><PROBABILITY> or <SOMETHING><MIN><RELATIVE_DEVIATION>
+                                        else if (token == E_START && (reader.name().compare(PROB_TAG,CI)==0 || reader.name().compare(REL_DEV_TAG,CI)==0)){
                                             minProb = reader.readElementText().toDouble();
                                         }
                                         token = reader.readNext();
@@ -112,8 +113,8 @@ Plant* PersistenceManager::readPlant(QString fileName) {
                                         if (token == E_START && reader.name().compare(V_TAG,CI)==0) {
                                             maxValue = reader.readElementText().toInt();
                                         }
-                                        // <SOMETHING><MAX><PROBABILITY>
-                                        else if (token == E_START && reader.name().compare(PROB_TAG,CI)==0){
+                                        // <SOMETHING><MAX><PROBABILITY> or <SOMETHING><MAX><RELATIVE_DEVIATION>
+                                        else if (token == E_START && (reader.name().compare(PROB_TAG,CI)==0 || reader.name().compare(REL_DEV_TAG,CI)==0)){
                                             maxProb = reader.readElementText().toDouble();
                                         }
                                         token = reader.readNext();
@@ -127,8 +128,8 @@ Plant* PersistenceManager::readPlant(QString fileName) {
                                         if (token == E_START && reader.name().compare(V_TAG,CI)==0) {
                                             tupelValues.append(reader.readElementText().toInt());
                                         }
-                                        // <SOMETHING><TUPEL><PROBABILITY>
-                                        else if (token == E_START && reader.name().compare(PROB_TAG,CI)==0){
+                                        // <SOMETHING><TUPEL><PROBABILITY> or <SOMETHING><TUPEL><RELATIVE_DEVIATION>
+                                        else if (token == E_START && (reader.name().compare(PROB_TAG,CI)==0 || reader.name().compare(REL_DEV_TAG,CI)==0)){
                                             tupelProbs.append(reader.readElementText().toDouble());
                                         }
                                         // <SOMETHING><TUPEL><AGE>
@@ -305,7 +306,7 @@ bool PersistenceManager::writePlant(QString fileName, Plant *p){
                 writer->writeTextElement(AGE_TAG,QString::number(p->branchThickness.at(i).age));
             }
             writer->writeTextElement(V_TAG,QString::number(p->branchThickness.at(i).value));
-            writer->writeTextElement(PROB_TAG,QString::number(p->branchThickness.at(i).probability));
+            writer->writeTextElement(REL_DEV_TAG,QString::number(p->branchThickness.at(i).probability));
             writer->writeEndElement();
         }
         // </THICKNESS>
@@ -331,7 +332,7 @@ bool PersistenceManager::writePlant(QString fileName, Plant *p){
                 writer->writeTextElement(AGE_TAG,QString::number(p->branchLength.at(i).age));
             }
             writer->writeTextElement(V_TAG,QString::number(p->branchLength.at(i).value));
-            writer->writeTextElement(PROB_TAG,QString::number(p->branchLength.at(i).probability));
+            writer->writeTextElement(REL_DEV_TAG,QString::number(p->branchLength.at(i).probability));
             writer->writeEndElement();
         }
         // </LENGTH>
@@ -383,7 +384,33 @@ bool PersistenceManager::writePlant(QString fileName, Plant *p){
                 writer->writeTextElement(AGE_TAG,QString::number(p->branchingAngle.at(i).age));
             }
             writer->writeTextElement(V_TAG,QString::number(p->branchingAngle.at(i).value));
-            writer->writeTextElement(PROB_TAG,QString::number(p->branchingAngle.at(i).probability));
+            writer->writeTextElement(REL_DEV_TAG,QString::number(p->branchingAngle.at(i).probability));
+            writer->writeEndElement();
+        }
+        // </BRANCHING_ANGLE>
+        writer->writeEndElement();
+
+        // <BRANCHING_ROTATION>
+        writer->writeStartElement(B_ROT_TAG);
+        for (int i=0; i<p->branchingRotation.size(); i++) {
+            if (i==0) {
+                // <MIN>
+                writer->writeStartElement(MIN_TAG);
+                writeAge=false;
+            } else if (i==p->branchingRotation.size()-1) {
+                // <MAX>
+                writer->writeStartElement(MAX_TAG);
+                writeAge=false;
+            } else {
+                // <TUPEL>
+                writer->writeStartElement(TUPEL_TAG);
+                writeAge=true;
+            }
+            if (writeAge) {
+                writer->writeTextElement(AGE_TAG,QString::number(p->branchingRotation.at(i).age));
+            }
+            writer->writeTextElement(V_TAG,QString::number(p->branchingRotation.at(i).value));
+            writer->writeTextElement(REL_DEV_TAG,QString::number(p->branchingRotation.at(i).probability));
             writer->writeEndElement();
         }
         // </BRANCHING_ANGLE>
@@ -435,7 +462,7 @@ bool PersistenceManager::writePlant(QString fileName, Plant *p){
                 writer->writeTextElement(AGE_TAG,QString::number(p->branchWobbliness.at(i).age));
             }
             writer->writeTextElement(V_TAG,QString::number(p->branchWobbliness.at(i).value));
-            writer->writeTextElement(PROB_TAG,QString::number(p->branchWobbliness.at(i).probability));
+            writer->writeTextElement(REL_DEV_TAG,QString::number(p->branchWobbliness.at(i).probability));
             writer->writeEndElement();
         }
         // </WOBBLINESS>
