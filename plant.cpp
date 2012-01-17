@@ -271,6 +271,23 @@ int Plant::getBranchingRotationAt(int *age) {
     return interpolateDeviatedValue3(&branchingRotation, age);
 }
 
+void Plant::addMainBranch(int age, double probability)
+{
+    Tupel3 t(age,0,probability);
+    addTupel3(&mainBranch,&t);
+}
+
+double Plant::getMainBranchProbabilityAt(int *age)
+{
+    return interpolateProbability3(&mainBranch, age);
+}
+
+bool Plant::continueMainBranchAt(int *age)
+{
+    double prob = getMainBranchProbabilityAt(age);
+    return isTakingPlace(&prob);
+}
+
 void Plant::addGravitationalInfluence(int age, int influence)
 {
     Tupel2 t(age,influence);

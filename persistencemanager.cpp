@@ -11,6 +11,7 @@ static const QString LEN_TAG = "LENGTH";
 static const QString B_TAG = "BRANCHING";
 static const QString B_ANGLE_TAG = "BRANCHING_ANGLE";
 static const QString B_ROT_TAG = "BRANCHING_ROTATION";
+static const QString MAIN_B_TAG = "MAIN_BRANCH";
 static const QString GRAV_TAG = "GRAVITATIONAL_INFLUENCE";
 static const QString GROWTH_INTERRUT_TAG = "GROWTH_INTERRUPTION";
 static const QString WOBBLE_TAG = "WOBBLINESS";
@@ -193,6 +194,16 @@ Plant* PersistenceManager::readPlant(QString fileName) {
                                     p->addBranchingRotation(tupelAges.at(i),tupelValues.at(i),tupelProbs.at(i));
                                 }
                             }
+
+                            // <MAIN_BRANCH>
+                            else if (tagName.compare(MAIN_B_TAG,CI)==0) {
+                                p->addMainBranch(0,minProb);
+                                p->addMainBranch(p->maxAge,maxProb);
+                                for (int i=0; i<tupelAges.size(); i++) {
+                                    p->addMainBranch(tupelAges.at(i),tupelProbs.at(i));
+                                }
+                            }
+
                             // <GRAVITATIONAL_INFLUENCE>
                             else if (tagName.compare(GRAV_TAG,CI)==0) {
                                 p->addGravitationalInfluence(0,minValue);
@@ -424,7 +435,32 @@ bool PersistenceManager::writePlant(QString fileName, const Plant *p){
             writer->writeTextElement(REL_DEV_TAG,QString::number(p->branchingRotation.at(i).probability));
             writer->writeEndElement();
         }
-        // </BRANCHING_ANGLE>
+        // </BRANCHING_ROTATION>
+        writer->writeEndElement();
+
+        // <MAIN_BRANCH>
+        writer->writeStartElement(MAIN_B_TAG);
+        for (int i=0; i<p->mainBranch.size(); i++) {
+            if (i==0) {
+                // <MIN>
+                writer->writeStartElement(MIN_TAG);
+                writeAge=false;
+            } else if (i==p->mainBranch.size()-1) {
+                // <MAX>
+                writer->writeStartElement(MAX_TAG);
+                writeAge=false;
+            } else {
+                // <TUPEL>
+                writer->writeStartElement(TUPEL_TAG);
+                writeAge=true;
+            }
+            if (writeAge) {
+                writer->writeTextElement(AGE_TAG,QString::number(p->mainBranch.at(i).age));
+            }
+            writer->writeTextElement(PROB_TAG,QString::number(p->mainBranch.at(i).probability));
+            writer->writeEndElement();
+        }
+        // </MAIN_BRANCH>
         writer->writeEndElement();
 
         // <GROWTH_INTERRUPTION>
