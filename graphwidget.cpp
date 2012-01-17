@@ -23,18 +23,25 @@ void GraphWidget::paintEvent(QPaintEvent *event) {
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.setFont(font);
 
-    // where is the value column?
-    const int valueColumn = table->columnCount() - 2;
+    // where are the relevant columns?
+    int valueColumnPos = -1;
+    int probabilityColumnPos = -1;
+
+    if (probabilityColumn && valueColumn) {
+        valueColumnPos = table->columnCount() - 2;
+        probabilityColumnPos = table->columnCount() - 3;
+    }
+    else if (!probabilityColumn && valueColumn ) {
+        valueColumnPos = table->columnCount() - 2;
+    }
+    else if (probabilityColumn && !valueColumn) {
+        probabilityColumnPos = table->columnCount() - 2;
+    }
     // the data rows minus the one to add new data
     const int dataRowCount = table->rowCount() - 1;
-    bool probabilityColumn = false;
-
-    // decide whether to display a probability graph
-    if (table->columnCount() == 4)
-        probabilityColumn = true;
 
     // paint the coordinate system with a probability axis
-    if (probabilityColumn) {
+    if (probabilityColumn && valueColumn) {
         static const QPointF ptsFrame[4] = {
             QPointF(MARGIN, MARGIN),
             QPointF(MARGIN, MARGIN + HEIGHT),
@@ -62,11 +69,12 @@ void GraphWidget::paintEvent(QPaintEvent *event) {
 
     // fill them with the data
     for (int i= 0; i < dataRowCount; i++) {
-        values[i] = ((QSpinBox*)table->cellWidget(i, valueColumn))->value();
         ages[i] = ((QLabel*)table->cellWidget(i, 0))->text().toInt();
-        // if there is a probability column ...
+        // if there are respective columns ...
         if (probabilityColumn)
-            probabilities[i] = ((QDoubleSpinBox*)table->cellWidget(i, valueColumn - 1))->value();
+            probabilities[i] = ((QDoubleSpinBox*)table->cellWidget(i, probabilityColumn))->value();
+        if (valueColumn)
+            values[i] = ((QSpinBox*)table->cellWidget(i, valueColumn))->value();
     }
 
     // find the maximum values and calculate a stepping
@@ -75,16 +83,16 @@ void GraphWidget::paintEvent(QPaintEvent *event) {
     double valueQuot = (double)HEIGHT / (double)maxValue;
     double agesQuot = (double)HEIGHT / (double)maxAge;
 
-    QPainterPath valueGraph;
-
-    // paint lines for all the values
-    valueGraph.moveTo(MARGIN + ages[0] * agesQuot, MARGIN + HEIGHT - (int)(values[0] * valueQuot));
-    for (int i = 1; i < dataRowCount; i++) {
-        valueGraph.lineTo(MARGIN + ages[i] * agesQuot, MARGIN + HEIGHT - (int)(values[i] * valueQuot));
+    // paint lines for all the values if there are any
+    if (valueColumn) {
+        QPainterPath valueGraph;
+        valueGraph.moveTo(MARGIN + ages[0] * agesQuot, MARGIN + HEIGHT - (int)(values[0] * valueQuot));
+        for (int i = 1; i < dataRowCount; i++) {
+            valueGraph.lineTo(MARGIN + ages[i] * agesQuot, MARGIN + HEIGHT - (int)(values[i] * valueQuot));
+        }
+        painter.setPen(penRed);
+        painter.drawPath(valueGraph);
     }
-
-    painter.setPen(penRed);
-    painter.drawPath(valueGraph);
 
     // paint lines for all the probabilities if there are any
     if (probabilityColumn) {
@@ -102,17 +110,29 @@ void GraphWidget::paintEvent(QPaintEvent *event) {
     painter.drawText(QRect(MARGIN, MARGIN + HEIGHT, WIDTH, MARGIN), Qt::AlignCenter, QString("Age [0 .. " + QString::number(maxAge) + "]"));
 
     // and on the left axis
-    painter.setPen(penRed);
-    painter.drawText(QRect(0, 0, MARGIN, MARGIN), Qt::AlignCenter, QString::number(maxValue));
-    painter.drawText(QRect(0, MARGIN + HEIGHT, MARGIN, MARGIN), Qt::AlignCenter, "0");
+    if (valueColumn) {
+        painter.setPen(penRed);
+        painter.drawText(QRect(0, 0, MARGIN, MARGIN), Qt::AlignCenter, QString::number(maxValue));
+        painter.drawText(QRect(0, MARGIN + HEIGHT, MARGIN, MARGIN), Qt::AlignCenter, "0");
 
-    painter.save();
-    painter.rotate(-90);
-    painter.translate(-1 * (2 * MARGIN + HEIGHT), 0);
-    painter.drawText(QRect(MARGIN, 0, HEIGHT, MARGIN), Qt::AlignCenter, "Value");
+        painter.save();
+        painter.rotate(-90);
+        painter.translate(-1 * (2 * MARGIN + HEIGHT), 0);
+        painter.drawText(QRect(MARGIN, 0, HEIGHT, MARGIN), Qt::AlignCenter, "Value");
+    }
+    else if (probabilityColumn) {
+        painter.setPen(penBlue);
+        painter.drawText(QRect(0, 0, MARGIN, MARGIN), Qt::AlignCenter, "1.0");
+        painter.drawText(QRect(0, MARGIN + HEIGHT, MARGIN, MARGIN), Qt::AlignCenter, "0");
+
+        painter.save();
+        painter.rotate(-90);
+        painter.translate(-1 * (2 * MARGIN + HEIGHT), 0);
+        painter.drawText(QRect(MARGIN, 0, HEIGHT, MARGIN), Qt::AlignCenter, "Probability");
+    }
 
     // if necessary, put some more text on the right axis
-    if (probabilityColumn) {
+    if (probabilityColumn && valueColumn) {
         painter.setPen(penBlue);
         painter.translate(0, WIDTH + MARGIN);
         painter.drawText(QRect(MARGIN, 0, HEIGHT, MARGIN), Qt::AlignCenter, "Probability");
