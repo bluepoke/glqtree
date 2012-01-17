@@ -102,6 +102,8 @@ public:
     void randomize();
     double getBranchingProbabilityAt(int *age);
     double getGrowthInterruptionProbabilityAt(int *age);
+    bool isBranchingAt(int *age);
+    bool isGrowthInterruptingAt(int *age);
 signals:
     
 public slots:
