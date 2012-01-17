@@ -89,7 +89,6 @@ void OptionsDialogTabLayout::initValue(int row, QString valueName, int maxAge,
                                         vector<double> probabilities, vector<int> values) {
 
     // the table is where all changable display of values is to be done
-    // QTableWidget *table = new QTableWidget;
     ValuesTable *table = new ValuesTable;
 
     // graphical visualization of the table's contents and a name for finding it later
