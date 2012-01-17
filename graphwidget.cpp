@@ -72,9 +72,9 @@ void GraphWidget::paintEvent(QPaintEvent *event) {
         ages[i] = ((QLabel*)table->cellWidget(i, 0))->text().toInt();
         // if there are respective columns ...
         if (probabilityColumn)
-            probabilities[i] = ((QDoubleSpinBox*)table->cellWidget(i, probabilityColumn))->value();
+            probabilities[i] = ((QDoubleSpinBox*)table->cellWidget(i, probabilityColumnPos))->value();
         if (valueColumn)
-            values[i] = ((QSpinBox*)table->cellWidget(i, valueColumn))->value();
+            values[i] = ((QSpinBox*)table->cellWidget(i, valueColumnPos))->value();
     }
 
     // find the maximum values and calculate a stepping

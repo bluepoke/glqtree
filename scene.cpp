@@ -42,10 +42,10 @@ Scene::Scene(Plant *plant) {
 
 SceneObject* Scene::initScene(Plant *plant) {
     // TODO load from static plant object here
-    qDebug() << plant->name;
-    qDebug() << plant->getBranchThicknessAt(0);
-    qDebug() << plant->getBranchThicknessAt(1);
-    qDebug() << plant->getBranchLengthAt(0);
+//    qDebug() << plant->name;
+//    qDebug() << plant->getBranchThicknessAt(0);
+//    qDebug() << plant->getBranchThicknessAt(1);
+//    qDebug() << plant->getBranchLengthAt(0);
 
     SceneObject *root;
     root = new BranchSection(0, plant->getBranchThicknessAt(0),

@@ -1,5 +1,4 @@
 #include "optionsdialogtablayout.h"
-#include <graphwidget.h>
 
 OptionsDialogTabLayout::OptionsDialogTabLayout(QWidget *parent) :
     QGridLayout(parent)
@@ -12,81 +11,8 @@ ValuesTable::ValuesTable(QWidget *parent) :
 {
 }
 
-void OptionsDialogTabLayout::initValues() {
-    // this is where handling the xml should be done and calls to the different
-    // display initialzations for each option should be done as exampled by the two following calls
-
-    // if you find a better way to hand over the values, for example as a single container object,
-    // by all means do it, there must be something better than arrays
-
-    // for now I declare that the data to be handed over has to:
-    // 1. there can not be any ambigious age values
-    // 2. there has to be a probability value (even if we do not use those through the boolean operator)
-    // 3. age values have to be in sorted order
-    // 4. there must be one tupel for age = 0 and one for age = max_age
-
-    // I assume there will be an age spinner somewhere to enter the max age
-    // Though I could re-calculate all the values in the table when the max_age happens, I cannot
-    // be sure as to what happens, shrinking the whole age range and floor to nearest int will
-    // most likely result in duplicate age values which contradict the rules I set.
-
-    // I might simply cut the top off in this case, and increase it when the max age changes upwards
-
-    int maxAge = 50;
-    vector<int> ages;
-    vector<double> probabilities;
-    vector<int> values;
-
-    ages.push_back(0);
-    ages.push_back(25);
-    ages.push_back(50);
-    probabilities.push_back(0.2);
-    probabilities.push_back(0.1);
-    probabilities.push_back(0.5);
-    values.push_back(5);
-    values.push_back(10);
-    values.push_back(12);
-
-    // position integer deciding where on the optionspanel's layout the widget is placed
-    int row = 0;
-
-    initValue(row++, QString("Branching"), maxAge, true, true, ages, probabilities, values);
-
-    ages.clear();
-    probabilities.clear();
-    values.clear();
-    ages.push_back(0);
-    ages.push_back(20);
-    ages.push_back(50);
-    probabilities.push_back(0);
-    probabilities.push_back(0);
-    probabilities.push_back(0);
-    values.push_back(2);
-    values.push_back(1);
-    values.push_back(19);
-
-    initValue(row++, QString("Thickness"), maxAge, false, true, ages, probabilities, values);
-
-    ages.clear();
-    probabilities.clear();
-    values.clear();
-    ages.push_back(0);
-    ages.push_back(30);
-    ages.push_back(50);
-    probabilities.push_back(0.1);
-    probabilities.push_back(0.3);
-    probabilities.push_back(0.6);
-    values.push_back(0);
-    values.push_back(0);
-    values.push_back(0);
-
-    initValue(row++, QString("Main Branch"), maxAge, true, false, ages, probabilities, values);
-}
-
 void OptionsDialogTabLayout::initValue(int row, QString valueName, int maxAge,
-                                        bool probabilityColumn, bool valueColumn,
-                                        vector<int> ages,
-                                        vector<double> probabilities, vector<int> values) {
+                                       bool probabilityColumn, bool valueColumn, QList<Tupel3> *values) {
 
     // the table is where all changable display of values is to be done
     ValuesTable *table = new ValuesTable;
@@ -170,17 +96,19 @@ void OptionsDialogTabLayout::initValue(int row, QString valueName, int maxAge,
     connect(addBtn, SIGNAL(clicked()), this, SLOT(addRow()));
     table->setCellWidget(0, column++, addBtn);
 
-    // add the initial data to the table
-    while (!ages.empty()) {
+    // prepend all data to the table, one tupel after the other
+    for (int i=values->count() - 1; i >= 0; i--) {
+        Tupel3 tupel = values->at(i);
+
         // prepare a new row
         lbl = new QLabel;
-        lbl->setNum(ages.back());
+        lbl->setNum(tupel.age);
 
         if (probabilityColumn) {
             doubleSpin = new QDoubleSpinBox;
             doubleSpin->setRange(0.0, 1.0);
             doubleSpin->setSingleStep(0.01);
-            doubleSpin->setValue(probabilities.back());
+            doubleSpin->setValue(tupel.probability);
             // connect any changes to the dialog close button and the graph
             connect(doubleSpin, SIGNAL(valueChanged(double)), graph, SLOT(update()));
             connect(doubleSpin, SIGNAL(valueChanged(double)), dialog, SLOT(valuesChanged()));
@@ -190,7 +118,7 @@ void OptionsDialogTabLayout::initValue(int row, QString valueName, int maxAge,
             singleSpin = new QSpinBox;
             singleSpin->setMinimum(0);
             singleSpin->setSingleStep(1);
-            singleSpin->setValue(values.back());
+            singleSpin->setValue(tupel.value);
             // connect any changes to the dialog close button and the graph
             connect(singleSpin, SIGNAL(valueChanged(int)), graph, SLOT(update()));
             connect(singleSpin, SIGNAL(valueChanged(int)), dialog, SLOT(valuesChanged()));
@@ -213,7 +141,7 @@ void OptionsDialogTabLayout::initValue(int row, QString valueName, int maxAge,
             table->setCellWidget(0, column++, singleSpin);
         }
 
-        if (ages.back() == 0 || ages.back() == maxAge) {
+        if (tupel.age == 0 || tupel.age == maxAge) {
             lbl = new QLabel;
             table->setCellWidget(0, column++, lbl);
         }
@@ -222,11 +150,6 @@ void OptionsDialogTabLayout::initValue(int row, QString valueName, int maxAge,
             connect(delBtn, SIGNAL(clicked()), this, SLOT(delRow()));
             table->setCellWidget(0, column++, delBtn);
         }
-
-        // remove the just added elements from the containers holding them
-        ages.pop_back();
-        probabilities.pop_back();
-        values.pop_back();
     }
 }
 

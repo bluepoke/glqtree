@@ -15,8 +15,12 @@ TabbedOptionsDialog::TabbedOptionsDialog(QWidget *parent) :
     OptionsDialogTabLayout *tab1Layout = new OptionsDialogTabLayout(this);
     QVBoxLayout *tab2LayoutStub = new QVBoxLayout;
 
-    // organize tab1Layout contents here like this:
-    tab1Layout->initValues();
+    // TODO organize tab1Layout and any additional tabs' contents here like this:
+    Plant *p = Plant::activePlant;
+    int row = 0;
+    tab1Layout->initValue(row++, "Branching", p->maxAge, true, true, &(p->branching));
+    tab1Layout->initValue(row++, "Thickness", p->maxAge, false, true, &(p->branchThickness));
+    tab1Layout->initValue(row++, "Main Branch", p->maxAge, true, false, &(p->mainBranch));
 
     tabWidget->addTab(new Tab1(this, tab1Layout), "Options 1");
     tabWidget->addTab(new Tab2(this, tab2LayoutStub), "Options 2");
