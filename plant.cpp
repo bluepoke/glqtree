@@ -60,6 +60,7 @@ int interpolateValue3(QList<Tupel3> *list, int *age) {
             interpolatedTupel.age=*age;
             interpolatedTupel.value=x;
             interpolatedTupel.probability=d;
+            break;
         }
     }
     return interpolatedTupel.value;
@@ -75,6 +76,7 @@ int interpolateDeviatedValue3(QList<Tupel3> *list, int *age) {
         // found exact value
         if (t.age==*age) {
             interpolatedTupel = t;
+            break;
         }
          else if (t.age<*age) {
             lastTupel = t;
@@ -94,6 +96,7 @@ int interpolateDeviatedValue3(QList<Tupel3> *list, int *age) {
             interpolatedTupel.age=*age;
             interpolatedTupel.value=x;
             interpolatedTupel.probability=d;
+            break;
         }
     }
     // range of deviation can be value*deviation in positive and negative direction
@@ -103,6 +106,8 @@ int interpolateDeviatedValue3(QList<Tupel3> *list, int *age) {
     // therefore we fetch a random number from range [0,2*deviationRange)
     // and shift the result to the left by deviationRange.
     // it is not really exact and symmetric but it is sufficient for this application
+    if (deviationRange == 0) return interpolatedTupel.value;
+    // otherwise...
     int deviation = qrand()%(2*deviationRange) - deviationRange;
     // add deviation to exact value
     return interpolatedTupel.value + deviation;
@@ -118,6 +123,7 @@ double interpolateProbability3(QList<Tupel3> *list, int *age) {
         // found exact value
         if (t.age==*age) {
             interpolatedTupel = t;
+            break;
         }
          else if (t.age<*age) {
             lastTupel = t;
@@ -200,7 +206,7 @@ double Plant::getBranchingProbabilityAt(int age) {
 }
 
 bool Plant::isBranchingAt(int age) {
-    double prob = getBranchingProbabilityAt(&age);
+    double prob = getBranchingProbabilityAt(age);
     return isTakingPlace(&prob);
 }
 
@@ -237,7 +243,7 @@ double Plant::getMainBranchProbabilityAt(int age)
 
 bool Plant::continueMainBranchAt(int age)
 {
-    double prob = getMainBranchProbabilityAt(&age);
+    double prob = getMainBranchProbabilityAt(age);
     return isTakingPlace(&prob);
 }
 
@@ -266,7 +272,7 @@ double Plant::getGrowthInterruptionProbabilityAt(int age) {
 }
 
 bool Plant::isGrowthInterruptingAt(int age) {
-    double prob = getGrowthInterruptionProbabilityAt(&age);
+    double prob = getGrowthInterruptionProbabilityAt(age);
     return isTakingPlace(&prob);
 }
 

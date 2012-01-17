@@ -1,6 +1,7 @@
 #include "scene.h"
 #include <GL/gl.h>
 #include <GL/glu.h>
+#include <QDebug>
 
 SceneObject::SceneObject(SceneObject *parent) : parent(parent)
 {
@@ -41,24 +42,33 @@ Scene::Scene(Plant *plant) {
 
 SceneObject* Scene::initScene(Plant *plant) {
     // TODO load from static plant object here
+    qDebug() << plant->name;
+    qDebug() << plant->getBranchThicknessAt(0);
+    qDebug() << plant->getBranchThicknessAt(1);
+    qDebug() << plant->getBranchLengthAt(0);
 
-    // define a temp root object
     SceneObject *root;
-    root = new BranchSection(0, 0.5, 0.3, 1);
-    root->rotation = new QVector3D(0, 25, 0);
-    root->translation = new QVector3D(-2, 0, 0);
+    root = new BranchSection(0, plant->getBranchThicknessAt(0),
+                             plant->getBranchThicknessAt(1),
+                             plant->getBranchLengthAt(0));
 
-    // example child nodes
-    SceneObject *child;
-    child = new BranchSection(root, 0.3, 0.2, 1.5);
-    child->rotation = new QVector3D(-25, 15, 0);
-    child->translation = new QVector3D(0, 0, ((BranchSection*)root)->length);
-    root->children->append(child);
+//    // define a temp root object
+//    SceneObject *root;
+//    root = new BranchSection(0, 0.5, 0.3, 1);
+//    root->rotation = new QVector3D(0, 25, 0);
+//    root->translation = new QVector3D(-2, 0, 0);
 
-    child = new BranchSection(root, 0.3, 0.05, 2);
-    child->rotation = new QVector3D(15, -35, 0);
-    child->translation = new QVector3D(0, 0, ((BranchSection*)root)->length);
-    root->children->append(child);
+//    // example child nodes
+//    SceneObject *child;
+//    child = new BranchSection(root, 0.3, 0.2, 1.5);
+//    child->rotation = new QVector3D(-25, 15, 0);
+//    child->translation = new QVector3D(0, 0, ((BranchSection*)root)->length);
+//    root->children->append(child);
+
+//    child = new BranchSection(root, 0.3, 0.05, 2);
+//    child->rotation = new QVector3D(15, -35, 0);
+//    child->translation = new QVector3D(0, 0, ((BranchSection*)root)->length);
+//    root->children->append(child);
 
     // return root
     return root;
