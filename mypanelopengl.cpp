@@ -8,7 +8,7 @@ MyPanelOpenGL::MyPanelOpenGL(QWidget *parent) :
     QGLWidget(parent)
 {
     // mouse navigation values
-    mouseZoomDistance = 5.0f;
+    mouseZoomDistance = 50.0f;
     // initial rotation here, none by default
     modelBaseRotation = QPointF();
     // initially, no accumulated rotation given
@@ -65,11 +65,11 @@ void MyPanelOpenGL::resizeGL(int width, int height){
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     // 40° fov, aspect ratio decided by the viewport, near and far clipping values
-    gluPerspective(40, (float)width/height, 0.01, 100.0);
+    gluPerspective(40, (float)width/height, 0.01, 10000.0);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     // add a camera with vectors:(where, to, up)
-    gluLookAt(0,0,5, 0,0,0, 0,1,0);
+    gluLookAt(0,0,50, 0,0,0, 0,1,0);
 }
 
 void MyPanelOpenGL::paintGL(){
