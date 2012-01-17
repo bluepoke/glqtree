@@ -6,31 +6,6 @@
 
 Plant* Plant::activePlant = 0; //PersistenceManager::readPlant("default.xml");
 
-// add Tupel2 into list at correct position (regarding age)
-void addTupel2(QList<Tupel2> *list, Tupel2 *tupel) {
-    if (list->size()==0) {
-        // no tupels in list, simply append
-        list->append(*tupel);
-    } else {
-        QList<Tupel2>::iterator i;
-        bool added = false;
-        for (i = list->begin(); i != list->end(); ++i) {
-            Tupel2 t = *i;
-            if (t.age<tupel->age) {
-                continue;
-            } else {
-                list->insert(i,*tupel);
-                added = true;
-                break;
-            }
-        }
-        if (!added) {
-            // all tupels for smaller age, append
-            list->append(*tupel);
-        }
-    }
-}
-
 // add Tupel3 into list at correct position (regarding age)
 void addTupel3(QList<Tupel3> *list, Tupel3 *tupel) {
     if (list->size()==0) {
@@ -167,31 +142,6 @@ double interpolateProbability3(QList<Tupel3> *list, int *age) {
     return interpolatedTupel.probability;
 }
 
-// returns interpolated value of Tupel2 at given age
-int interpolateValue2(QList<Tupel2> *list, int *age) {
-    Tupel2 lastTupel;
-    QList<Tupel2>::iterator i;
-    for (i = list->begin(); i!= list->end(); ++i) {
-        Tupel2 t = *i;
-        if (t.age==*age) {
-            // exact value found
-            return t.value;
-        }
-         else if (t.age<*age) {
-            lastTupel = t;
-        }
-         else if (t.age>*age) {
-            // exact value not in list, so let's interpolate between this and the previous one
-            Tupel2 currentTupel = t;
-            double m = (((double)currentTupel.value-lastTupel.value))/(((double)currentTupel.age-lastTupel.age));
-            double v = ((*age-lastTupel.age)*m)+lastTupel.value;
-            int x = v;
-            return x;
-        }
-    }
-    return NULL;
-}
-
 //use probability value and some random number to determine if something takes place or not
 bool isTakingPlace(double *probability) {
     int threshold = *probability*RAND_MAX;
@@ -293,12 +243,12 @@ bool Plant::continueMainBranchAt(int *age)
 
 void Plant::addGravitationalInfluence(int age, int influence)
 {
-    Tupel2 t(age,influence);
-    addTupel2(&gravitationalInfluence,&t);
+    Tupel3 t(age,influence,0);
+    addTupel3(&gravitationalInfluence,&t);
 }
 
 int Plant::getGravitationalInfluenceAt(int *age) {
-    return interpolateValue2(&gravitationalInfluence, age);
+    return interpolateValue3(&gravitationalInfluence, age);
 }
 
 void Plant::addGrowthInterruption(int age, int duration, double probability)
@@ -332,65 +282,55 @@ int Plant::getBranchWobblinessAt(int *age) {
 
 void Plant::addLeafLevels(int age, int count)
 {
-    Tupel2 t(age,count);
-    addTupel2(&leafLevels,&t);
+    Tupel3 t(age,count,0);
+    addTupel3(&leafLevels,&t);
 }
 
 int Plant::getLeafLevelsAt(int *age) {
-    return interpolateValue2(&leafLevels, age);
+    return interpolateValue3(&leafLevels, age);
 }
 
 void Plant::addLeafCountPerLevel(int age, int count)
 {
-    Tupel2 t(age,count);
-    addTupel2(&leafCountPerLevel,&t);
+    Tupel3 t(age,count,0);
+    addTupel3(&leafCountPerLevel,&t);
 }
 
 int Plant::getLeafCountPerLevelAt(int *age) {
-    return interpolateValue2(&leafCountPerLevel, age);
+    return interpolateValue3(&leafCountPerLevel, age);
 }
 
 void Plant::addLeafAngle(int age, int angle)
 {
-    Tupel2 t(age,angle);
-    addTupel2(&leafAngle,&t);
+    Tupel3 t(age,angle,0);
+    addTupel3(&leafAngle,&t);
 }
 
 int Plant::getLeafAngleAt(int *age) {
-    return interpolateValue2(&leafAngle, age);
+    return interpolateValue3(&leafAngle, age);
 }
 
 void Plant::addLeafLength(int age, int length)
 {
-    Tupel2 t(age,length);
-    addTupel2(&leafLength, &t);
+    Tupel3 t(age,length,0);
+    addTupel3(&leafLength, &t);
 }
 
 int Plant::getLeafLengthAt(int *age) {
-    return interpolateValue2(&leafLength, age);
+    return interpolateValue3(&leafLength, age);
 }
 
 void Plant::addLeafWidth(int age, int width)
 {
-    Tupel2 t(age,width);
-    addTupel2(&leafWidth, &t);
+    Tupel3 t(age,width,0);
+    addTupel3(&leafWidth, &t);
 }
 
 int Plant::getLeafWidthAt(int *age) {
-    return interpolateValue2(&leafWidth, age);
+    return interpolateValue3(&leafWidth, age);
 }
 
 // implementations for tupels
-
-Tupel2::Tupel2(int age, int value) :
-    age(age), value(value)
-{
-}
-
-QString Tupel2::toString()
-{
-    return QString::number(age)+"|"+QString::number(value);
-}
 
 Tupel3::Tupel3(int age, int value, double probability) :
     age(age), value(value), probability(probability)

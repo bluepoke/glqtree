@@ -5,21 +5,6 @@
 
 // classes for tupels
 
-class Tupel2
-{
-
-public:
-    explicit Tupel2(int age=0, int value=0);
-    QString toString();
-    int age;
-    int value;
-
-signals:
-
-public slots:
-
-};
-
 class Tupel3
 {
 
@@ -56,15 +41,15 @@ public:
     QList<Tupel3> branchingAngle;
     QList<Tupel3> branchingRotation;
     QList<Tupel3> mainBranch;
-    QList<Tupel2> gravitationalInfluence;
+    QList<Tupel3> gravitationalInfluence;
     QList<Tupel3> growthInterruption;
     QList<Tupel3> branchWobbliness;
 
-    QList<Tupel2> leafLevels;
-    QList<Tupel2> leafCountPerLevel;
-    QList<Tupel2> leafAngle;
-    QList<Tupel2> leafLength;
-    QList<Tupel2> leafWidth;
+    QList<Tupel3> leafLevels;
+    QList<Tupel3> leafCountPerLevel;
+    QList<Tupel3> leafAngle;
+    QList<Tupel3> leafLength;
+    QList<Tupel3> leafWidth;
 
     void addBranchThickness(int age, int thickness, double rel_deviation);
     void addBranchLength(int age, int length, double rel_deviation);
