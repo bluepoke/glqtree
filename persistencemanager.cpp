@@ -138,6 +138,14 @@ Plant* PersistenceManager::readPlant(QString fileName) {
                                         }
                                         token = reader.readNext(); // Next element inside <SOMETHING><TUPEL>
                                     }
+                                    // in case no value or no probability is defined in tupel
+                                    // just add 0 to the list
+                                    if (tupelAges.size()>tupelProbs.size()) {
+                                        tupelProbs.append(0);
+                                    }
+                                    if (tupelAges.size()>tupelValues.size()) {
+                                        tupelValues.append(0);
+                                    }
                                 }
                                 token = reader.readNext(); // Next element inside <SOMETHING>
                             }
@@ -264,7 +272,7 @@ Plant* PersistenceManager::readPlant(QString fileName) {
 
 
 // write the data of Plant p to the file located at fileName
-bool PersistenceManager::writePlant(QString fileName, Plant *p){
+bool PersistenceManager::writePlant(QString fileName, const Plant *p){
     bool successful = true;
     QFile file(fileName);
     if (!file.open(QIODevice::WriteOnly)) {
