@@ -3,6 +3,7 @@
 #include <iterator>
 #include <QDebug>
 
+// add Tupel2 into list at correct position (regarding age)
 void addTupel2(QList<Tupel2> *list, Tupel2 *tupel) {
     if (list->size()==0) {
         // no tupels in list, simply append
@@ -27,6 +28,7 @@ void addTupel2(QList<Tupel2> *list, Tupel2 *tupel) {
     }
 }
 
+// add Tupel3 into list at correct position (regarding age)
 void addTupel3(QList<Tupel3> *list, Tupel3 *tupel) {
     if (list->size()==0) {
         // no tupels in list, simply append
@@ -51,6 +53,7 @@ void addTupel3(QList<Tupel3> *list, Tupel3 *tupel) {
     }
 }
 
+// returns interpolated value of Tupel3 at given age
 int interpolateValue3(QList<Tupel3> *list, int *age) {
     Tupel3 lastTupel;
     Tupel3 interpolatedTupel;
@@ -84,6 +87,7 @@ int interpolateValue3(QList<Tupel3> *list, int *age) {
     return interpolatedTupel.value;
 }
 
+// returns interpolated value added with some deviation of Tupel3 at given age
 int interpolateDeviatedValue3(QList<Tupel3> *list, int *age) {
     Tupel3 lastTupel;
     Tupel3 interpolatedTupel;
@@ -160,6 +164,7 @@ double interpolateProbability3(QList<Tupel3> *list, int *age) {
     return interpolatedTupel.probability;
 }
 
+// returns interpolated value of Tupel2 at given age
 int interpolateValue2(QList<Tupel2> *list, int *age) {
     Tupel2 lastTupel;
     QList<Tupel2>::iterator i;
@@ -195,6 +200,7 @@ bool isTakingPlace(double *probability) {
     }
 }
 
+// create new plant
 Plant::Plant(int maxAge, QString name, int seed) : name(name), seed(seed), maxAge(maxAge)
 {
     // initialize randomizer when creating new plant

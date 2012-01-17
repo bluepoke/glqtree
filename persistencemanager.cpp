@@ -4,6 +4,7 @@
 #include <QDebug>
 #include "plant.h"
 
+// XML tag names
 static const QString P_TAG = "PLANT";
 static const QString THICK_TAG = "THICKNESS";
 static const QString LEN_TAG = "LENGTH";
@@ -26,10 +27,12 @@ static const QString AGE_TAG = "AGE";
 static const QString PROB_TAG = "PROBABILITY";
 static const QString REL_DEV_TAG = "RELATIVE_DEVIATION";
 
+// XML <PLANT> attribute names
 static const QString NAME_ATTRIB = "NAME";
 static const QString MAX_AGE_ATTRIB = "MAX_AGE";
 static const QString SEED_ATTRIB = "RANDOM_SEED";
 
+// some fields to make the source code more readable
 static const Qt::CaseSensitivity CI = Qt::CaseInsensitive;
 static const QXmlStreamReader::TokenType E_START = QXmlStreamReader::StartElement;
 static const QXmlStreamReader::TokenType E_END = QXmlStreamReader::EndElement;
