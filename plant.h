@@ -42,13 +42,7 @@ class Plant
 {
 public:
     explicit Plant(int maxAge = 0, QString name = "0", int seed = 0);
-    int getSeed() {
-        return seed;
-    }
-    QString getName() {
-        return name;
-    }
-
+    static Plant* activePlant;
 private:
 
 public:
@@ -113,5 +107,4 @@ signals:
 public slots:
     
 };
-
 #endif // PLANT_H

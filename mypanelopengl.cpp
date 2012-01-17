@@ -3,6 +3,7 @@
 #include <QMouseEvent>
 #include <QDebug>
 #include <QList>
+#include "plant.h"
 
 MyPanelOpenGL::MyPanelOpenGL(QWidget *parent) :
     QGLWidget(parent)
@@ -55,7 +56,7 @@ void MyPanelOpenGL::initializeGL() {
     glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 
     // load a scene to display
-    scene = new Scene;
+    scene = new Scene(Plant::activePlant);
 }
 
 void MyPanelOpenGL::resizeGL(int width, int height){

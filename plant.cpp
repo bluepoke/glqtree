@@ -3,6 +3,8 @@
 #include <iterator>
 #include <QDebug>
 
+Plant* Plant::activePlant = new Plant();
+
 // add Tupel2 into list at correct position (regarding age)
 void addTupel2(QList<Tupel2> *list, Tupel2 *tupel) {
     if (list->size()==0) {
