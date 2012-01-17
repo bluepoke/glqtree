@@ -10,7 +10,6 @@ OptionsDialogTabLayout::OptionsDialogTabLayout(QWidget *parent) :
 ValuesTable::ValuesTable(QWidget *parent) :
     QTableWidget(parent)
 {
-
 }
 
 void OptionsDialogTabLayout::initValues() {
@@ -51,7 +50,7 @@ void OptionsDialogTabLayout::initValues() {
     // position integer deciding where on the optionspanel's layout the widget is placed
     int row = 0;
 
-    initValue(row++, QString("Branching"), maxAge, true, ages, probabilities, values);
+    initValue(row++, QString("Branching"), maxAge, true, true, ages, probabilities, values);
 
     ages.clear();
     probabilities.clear();
@@ -59,24 +58,37 @@ void OptionsDialogTabLayout::initValues() {
     ages.push_back(0);
     ages.push_back(20);
     ages.push_back(50);
-    probabilities.push_back(0.5);
-    probabilities.push_back(0.2);
-    probabilities.push_back(0.7);
+    probabilities.push_back(0);
+    probabilities.push_back(0);
+    probabilities.push_back(0);
     values.push_back(2);
     values.push_back(1);
     values.push_back(19);
 
-    initValue(row++, QString("Thickness"), maxAge, false, ages, probabilities, values);
+    initValue(row++, QString("Thickness"), maxAge, false, true, ages, probabilities, values);
 
+    ages.clear();
+    probabilities.clear();
+    values.clear();
+    ages.push_back(0);
+    ages.push_back(30);
+    ages.push_back(50);
+    probabilities.push_back(0.1);
+    probabilities.push_back(0.3);
+    probabilities.push_back(0.6);
+    values.push_back(0);
+    values.push_back(0);
+    values.push_back(0);
+
+    initValue(row++, QString("Main Branch"), maxAge, true, false, ages, probabilities, values);
 }
 
-void OptionsDialogTabLayout::initValue(int row, QString valueName, int maxAge, bool probabilityColumn,
+void OptionsDialogTabLayout::initValue(int row, QString valueName, int maxAge,
+                                        bool probabilityColumn, bool valueColumn,
                                         vector<int> ages,
-                                        vector<double> probabilities,
-                                        vector<int> values) {
+                                        vector<double> probabilities, vector<int> values) {
 
     // the table is where all changable display of values is to be done
-    // QTableWidget *table = new QTableWidget;
     ValuesTable *table = new ValuesTable;
 
     // graphical visualization of the table's contents and a name for finding it later
@@ -85,6 +97,11 @@ void OptionsDialogTabLayout::initValue(int row, QString valueName, int maxAge, b
     // make the widgets know each other
     graph->table = table;
     table->graph = graph;
+    // publish the columns
+    table->probabilityColumn = probabilityColumn;
+    table->valueColumn = valueColumn;
+    graph->probabilityColumn = probabilityColumn;
+    graph->valueColumn = valueColumn;
 
     // connect updates on the graph to signals we emit here
     connect(this, SIGNAL(valuesChanged()), graph, SLOT(update()));
@@ -95,14 +112,27 @@ void OptionsDialogTabLayout::initValue(int row, QString valueName, int maxAge, b
     addWidget(graph, row, 0);
     addWidget(table, row, 1);
 
-    // decide on the column count
-    probabilityColumn ? table->setColumnCount(4) : table->setColumnCount(3);
-    table->setRowCount(1);
-    // headers and sorting
+    // list for header names
     QStringList list;
     list << "Age";
-    if (probabilityColumn) list << "Probability";
-    list << valueName << "";
+
+    // decide on the column count and headers
+    if (probabilityColumn && valueColumn) {
+        table->setColumnCount(4);
+        list << "Probability" << valueName << "";
+
+    }
+    else if (!probabilityColumn && !valueColumn) {
+        table->setColumnCount(2);
+        list << "";
+    }
+    else {
+        table->setColumnCount(3);
+        list << valueName << "";
+    }
+
+    table->setRowCount(1);
+    // headers and sorting
     table->setHorizontalHeaderLabels(list);
     table->setSortingEnabled(false);
     table->verticalHeader()->hide();
@@ -127,11 +157,13 @@ void OptionsDialogTabLayout::initValue(int row, QString valueName, int maxAge, b
     }
 
     // a spinner for the value to be added
-    singleSpin = new QSpinBox;
-    singleSpin->setRange(0, 20);
-    singleSpin->setSingleStep(1);
-    singleSpin->setValue(0);
-    table->setCellWidget(0, column++, singleSpin);
+    if (valueColumn) {
+        singleSpin = new QSpinBox;
+        singleSpin->setMinimum(0);
+        singleSpin->setSingleStep(1);
+        singleSpin->setValue(0);
+        table->setCellWidget(0, column++, singleSpin);
+    }
 
     // a button to add new lines
     addBtn = new QPushButton("Add", table);
@@ -143,6 +175,7 @@ void OptionsDialogTabLayout::initValue(int row, QString valueName, int maxAge, b
         // prepare a new row
         lbl = new QLabel;
         lbl->setNum(ages.back());
+
         if (probabilityColumn) {
             doubleSpin = new QDoubleSpinBox;
             doubleSpin->setRange(0.0, 1.0);
@@ -152,13 +185,16 @@ void OptionsDialogTabLayout::initValue(int row, QString valueName, int maxAge, b
             connect(doubleSpin, SIGNAL(valueChanged(double)), graph, SLOT(update()));
             connect(doubleSpin, SIGNAL(valueChanged(double)), dialog, SLOT(valuesChanged()));
         }
-        singleSpin = new QSpinBox;
-        singleSpin->setRange(0, 20);
-        singleSpin->setSingleStep(1);
-        singleSpin->setValue(values.back());
-        // connect any changes to the dialog close button and the graph
-        connect(singleSpin, SIGNAL(valueChanged(int)), graph, SLOT(update()));
-        connect(singleSpin, SIGNAL(valueChanged(int)), dialog, SLOT(valuesChanged()));
+
+        if (valueColumn) {
+            singleSpin = new QSpinBox;
+            singleSpin->setMinimum(0);
+            singleSpin->setSingleStep(1);
+            singleSpin->setValue(values.back());
+            // connect any changes to the dialog close button and the graph
+            connect(singleSpin, SIGNAL(valueChanged(int)), graph, SLOT(update()));
+            connect(singleSpin, SIGNAL(valueChanged(int)), dialog, SLOT(valuesChanged()));
+        }
 
         // serves to add items to different columns
         column = 0;
@@ -172,7 +208,10 @@ void OptionsDialogTabLayout::initValue(int row, QString valueName, int maxAge, b
         if (probabilityColumn) {
             table->setCellWidget(0, column++, doubleSpin);
         }
-        table->setCellWidget(0, column++, singleSpin);
+
+        if (valueColumn) {
+            table->setCellWidget(0, column++, singleSpin);
+        }
 
         if (ages.back() == 0 || ages.back() == maxAge) {
             lbl = new QLabel;
@@ -208,15 +247,19 @@ void OptionsDialogTabLayout::addRow() {
             if (sender() == table->cellWidget(row, col)) {
 
                 // remember the values to be added
-                double iAge = ((QSpinBox*)table->cellWidget(row, 0))->value();
+                int iAge = ((QSpinBox*)table->cellWidget(row, 0))->value();
                 double dProbability = 0.0;
-                int iAmount = 0;
-                if (columnCount == 4) {
+                int iValue = 0;
+
+                if (table->probabilityColumn && table->valueColumn) {
                     dProbability = ((QDoubleSpinBox*)table->cellWidget(row, 1))->value();
-                    iAmount = ((QSpinBox*)table->cellWidget(row, 2))->value();
+                    iValue = ((QSpinBox*)table->cellWidget(row, 2))->value();
                 }
-                else {
-                    iAmount = ((QSpinBox*)table->cellWidget(row, 1))->value();
+                else if (!table->probabilityColumn && table->valueColumn) {
+                    iValue = ((QSpinBox*)table->cellWidget(row, 1))->value();
+                }
+                else if (table->probabilityColumn && !table->valueColumn) {
+                    dProbability = ((QDoubleSpinBox*)table->cellWidget(row, 1))->value();
                 }
 
                 // find the correct row where the values need to be added to
@@ -236,18 +279,21 @@ void OptionsDialogTabLayout::addRow() {
                     else {
                         // clear the fields
                         ((QSpinBox*)table->cellWidget(row, 0))->setValue(0);
-                        if (columnCount == 4) {
+                        if (table->probabilityColumn && table->valueColumn) {
                             ((QDoubleSpinBox*)table->cellWidget(row, 1))->setValue(0.0);
                             ((QSpinBox*)table->cellWidget(row, 2))->setValue(0);
                         }
-                        else {
+                        else if (!table->probabilityColumn && table->valueColumn) {
                             ((QSpinBox*)table->cellWidget(row, 1))->setValue(0);
+                        }
+                        else if (table->probabilityColumn && !table->valueColumn) {
+                            ((QDoubleSpinBox*)table->cellWidget(row, 1))->setValue(0.0);
                         }
 
                         // prepare a new row
                         lbl = new QLabel;
                         lbl->setNum(iAge);
-                        if (columnCount == 4) {
+                        if (table->probabilityColumn) {
                             doubleSpin = new QDoubleSpinBox;
                             doubleSpin->setRange(0.0, 1.0);
                             doubleSpin->setSingleStep(0.01);
@@ -256,28 +302,31 @@ void OptionsDialogTabLayout::addRow() {
                             connect(doubleSpin, SIGNAL(valueChanged(double)), graph, SLOT(update()));
                             connect(doubleSpin, SIGNAL(valueChanged(double)), dialog, SLOT(valuesChanged()));
                         }
-                        singleSpin = new QSpinBox;
-                        singleSpin->setRange(0, 20);
-                        singleSpin->setSingleStep(1);
-                        singleSpin->setValue(iAmount);
-                        // connect any changes to the dialog close button and the graph
-                        connect(singleSpin, SIGNAL(valueChanged(int)), graph, SLOT(update()));
-                        connect(singleSpin, SIGNAL(valueChanged(int)), dialog, SLOT(valuesChanged()));
+                        if (table->valueColumn) {
+                            singleSpin = new QSpinBox;
+                            singleSpin->setMinimum(0);
+                            singleSpin->setSingleStep(1);
+                            singleSpin->setValue(iValue);
+                            // connect any changes to the dialog close button and the graph
+                            connect(singleSpin, SIGNAL(valueChanged(int)), graph, SLOT(update()));
+                            connect(singleSpin, SIGNAL(valueChanged(int)), dialog, SLOT(valuesChanged()));
+                        }
+
                         delBtn = new QPushButton("Delete", table);
                         connect(delBtn, SIGNAL(clicked()), this, SLOT(delRow()));
 
                         // add the row
+                        int column = 0;
                         table->insertRow(next);
-                        table->setCellWidget(next, 0, lbl);
-                        if (columnCount == 4) {
-                            table->setCellWidget(next, 1, doubleSpin);
-                            table->setCellWidget(next, 2, singleSpin);
-                            table->setCellWidget(next, 3, delBtn);
+                        table->setCellWidget(next, column++, lbl);
+                        if (table->probabilityColumn) {
+                            table->setCellWidget(next, column++, doubleSpin);
                         }
-                        else {
-                            table->setCellWidget(next, 1, singleSpin);
-                            table->setCellWidget(next, 2, delBtn);
+                        if (table->valueColumn) {
+                            table->setCellWidget(next, column++, singleSpin);
                         }
+
+                        table->setCellWidget(next, column++, delBtn);
                         emit valuesChanged();
                         return;
                     }

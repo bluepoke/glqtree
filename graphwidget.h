@@ -16,6 +16,8 @@ class GraphWidget : public QWidget
 public:
     explicit GraphWidget(QWidget *parent = 0);
     QTableWidget *table;
+    bool probabilityColumn;
+    bool valueColumn;
 
 private:
     static const int MARGIN = 17;

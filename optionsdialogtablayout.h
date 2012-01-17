@@ -20,7 +20,8 @@ class ValuesTable : public QTableWidget
 public:
     explicit ValuesTable(QWidget *parent = 0);
     GraphWidget *graph;
-
+    bool probabilityColumn;
+    bool valueColumn;
 };
 
 class OptionsDialogTabLayout : public QGridLayout
@@ -40,7 +41,8 @@ private:
     QDoubleSpinBox *doubleSpin;
     QSpinBox *singleSpin;
     QLabel *lbl;
-    void initValue(int row = 0, QString valueName = 0, int maxAge = 0, bool probabilityColumn = 0,
+    void initValue(int row = 0, QString valueName = 0, int maxAge = 0,
+                   bool probabilityColumn = 0, bool valueColumn = 0,
                        vector<int> ages = vector<int> (0),
                        vector<double> probabilities = vector<double> (0),
                        vector<int> values = vector<int> (0));

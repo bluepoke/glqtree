@@ -22,15 +22,13 @@ protected:
 
 private:
     static const float MIN_ZOOM_DISTANCE = 3.0f;
-    static const float MAX_ZOOM_DISTANCE = 25.0f;
+    static const float MAX_ZOOM_DISTANCE = 1000.0f;
     static const float MAX_TILT_ANGLE = 90.0f;
 
     float mouseZoomDistance;
     QPoint mouseLastPosition;
     QPointF modelBaseRotation;
     QPointF modelAccumulatedRotation;
-//    SceneObject *root;
-//    SceneObject *child;
     Scene *scene;
 
 signals:
