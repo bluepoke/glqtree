@@ -5,6 +5,7 @@
 #include <QFileDialog>
 #include <QDebug>
 #include "scene.h"
+#include "persistencemanager.h"
 
 class MyPanelOpenGL;
 
@@ -114,6 +115,9 @@ void TabbedOptionsDialog::saveToXML() {
     //QMessageBox(QMessageBox::Information, "Save info", "Save was invoked", QMessageBox::Ok).exec();
     updated = false;
     // TODO: save to XML here
+    if (!(fileName.isEmpty() || fileName.isNull())) {
+            PersistenceManager::writePlant(fileName,Plant::activePlant);
+    }
 }
 
 void TabbedOptionsDialog::valuesChanged() {
