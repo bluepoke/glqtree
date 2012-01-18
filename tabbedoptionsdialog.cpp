@@ -120,8 +120,6 @@ void TabbedOptionsDialog::valuesChanged() {
     Plant *p = Plant::activePlant;
     ValuesTable *v = (ValuesTable*)QObject::sender()->parent()->parent();
 
-    qDebug() << "\nBefore: " << Plant::activePlant->getBranchThicknessAt(0);
-
     // Branching changed
     if (v->pValues == &(p->branching)) {
         p->branching.clear();
@@ -241,6 +239,5 @@ void TabbedOptionsDialog::valuesChanged() {
                             ((QSpinBox*)v->cellWidget(i,1))->value());
         }
     }
-    qDebug() << "After: " << Plant::activePlant->getBranchThicknessAt(0);
     Scene::activeScene->initScene(Plant::activePlant);
 }
