@@ -249,10 +249,9 @@ void OptionsDialogTabLayout::addRow() {
                         }
 
                         table->setCellWidget(next, column++, delBtn);
-                        break;
+                        return;
                     }
                 }
-                return;
             }
         }
     }
