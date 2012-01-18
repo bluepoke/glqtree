@@ -6,6 +6,7 @@
 #include <QDebug>
 #include "scene.h"
 #include "persistencemanager.h"
+#include <QMainWindow>
 
 class MyPanelOpenGL;
 
@@ -26,13 +27,16 @@ TabbedOptionsDialog::TabbedOptionsDialog(QWidget *parent) :
     btnClose = new QPushButton("Close");
     btnOpen = new QPushButton("Open");
     btnSave = new QPushButton("Save");
+    btnNew = new QPushButton("New");
 
     buttonBox = new QDialogButtonBox;
+    buttonBox->addButton(btnNew, QDialogButtonBox::ActionRole);
     buttonBox->addButton(btnOpen, QDialogButtonBox::ActionRole);
     buttonBox->addButton(btnSave, QDialogButtonBox::ActionRole);
     buttonBox->addButton(btnClose, QDialogButtonBox::RejectRole);
 
     // connect to the appropriate slots
+    connect(btnNew, SIGNAL(clicked()), this, SLOT(newPlant()));
     connect(btnSave, SIGNAL(clicked()), this, SLOT(saveToXML()));
     connect(btnOpen, SIGNAL(clicked()), this, SLOT(openFromXML()));
     connect(btnClose, SIGNAL(clicked()), this, SLOT(closeDialog()));
@@ -113,6 +117,10 @@ void TabbedOptionsDialog::saveToXML() {
     if (!(fileName.isEmpty() || fileName.isNull())) {
             PersistenceManager::writePlant(fileName,Plant::activePlant);
     }
+}
+
+void TabbedOptionsDialog::newPlant() {
+    // TODO create something new
 }
 
 void TabbedOptionsDialog::valuesChanged() {
