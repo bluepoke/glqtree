@@ -9,9 +9,15 @@
 
 class MyPanelOpenGL;
 
+static const int MIN_WIDTH = 550;
+static const int MIN_HEIGHT = 600;
+
 TabbedOptionsDialog::TabbedOptionsDialog(QWidget *parent) :
     QDialog(parent)
 {
+    setWindowFlags(Qt::WindowContextHelpButtonHint | Qt::WindowMinMaxButtonsHint);
+    setMinimumSize(MIN_WIDTH, MIN_HEIGHT);
+
     tabWidget = new QTabWidget;
 
     initTabs();
@@ -72,11 +78,11 @@ void TabbedOptionsDialog::initTabs() {
     tabWidget->addTab(new Tab(this,tab2Layout), "Branch Geometry");
 
     row = 0;
-    tab3Layout->initValue(row++, "Count per level", p->maxAge,false,true,&(p->leafCountPerLevel));
-    tab3Layout->initValue(row++,"Levels", p->maxAge,false,true,&(p->leafLevels));
+    tab3Layout->initValue(row++, "Count/level", p->maxAge,false,true,&(p->leafCountPerLevel));
+    tab3Layout->initValue(row++, "Levels", p->maxAge,false,true,&(p->leafLevels));
     tab3Layout->initValue(row++, "Angle", p->maxAge,false,true,&(p->leafAngle));
-    tab3Layout->initValue(row++,"Length",p->maxAge,false,true,&(p->leafLength));
-    tab3Layout->initValue(row++,"Width", p->maxAge,false,true,&(p->leafWidth));
+    tab3Layout->initValue(row++, "Length",p->maxAge,false,true,&(p->leafLength));
+    tab3Layout->initValue(row++, "Width", p->maxAge,false,true,&(p->leafWidth));
     tabWidget->addTab(new Tab(this, tab3Layout), "Leaf Geometry");
 
     tabWidget->addTab(new Tab(this, tab4LayoutStub), "Other");

@@ -81,7 +81,7 @@ void GraphWidget::paintEvent(QPaintEvent *event) {
     int maxValue = *max_element(values, values + dataRowCount);
     int maxAge = ages[dataRowCount - 1];
     double valueQuot = (double)HEIGHT / (double)maxValue;
-    double agesQuot = (double)HEIGHT / (double)maxAge;
+    double agesQuot = (double)WIDTH / (double)maxAge;
 
     // paint lines for all the values if there are any
     if (valueColumn) {

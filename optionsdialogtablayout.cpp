@@ -1,5 +1,10 @@
 #include "optionsdialogtablayout.h"
 
+static const int ROW_HEIGHT = 20;
+static const int COLUMN_WIDTH = 80;
+static const int TABLE_MIN_HEIGHT = GraphWidget::HEIGHT + 2 * GraphWidget::MARGIN;
+static const int TABLE_MAX_WIDTH = 350;
+
 OptionsDialogTabLayout::OptionsDialogTabLayout(QWidget *parent) :
     QGridLayout(0)
 {
@@ -56,10 +61,23 @@ void OptionsDialogTabLayout::initValue(int row, QString valueName, int maxAge,
     }
 
     table->setRowCount(1);
+    table->setRowHeight(0, ROW_HEIGHT);
     // headers and sorting
     table->setHorizontalHeaderLabels(list);
     table->setSortingEnabled(false);
     table->verticalHeader()->hide();
+    table->resizeColumnsToContents();
+    for (int i=0; i<table->columnCount(); i++) {
+        table->setColumnWidth(i, COLUMN_WIDTH);
+//        switch(i) {
+//        case 0: table->setColumnWidth(0, 40);
+//        case 1: table->setColumnWidth(1, 80);
+//        case 2: i == table->columnCount() -1 ? table->setColumnWidth(2, 50) : table->setColumnWidth(2, 80);
+//        case 3: table->setColumnWidth(3, 50);
+//        }
+    }
+    table->setMaximumWidth(TABLE_MAX_WIDTH);
+    table->setMinimumHeight(TABLE_MIN_HEIGHT);
 
     // serves to add items to different columns
     int column = 0;
@@ -83,7 +101,7 @@ void OptionsDialogTabLayout::initValue(int row, QString valueName, int maxAge,
     // a spinner for the value to be added
     if (valueColumn) {
         singleSpin = new QSpinBox;
-        singleSpin->setMinimum(0);
+        singleSpin->setMaximum(99999);
         singleSpin->setSingleStep(1);
         singleSpin->setValue(0);
         table->setCellWidget(0, column++, singleSpin);
@@ -116,7 +134,7 @@ void OptionsDialogTabLayout::initValue(int row, QString valueName, int maxAge,
 
         if (valueColumn) {
             singleSpin = new QSpinBox;
-            singleSpin->setMinimum(0);
+            singleSpin->setMaximum(99999);
             singleSpin->setSingleStep(1);
             singleSpin->setValue(tupel.value);
             // connect any changes to the dialog close button and the graph
@@ -129,6 +147,7 @@ void OptionsDialogTabLayout::initValue(int row, QString valueName, int maxAge,
 
         // add the row
         table->insertRow(0);
+        table->setRowHeight(0, ROW_HEIGHT);
 
         // add the different items
         table->setCellWidget(0, column++, lbl);
@@ -227,7 +246,7 @@ void OptionsDialogTabLayout::addRow() {
                         }
                         if (table->valueColumn) {
                             singleSpin = new QSpinBox;
-                            singleSpin->setMinimum(0);
+                            singleSpin->setMaximum(99999);
                             singleSpin->setSingleStep(1);
                             singleSpin->setValue(iValue);
                             // connect any changes to the dialog close button and the graph

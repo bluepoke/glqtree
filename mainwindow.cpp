@@ -3,10 +3,14 @@
 #include <QDebug>
 #include "persistencemanager.h"
 
+static const int MIN_WIDTH = 550;
+static const int MIN_HEIGHT = 600;
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    setMinimumSize(MIN_WIDTH, MIN_HEIGHT);
     Plant::activePlant = PersistenceManager::readPlant("default.xml");
 
     // define a QGLFormat with multisampling and alpha blending

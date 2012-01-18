@@ -18,11 +18,11 @@ public:
     QTableWidget *table;
     bool probabilityColumn;
     bool valueColumn;
+    static const int MARGIN = 17;
+    static const int HEIGHT = 66;
+    static const int WIDTH = 100;
 
 private:
-    static const int MARGIN = 17;
-    static const int HEIGHT = 100;
-    static const int WIDTH = 100;
     static const int dataRowCount;
 
 protected:
