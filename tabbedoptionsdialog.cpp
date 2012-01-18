@@ -29,7 +29,7 @@ TabbedOptionsDialog::TabbedOptionsDialog(QWidget *parent) :
     tabWidget->addTab(new Tab(this, tab1Layout), "Branching Behaviour");
 
     row = 0;
-    tab2Layout->initValue(row++, "Length",p->maxAge,true,true,&(p->branchLength));
+    tab2Layout->initValue(row++, "Length", p->maxAge,true,true,&(p->branchLength));
     tab2Layout->initValue(row++, "Thickness", p->maxAge,true,true,&(p->branchThickness));
     tab2Layout->initValue(row++, "Wobbliness", p->maxAge,true,true,&(p->branchWobbliness));
     tab2Layout->initValue(row++, "Gravitation", p->maxAge,false,true,&(p->gravitationalInfluence));
@@ -37,10 +37,10 @@ TabbedOptionsDialog::TabbedOptionsDialog(QWidget *parent) :
 
     row = 0;
     tab3Layout->initValue(row++, "Count per level", p->maxAge,false,true,&(p->leafCountPerLevel));
-    tab3Layout->initValue(row++,"Levels",p->maxAge,false,true,&(p->leafLevels));
+    tab3Layout->initValue(row++,"Levels", p->maxAge,false,true,&(p->leafLevels));
     tab3Layout->initValue(row++, "Angle", p->maxAge,false,true,&(p->leafAngle));
     tab3Layout->initValue(row++,"Length",p->maxAge,false,true,&(p->leafLength));
-    tab3Layout->initValue(row++,"Width",p->maxAge,false,true,&(p->leafWidth));
+    tab3Layout->initValue(row++,"Width", p->maxAge,false,true,&(p->leafWidth));
     tabWidget->addTab(new Tab(this, tab3Layout), "Leaf Geometry");
 
     tabWidget->addTab(new Tab(this, tab4LayoutStub), "Other");
@@ -115,5 +115,50 @@ void TabbedOptionsDialog::saveToXML() {
 
 void TabbedOptionsDialog::valuesChanged() {
     updated = true;
-    qDebug() << QObject::sender();
+
+    Plant *p = Plant::activePlant;
+    ValuesTable *v = (ValuesTable*)QObject::sender()->parent()->parent();
+
+    if (v->pValues == &(p->branching)) {
+        qDebug() << "Branching changed";
+    }
+    else if (v->pValues == &(p->branchingAngle)) {
+        qDebug() << "Branching angle changed";
+    }
+    else if (v->pValues == &(p->branchingRotation)) {
+        qDebug() << "Branching rotatiton changed";
+    }
+    else if (v->pValues == &(p->branchLength)) {
+        qDebug() << "Branch length changed";
+    }
+    else if (v->pValues == &(p->branchThickness)) {
+        qDebug() << "Thickness changed";
+    }
+    else if (v->pValues == &(p->branchWobbliness)) {
+        qDebug() << "Wobbliness changed";
+    }
+    else if (v->pValues == &(p->gravitationalInfluence)) {
+        qDebug() << "Grav. influence changed";
+    }
+    else if (v->pValues == &(p->growthInterruption)) {
+        qDebug() << "Growth interruption changed";
+    }
+    else if (v->pValues == &(p->mainBranch)) {
+        qDebug() << "Main branch changed";
+    }
+    else if (v->pValues == &(p->leafAngle)) {
+        qDebug() << "Leaf angle changed";
+    }
+    else if (v->pValues == &(p->leafCountPerLevel)) {
+        qDebug() << "Leaf count p. lvl changed";
+    }
+    else if (v->pValues == &(p->leafLength)) {
+        qDebug() << "Leaf length changed";
+    }
+    else if (v->pValues == &(p->leafLevels)) {
+        qDebug() << "Leaf levels changed";
+    }
+    else if (v->pValues == &(p->leafWidth)) {
+        qDebug() << "Leaf width changed";
+    }
 }

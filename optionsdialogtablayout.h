@@ -23,6 +23,7 @@ public:
     GraphWidget *graph;
     bool probabilityColumn;
     bool valueColumn;
+    QList<Tupel3> *pValues;
 };
 
 class OptionsDialogTabLayout : public QGridLayout

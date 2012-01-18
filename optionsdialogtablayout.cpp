@@ -12,7 +12,8 @@ ValuesTable::ValuesTable(QWidget *parent) :
 }
 
 void OptionsDialogTabLayout::initValue(int row, QString valueName, int maxAge,
-                                       bool probabilityColumn, bool valueColumn, QList<Tupel3> *values) {
+                                       bool probabilityColumn, bool valueColumn, QList<Tupel3> *values)
+{
 
     // the table is where all changable display of values is to be done
     ValuesTable *table = new ValuesTable;
@@ -28,6 +29,8 @@ void OptionsDialogTabLayout::initValue(int row, QString valueName, int maxAge,
     table->valueColumn = valueColumn;
     graph->probabilityColumn = probabilityColumn;
     graph->valueColumn = valueColumn;
+    // and the values represented by the table
+    table->pValues = values;
 
     // adding graph and table
     addWidget(graph, row, 0);
