@@ -19,12 +19,13 @@ public:
     explicit TabbedOptionsDialog(QWidget *parent = 0);
 
 private:
-    bool updated;
     QTabWidget *tabWidget;
     QDialogButtonBox *buttonBox;
     QPushButton *btnClose;
     QPushButton *btnOpen;
     QPushButton *btnSave;
+    void reloadTabs();
+    void initTabs();
 
 public slots:
     void valuesChanged();

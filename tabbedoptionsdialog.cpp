@@ -12,11 +12,43 @@ class MyPanelOpenGL;
 TabbedOptionsDialog::TabbedOptionsDialog(QWidget *parent) :
     QDialog(parent)
 {
-    // this bool decides whether closing this dialog is possible
-    updated = false;
-
     tabWidget = new QTabWidget;
 
+    initTabs();
+
+    // buttons for the button box
+    btnClose = new QPushButton("Close");
+    btnOpen = new QPushButton("Open");
+    btnSave = new QPushButton("Save");
+
+    buttonBox = new QDialogButtonBox;
+    buttonBox->addButton(btnOpen, QDialogButtonBox::ActionRole);
+    buttonBox->addButton(btnSave, QDialogButtonBox::ActionRole);
+    buttonBox->addButton(btnClose, QDialogButtonBox::RejectRole);
+
+    // connect to the appropriate slots
+    connect(btnSave, SIGNAL(clicked()), this, SLOT(saveToXML()));
+    connect(btnOpen, SIGNAL(clicked()), this, SLOT(openFromXML()));
+    connect(btnClose, SIGNAL(clicked()), this, SLOT(closeDialog()));
+
+    // lay it all out
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    mainLayout->setSizeConstraint(QLayout::SetNoConstraint);
+    mainLayout->addWidget(tabWidget);
+    mainLayout->addWidget(buttonBox);
+    setLayout(mainLayout);
+
+    // show title and make dialog modal
+    setWindowTitle("Options");
+    setModal(true);
+}
+
+void TabbedOptionsDialog::reloadTabs() {
+    tabWidget->clear();
+    initTabs();
+}
+
+void TabbedOptionsDialog::initTabs() {
     OptionsDialogTabLayout *tab1Layout = new OptionsDialogTabLayout(this);
     OptionsDialogTabLayout *tab2Layout = new OptionsDialogTabLayout(this);
     OptionsDialogTabLayout *tab3Layout = new OptionsDialogTabLayout(this);
@@ -48,32 +80,6 @@ TabbedOptionsDialog::TabbedOptionsDialog(QWidget *parent) :
     tabWidget->addTab(new Tab(this, tab3Layout), "Leaf Geometry");
 
     tabWidget->addTab(new Tab(this, tab4LayoutStub), "Other");
-
-    // buttons for the button box
-    btnClose = new QPushButton("Close");
-    btnOpen = new QPushButton("Open");
-    btnSave = new QPushButton("Save");
-
-    buttonBox = new QDialogButtonBox;
-    buttonBox->addButton(btnOpen, QDialogButtonBox::ActionRole);
-    buttonBox->addButton(btnSave, QDialogButtonBox::ActionRole);
-    buttonBox->addButton(btnClose, QDialogButtonBox::RejectRole);
-
-    // connect to the appropriate slots
-    connect(btnSave, SIGNAL(clicked()), this, SLOT(saveToXML()));
-    connect(btnOpen, SIGNAL(clicked()), this, SLOT(openFromXML()));
-    connect(btnClose, SIGNAL(clicked()), this, SLOT(closeDialog()));
-
-    // lay it all out
-    QVBoxLayout *mainLayout = new QVBoxLayout;
-    mainLayout->setSizeConstraint(QLayout::SetNoConstraint);
-    mainLayout->addWidget(tabWidget);
-    mainLayout->addWidget(buttonBox);
-    setLayout(mainLayout);
-
-    // show title and make dialog modal
-    setWindowTitle("Options");
-    setModal(true);
 }
 
 // a generic tabs
@@ -84,45 +90,26 @@ Tab::Tab(QWidget *parent, QLayout *mainLayout)
 }
 
 void TabbedOptionsDialog::closeDialog() {
-    if (updated) {
-        // at least have the courtesy to ask before descarding any changes
-        int ret = QMessageBox(QMessageBox::Question, "Save values?",
-                    "There are unsaved values.\nDo you want to save them now?",
-                              QMessageBox::Cancel | QMessageBox::Save | QMessageBox::Discard).exec();
-
-        switch (ret) {
-        case QMessageBox::Discard: this->close(); break;
-        case QMessageBox::Save: this->saveToXML(); this->close(); break;
-        default: break;
-        }
-    }
-    else {
-        updated = false;
-        // TODO: reload currently loaded values here
-        this->close();
-    }
+    close();
 }
 
 void TabbedOptionsDialog::openFromXML() {
     QString fileName = QFileDialog::getOpenFileName(this,"Open plant from XML file","","XML files (*.xml)");
-    // QMessageBox(QMessageBox::Information, "Open info", "Open was invoked", QMessageBox::Ok).exec();
-    updated = false;
-    // TODO: load new values here
+    if (!(fileName.isEmpty() || fileName.isNull())) {
+            Plant::activePlant = PersistenceManager::readPlant(fileName);
+            Scene::activeScene->initScene(Plant::activePlant);
+            reloadTabs();
+    }
 }
 
 void TabbedOptionsDialog::saveToXML() {
     QString fileName = QFileDialog::getSaveFileName(this,"Save plant configuration to XML file","","XML files (*.xml)");
-    //QMessageBox(QMessageBox::Information, "Save info", "Save was invoked", QMessageBox::Ok).exec();
-    updated = false;
-    // TODO: save to XML here
     if (!(fileName.isEmpty() || fileName.isNull())) {
             PersistenceManager::writePlant(fileName,Plant::activePlant);
     }
 }
 
 void TabbedOptionsDialog::valuesChanged() {
-    updated = true;
-
     Plant *p = Plant::activePlant;
     ValuesTable *v = (ValuesTable*)QObject::sender()->parent()->parent();
 
