@@ -41,6 +41,7 @@ Scene::Scene(Plant *plant) {
 }
 
 SceneObject* Scene::initScene(Plant *plant) {
+    if (plant == 0) return 0;
     // TODO load from static plant object here
 //    qDebug() << plant->name;
 //    qDebug() << plant->getBranchThicknessAt(0);

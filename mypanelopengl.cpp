@@ -93,10 +93,13 @@ void MyPanelOpenGL::paintGL(){
     glColor4f(1, 0, 0, 1);
 
     // render scene, starting with the root
-    glPushMatrix();
-    glRotatef(-90.0, 1.0, 0.0, 0.0);
-    renderObject(scene->root);
-    glPopMatrix();
+    if (scene->root != 0) {
+        glPushMatrix();
+        glRotatef(-90.0, 1.0, 0.0, 0.0);
+
+        renderObject(scene->root);
+        glPopMatrix();
+    }
 
     glBegin(GL_QUADS);
 
