@@ -13,11 +13,11 @@ TabbedOptionsDialog::TabbedOptionsDialog(QWidget *parent) :
     tabWidget = new QTabWidget;
 
     OptionsDialogTabLayout *tab1Layout = new OptionsDialogTabLayout(this);
-    //QVBoxLayout *tab2LayoutStub = new QVBoxLayout;
     OptionsDialogTabLayout *tab2Layout = new OptionsDialogTabLayout(this);
     OptionsDialogTabLayout *tab3Layout = new OptionsDialogTabLayout(this);
+    QVBoxLayout *tab4LayoutStub = new QVBoxLayout;
 
-    // TODO organize tab1Layout and any additional tabs' contents here like this:
+    // organize tabs' contents here
     Plant *p = Plant::activePlant;
     int row = 0;
     tab1Layout->initValue(row++, "Branching", p->maxAge, true, true, &(p->branching));
@@ -25,14 +25,14 @@ TabbedOptionsDialog::TabbedOptionsDialog(QWidget *parent) :
     tab1Layout->initValue(row++, "Rotation", p->maxAge, true, true, &(p->branchingRotation));
     tab1Layout->initValue(row++, "Main Branch", p->maxAge, true, false, &(p->mainBranch));
     tab1Layout->initValue(row++, "Interruption", p->maxAge, true, true,&(p->growthInterruption));
-    tabWidget->addTab(new Tab1(this, tab1Layout), "Branching Behaviour");
+    tabWidget->addTab(new Tab(this, tab1Layout), "Branching Behaviour");
 
     row = 0;
     tab2Layout->initValue(row++, "Length",p->maxAge,true,true,&(p->branchLength));
     tab2Layout->initValue(row++, "Thickness", p->maxAge,true,true,&(p->branchThickness));
     tab2Layout->initValue(row++, "Wobbliness", p->maxAge,true,true,&(p->branchWobbliness));
     tab2Layout->initValue(row++, "Gravitation", p->maxAge,false,true,&(p->gravitationalInfluence));
-    tabWidget->addTab(new Tab1(this,tab2Layout), "Branch Geometry");
+    tabWidget->addTab(new Tab(this,tab2Layout), "Branch Geometry");
 
     row = 0;
     tab3Layout->initValue(row++, "Count per level", p->maxAge,false,true,&(p->leafCountPerLevel));
@@ -40,8 +40,9 @@ TabbedOptionsDialog::TabbedOptionsDialog(QWidget *parent) :
     tab3Layout->initValue(row++, "Angle", p->maxAge,false,true,&(p->leafAngle));
     tab3Layout->initValue(row++,"Length",p->maxAge,false,true,&(p->leafLength));
     tab3Layout->initValue(row++,"Width",p->maxAge,false,true,&(p->leafWidth));
-    tabWidget->addTab(new Tab1(this, tab3Layout), "Leaf Geometry");
+    tabWidget->addTab(new Tab(this, tab3Layout), "Leaf Geometry");
 
+    tabWidget->addTab(new Tab(this, tab4LayoutStub), "Other");
 
     // buttons for the button box
     btnClose = new QPushButton("Close");
@@ -70,15 +71,8 @@ TabbedOptionsDialog::TabbedOptionsDialog(QWidget *parent) :
     setModal(true);
 }
 
-// two generic tabs
-Tab1::Tab1(QWidget *parent, QLayout *mainLayout)
-    : QWidget(parent)
-{
-    //OptionsDialogTabLayout *mainLayout = new OptionsDialogTabLayout;
-    setLayout(mainLayout);
-}
-
-Tab2::Tab2(QWidget *parent, QLayout *mainLayout)
+// a generic tabs
+Tab::Tab(QWidget *parent, QLayout *mainLayout)
     : QWidget(parent)
 {
     setLayout(mainLayout);
