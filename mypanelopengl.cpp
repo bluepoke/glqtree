@@ -10,10 +10,12 @@ MyPanelOpenGL::MyPanelOpenGL(QWidget *parent) :
 {
     // mouse navigation values
     mouseZoomDistance = 50.0f;
-    // initial rotation here, none by default
+    // initial rotation and movement here, none by default
     modelBaseRotation = QPointF();
-    // initially, no accumulated rotation given
+    modelBaseMovement = QPointF();
+    // initially, no accumulated rotation or movement given
     modelAccumulatedRotation = QPointF();
+    modelAccumulatedMovement = QPointF();
 }
 
 void MyPanelOpenGL::initializeGL() {
@@ -83,9 +85,10 @@ void MyPanelOpenGL::paintGL(){
 
     // calculate resulting movement
     QPointF modelRotation = modelBaseRotation + modelAccumulatedRotation;
+    QPointF modelMovement = modelBaseMovement + modelAccumulatedMovement;
 
     // move and rotate this basic model according to mouse actions
-    glTranslatef(0, 0, -mouseZoomDistance);
+    glTranslatef(modelMovement.x(), -modelMovement.y(), -mouseZoomDistance);
     glRotatef(modelRotation.x(), 1, 0, 0);
     glRotatef(modelRotation.y(), 0, 1, 0);
 
@@ -135,27 +138,28 @@ void MyPanelOpenGL::mouseMoveEvent(QMouseEvent *event) {
     if (event->isAccepted())
         return;
 
-    // only handle model movement if the LMB is pressed
     if (event->buttons() & Qt::LeftButton) {
         // the mouse moved how far ?
-        QPointF delta = event->globalPos() - mouseLastPosition;
+        QPointF delta = event->globalPos() - mouseLastRotationPosition;
 
-        // calculate an appropriat rotation vector
+        // calculate an appropriate rotation vector
         modelAccumulatedRotation = 0.5 * QPointF(delta.y(), delta.x());
         // we do not want to tilt the model over the top or the bottom to prevent confusion with the x axis
         if ((modelBaseRotation.x() + modelAccumulatedRotation.x()) > MAX_TILT_ANGLE)
             modelAccumulatedRotation.setX(MAX_TILT_ANGLE - modelBaseRotation.x());
         else if ((modelBaseRotation.x() + modelAccumulatedRotation.x()) < -1 * MAX_TILT_ANGLE)
             modelAccumulatedRotation.setX((-1 * MAX_TILT_ANGLE) - modelBaseRotation.x());
-
-        // execute
-        event->accept();
-        updateGL();
     }
-    // TODO handle RMB movement for panning the camera
-    else if (event->button() & Qt::RightButton) {
-
+    else if (event->buttons() & Qt::RightButton) {
+        // the mouse moved how far ?
+        QPointF delta = event->globalPos() - mouseLastMovementPosition;
+        // calculate an appropriate movement vector
+        modelAccumulatedMovement = 0.1 * QPointF(delta.x(), delta.y());
     }
+
+    // execute
+    event->accept();
+    updateGL();
 }
 
 void MyPanelOpenGL::wheelEvent(QWheelEvent *event) {
@@ -173,7 +177,7 @@ void MyPanelOpenGL::wheelEvent(QWheelEvent *event) {
     else if (mouseZoomDistance > MAX_ZOOM_DISTANCE)
         mouseZoomDistance = MAX_ZOOM_DISTANCE;
 
-    // execute
+    // we're done
     event->accept();
     updateGL();
 }
@@ -184,13 +188,19 @@ void MyPanelOpenGL::mousePressEvent(QMouseEvent *event) {
     if (event->isAccepted())
         return;
 
-    // remember the position of the 1st click
-    mouseLastPosition = event->globalPos();
-    modelAccumulatedRotation = QPointF();
+    if (event->buttons() & Qt::LeftButton) {
+        // remember the position of the 1st click
+        mouseLastRotationPosition = event->globalPos();
+        modelAccumulatedRotation = QPointF();
+    }
+    else if (event->buttons() & Qt::RightButton) {
+        // remember the position of the 1st click
+        mouseLastMovementPosition = event->globalPos();
+        modelAccumulatedMovement = QPointF();
+    }
 
     // execute
     event->accept();
-    emit statusChanged("LMB clicked.");
 }
 
 void MyPanelOpenGL::mouseReleaseEvent(QMouseEvent *event) {
@@ -199,12 +209,14 @@ void MyPanelOpenGL::mouseReleaseEvent(QMouseEvent *event) {
     if (event->isAccepted())
         return;
 
+    // add up to get a final movement and rotation
     modelBaseRotation += modelAccumulatedRotation;
+    modelBaseMovement += modelAccumulatedMovement;
+    // reset accumulation
     modelAccumulatedRotation = QPointF();
+    modelAccumulatedMovement = QPointF();
 
-    // TODO handle RMB movement for panning the camera
     // we're done
     event->accept();
-    emit statusChanged("LMB released.");
     updateGL();
 }
