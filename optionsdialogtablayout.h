@@ -46,9 +46,6 @@ private:
     QSpinBox *singleSpin;
     QLabel *lbl;
 
-signals:
-    void valuesChanged();
-
 public slots:
     void addRow();
     void delRow();

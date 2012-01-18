@@ -29,11 +29,6 @@ void OptionsDialogTabLayout::initValue(int row, QString valueName, int maxAge,
     graph->probabilityColumn = probabilityColumn;
     graph->valueColumn = valueColumn;
 
-    // connect updates on the graph to signals we emit here
-    connect(this, SIGNAL(valuesChanged()), graph, SLOT(update()));
-    // connect any changes to the dialog close button
-    connect(this, SIGNAL(valuesChanged()), dialog, SLOT(valuesChanged()));
-
     // adding graph and table
     addWidget(graph, row, 0);
     addWidget(table, row, 1);
@@ -94,6 +89,8 @@ void OptionsDialogTabLayout::initValue(int row, QString valueName, int maxAge,
     // a button to add new lines
     addBtn = new QPushButton("Add", table);
     connect(addBtn, SIGNAL(clicked()), this, SLOT(addRow()));
+    connect(addBtn, SIGNAL(clicked()), graph, SLOT(update()));
+    connect(addBtn, SIGNAL(clicked()), dialog, SLOT(valuesChanged()));
     table->setCellWidget(0, column++, addBtn);
 
     // prepend all data to the table, one tupel after the other
@@ -148,6 +145,8 @@ void OptionsDialogTabLayout::initValue(int row, QString valueName, int maxAge,
         else {
             delBtn = new QPushButton("Delete", table);
             connect(delBtn, SIGNAL(clicked()), this, SLOT(delRow()));
+            connect(delBtn, SIGNAL(clicked()), graph, SLOT(update()));
+            connect(delBtn, SIGNAL(clicked()), dialog, SLOT(valuesChanged()));
             table->setCellWidget(0, column++, delBtn);
         }
     }
@@ -160,7 +159,6 @@ void OptionsDialogTabLayout::addRow() {
     ValuesTable *table = (ValuesTable*)(btnAdd->parentWidget()->parentWidget());
     GraphWidget *graph = table->graph;
 
-
     int rowCount = table->rowCount();
     int columnCount = table->columnCount();
 
@@ -168,7 +166,6 @@ void OptionsDialogTabLayout::addRow() {
     for (int row = 0; row < rowCount; row++) {
         for (int col = 0; col < columnCount; col++) {
             if (sender() == table->cellWidget(row, col)) {
-
                 // remember the values to be added
                 int iAge = ((QSpinBox*)table->cellWidget(row, 0))->value();
                 double dProbability = 0.0;
@@ -237,6 +234,8 @@ void OptionsDialogTabLayout::addRow() {
 
                         delBtn = new QPushButton("Delete", table);
                         connect(delBtn, SIGNAL(clicked()), this, SLOT(delRow()));
+                        connect(delBtn, SIGNAL(clicked()), graph, SLOT(update()));
+                        connect(delBtn, SIGNAL(clicked()), dialog, SLOT(valuesChanged()));
 
                         // add the row
                         int column = 0;
@@ -250,10 +249,10 @@ void OptionsDialogTabLayout::addRow() {
                         }
 
                         table->setCellWidget(next, column++, delBtn);
-                        emit valuesChanged();
-                        return;
+                        break;
                     }
                 }
+                return;
             }
         }
     }
@@ -273,7 +272,6 @@ void OptionsDialogTabLayout::delRow() {
             if (sender() == table->cellWidget(row, col)) {
                 // remove the whole row
                 table->removeRow(row);
-                emit valuesChanged();
                 return;
             }
         }

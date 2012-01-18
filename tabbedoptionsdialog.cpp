@@ -3,6 +3,7 @@
 #include <QVBoxLayout>
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QDebug>
 
 TabbedOptionsDialog::TabbedOptionsDialog(QWidget *parent) :
     QDialog(parent)
@@ -114,4 +115,5 @@ void TabbedOptionsDialog::saveToXML() {
 
 void TabbedOptionsDialog::valuesChanged() {
     updated = true;
+    qDebug() << QObject::sender();
 }
