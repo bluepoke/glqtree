@@ -239,7 +239,19 @@ void TabbedOptionsDialog::valuesChanged() {
         }
     }
     // reset seed
+    qDebug() << "Before reseed";
+    qDebug() << Plant::activePlant->getBranchThicknessAt(0);
+    qDebug() << Plant::activePlant->getBranchThicknessAt(1);
+    qDebug() << Plant::activePlant->getBranchLengthAt(0);
+
+    // the bug is here !!!!
     Plant::activePlant->reseed();
+
+    qDebug() << "After reseed";
+    qDebug() << Plant::activePlant->getBranchThicknessAt(0);
+    qDebug() << Plant::activePlant->getBranchThicknessAt(1);
+    qDebug() << Plant::activePlant->getBranchLengthAt(0);
+
     // rebuild scene
     Scene::activeScene->initScene(Plant::activePlant);
 }

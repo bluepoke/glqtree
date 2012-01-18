@@ -67,14 +67,9 @@ void OptionsDialogTabLayout::initValue(int row, QString valueName, int maxAge,
     table->setSortingEnabled(false);
     table->verticalHeader()->hide();
     table->resizeColumnsToContents();
+	// set column width
     for (int i=0; i<table->columnCount(); i++) {
         table->setColumnWidth(i, COLUMN_WIDTH);
-//        switch(i) {
-//        case 0: table->setColumnWidth(0, 40);
-//        case 1: table->setColumnWidth(1, 80);
-//        case 2: i == table->columnCount() -1 ? table->setColumnWidth(2, 50) : table->setColumnWidth(2, 80);
-//        case 3: table->setColumnWidth(3, 50);
-//        }
     }
     table->setMaximumWidth(TABLE_MAX_WIDTH);
     table->setMinimumHeight(TABLE_MIN_HEIGHT);
