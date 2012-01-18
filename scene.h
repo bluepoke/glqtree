@@ -33,10 +33,11 @@ class Scene
 {
 public:
     static Scene* activeScene;
-    Scene(Plant *plant = 0);
+    Scene(Plant *plant = 0, QWidget *oglPanel = 0);
 
-    SceneObject *initScene(Plant *plant = 0);
+    void initScene(Plant *plant = 0);
     SceneObject *root;
+    QWidget *oglPanel;
 };
 
 #endif // SCENE_H

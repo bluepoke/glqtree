@@ -80,7 +80,7 @@ public:
     int getLeafAngleAt(int age);
     int getLeafLengthAt(int age);
     int getLeafWidthAt(int age);
-    void randomize();
+    void reseed();
     double getBranchingProbabilityAt(int age);
     double getMainBranchProbabilityAt(int age);
     double getGrowthInterruptionProbabilityAt(int age);

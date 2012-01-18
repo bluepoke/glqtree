@@ -6,6 +6,8 @@
 #include <QDebug>
 #include "scene.h"
 
+class MyPanelOpenGL;
+
 TabbedOptionsDialog::TabbedOptionsDialog(QWidget *parent) :
     QDialog(parent)
 {
@@ -239,5 +241,8 @@ void TabbedOptionsDialog::valuesChanged() {
                             ((QSpinBox*)v->cellWidget(i,1))->value());
         }
     }
+    // reset seed
+    Plant::activePlant->reseed();
+    // rebuild scene
     Scene::activeScene->initScene(Plant::activePlant);
 }

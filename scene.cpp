@@ -2,6 +2,7 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <QDebug>
+#include <QGLWidget>
 
 Scene* Scene::activeScene = 0;
 
@@ -38,14 +39,19 @@ void BranchSection::render()
 }
 
 
-Scene::Scene(Plant *plant) {
-    root = initScene(plant);
+Scene::Scene(Plant *plant, QWidget *oglPanel) : oglPanel(oglPanel) {
+    initScene(plant);
 }
 
-SceneObject* Scene::initScene(Plant *plant) {
-    if (plant == 0) return 0;
+void Scene::initScene(Plant *plant) {
+    // no plant: no scene root
+    if (plant == 0) {
+        Scene::root = 0;
+        return;
+    }
+
     // TODO load from static plant object here
-//    qDebug() << plant->name;
+//    qDebug() << "\n" << plant->name;
 //    qDebug() << plant->getBranchThicknessAt(0);
 //    qDebug() << plant->getBranchThicknessAt(1);
 //    qDebug() << plant->getBranchLengthAt(0);
@@ -73,6 +79,8 @@ SceneObject* Scene::initScene(Plant *plant) {
 //    child->translation = new QVector3D(0, 0, ((BranchSection*)root)->length);
 //    root->children->append(child);
 
-    // return root
-    return root;
+    // set root for scene
+    Scene::root = root;
+    // call redraw
+    ((QGLWidget*)oglPanel)->update();
 }

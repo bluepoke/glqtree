@@ -56,7 +56,7 @@ void MyPanelOpenGL::initializeGL() {
     glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 
     // load a scene to display
-    Scene::activeScene = new Scene(Plant::activePlant);
+    Scene::activeScene = new Scene(Plant::activePlant, this);
 }
 
 void MyPanelOpenGL::resizeGL(int width, int height){
@@ -94,62 +94,13 @@ void MyPanelOpenGL::paintGL(){
 
     // render scene, starting with the root
     if (Scene::activeScene->root != 0) {
+        // y-axis should now be upwards :)
         glPushMatrix();
         glRotatef(-90.0, 1.0, 0.0, 0.0);
 
         renderObject(Scene::activeScene->root);
         glPopMatrix();
     }
-
-    glBegin(GL_QUADS);
-
-    GLfloat p = 0.75;
-
-    // testing normal vectors on this face
-    glColor4f(1,0,0,0.5);
-    glNormal3f(-1,-1,-1);
-    glVertex3f(-p,-p,-p);
-    glNormal3f( 1,-1,-1);
-    glVertex3f( p,-p,-p);
-    glNormal3f( 1, 1,-1);
-    glVertex3f( p, p,-p);
-    glNormal3f(-1, 1,-1);
-    glVertex3f(-p, p,-p);
-
-    // the rest adds up to a standard cube
-    glNormal3f( 0, 0, 1);
-    glVertex3f(-p,-p, p);
-    glVertex3f( p,-p, p);
-    glVertex3f( p, p, p);
-    glVertex3f(-p, p, p);
-
-    glColor4f(0,1,0,1);
-    glNormal3f(-1, 0, 0);
-    glVertex3f(-p,-p, p);
-    glVertex3f(-p,-p,-p);
-    glVertex3f(-p, p,-p);
-    glVertex3f(-p, p, p);
-
-    glNormal3f( 1, 0, 0);
-    glVertex3f( p,-p, p);
-    glVertex3f( p,-p,-p);
-    glVertex3f( p, p,-p);
-    glVertex3f( p, p, p);
-
-    glColor4f(0,0,1,1);
-    glNormal3f( 0,-1, 0);
-    glVertex3f(-p,-p, p);
-    glVertex3f(-p,-p,-p);
-    glVertex3f( p,-p,-p);
-    glVertex3f( p,-p, p);
-
-    glNormal3f( 0, 1, 0);
-    glVertex3f(-p, p, p);
-    glVertex3f(-p, p,-p);
-    glVertex3f( p, p,-p);
-    glVertex3f( p, p, p);
-
-    glEnd();
 
     glFlush();
 }
