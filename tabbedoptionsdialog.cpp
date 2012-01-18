@@ -4,6 +4,7 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QDebug>
+#include "scene.h"
 
 TabbedOptionsDialog::TabbedOptionsDialog(QWidget *parent) :
     QDialog(parent)
@@ -119,46 +120,127 @@ void TabbedOptionsDialog::valuesChanged() {
     Plant *p = Plant::activePlant;
     ValuesTable *v = (ValuesTable*)QObject::sender()->parent()->parent();
 
+    qDebug() << "\nBefore: " << Plant::activePlant->getBranchThicknessAt(0);
+
+    // Branching changed
     if (v->pValues == &(p->branching)) {
-        qDebug() << "Branching changed";
+        p->branching.clear();
+        for (int i = v->rowCount() - 2; i >= 0; i--) {
+            p->addBranching(((QLabel*)v->cellWidget(i,0))->text().toInt(),
+                            ((QSpinBox*)v->cellWidget(i,2))->value(),
+                            ((QDoubleSpinBox*)v->cellWidget(i,1))->value());
+        }
     }
+    // Branching angle changed
     else if (v->pValues == &(p->branchingAngle)) {
-        qDebug() << "Branching angle changed";
+        p->branchingAngle.clear();
+        for (int i = v->rowCount() - 2; i >= 0; i--) {
+            p->addBranchingAngle(((QLabel*)v->cellWidget(i,0))->text().toInt(),
+                            ((QSpinBox*)v->cellWidget(i,2))->value(),
+                            ((QDoubleSpinBox*)v->cellWidget(i,1))->value());
+        }
     }
+    // Branching rotatiton changed
     else if (v->pValues == &(p->branchingRotation)) {
-        qDebug() << "Branching rotatiton changed";
+        p->branchingRotation.clear();
+        for (int i = v->rowCount() - 2; i >= 0; i--) {
+            p->addBranchingRotation(((QLabel*)v->cellWidget(i,0))->text().toInt(),
+                            ((QSpinBox*)v->cellWidget(i,2))->value(),
+                            ((QDoubleSpinBox*)v->cellWidget(i,1))->value());
+        }
     }
+    // Branch length changed
     else if (v->pValues == &(p->branchLength)) {
-        qDebug() << "Branch length changed";
+        p->branchLength.clear();
+        for (int i = v->rowCount() - 2; i >= 0; i--) {
+            p->addBranchLength(((QLabel*)v->cellWidget(i,0))->text().toInt(),
+                            ((QSpinBox*)v->cellWidget(i,2))->value(),
+                            ((QDoubleSpinBox*)v->cellWidget(i,1))->value());
+        }
     }
+    // Thickness changed
     else if (v->pValues == &(p->branchThickness)) {
-        qDebug() << "Thickness changed";
+        p->branchThickness.clear();
+        for (int i = v->rowCount() - 2; i >= 0; i--) {
+            p->addBranchThickness(((QLabel*)v->cellWidget(i,0))->text().toInt(),
+                            ((QSpinBox*)v->cellWidget(i,2))->value(),
+                            ((QDoubleSpinBox*)v->cellWidget(i,1))->value());
+        }
     }
+    // Wobbliness changed
     else if (v->pValues == &(p->branchWobbliness)) {
-        qDebug() << "Wobbliness changed";
+        p->branchWobbliness.clear();
+        for (int i = v->rowCount() - 2; i >= 0; i--) {
+            p->addBranchWobbliness(((QLabel*)v->cellWidget(i,0))->text().toInt(),
+                            ((QSpinBox*)v->cellWidget(i,2))->value(),
+                            ((QDoubleSpinBox*)v->cellWidget(i,1))->value());
+        }
     }
+    // Grav. influence changed
     else if (v->pValues == &(p->gravitationalInfluence)) {
-        qDebug() << "Grav. influence changed";
+        p->gravitationalInfluence.clear();
+        for (int i = v->rowCount() - 2; i >= 0; i--) {
+            p->addGravitationalInfluence(((QLabel*)v->cellWidget(i,0))->text().toInt(),
+                            ((QSpinBox*)v->cellWidget(i,1))->value());
+        }
     }
+    // Growth interruption changed
     else if (v->pValues == &(p->growthInterruption)) {
-        qDebug() << "Growth interruption changed";
+        p->growthInterruption.clear();
+        for (int i = v->rowCount() - 2; i >= 0; i--) {
+            p->addGrowthInterruption(((QLabel*)v->cellWidget(i,0))->text().toInt(),
+                            ((QSpinBox*)v->cellWidget(i,2))->value(),
+                            ((QDoubleSpinBox*)v->cellWidget(i,1))->value());
+        }
     }
+    // Main branch changed
     else if (v->pValues == &(p->mainBranch)) {
-        qDebug() << "Main branch changed";
+        p->mainBranch.clear();
+        for (int i = v->rowCount() - 2; i >= 0; i--) {
+            p->addMainBranch(((QLabel*)v->cellWidget(i,0))->text().toInt(),
+                            ((QDoubleSpinBox*)v->cellWidget(i,1))->value());
+        }
     }
+    // Leaf angle changed
     else if (v->pValues == &(p->leafAngle)) {
-        qDebug() << "Leaf angle changed";
+        p->leafAngle.clear();
+        for (int i = v->rowCount() - 2; i >= 0; i--) {
+            p->addLeafAngle(((QLabel*)v->cellWidget(i,0))->text().toInt(),
+                            ((QSpinBox*)v->cellWidget(i,1))->value());
+        }
     }
+    // Leaf count p. lvl changed
     else if (v->pValues == &(p->leafCountPerLevel)) {
-        qDebug() << "Leaf count p. lvl changed";
+        p->leafCountPerLevel.clear();
+        for (int i = v->rowCount() - 2; i >= 0; i--) {
+            p->addLeafCountPerLevel(((QLabel*)v->cellWidget(i,0))->text().toInt(),
+                            ((QSpinBox*)v->cellWidget(i,1))->value());
+        }
     }
+    // Leaf length changed
     else if (v->pValues == &(p->leafLength)) {
-        qDebug() << "Leaf length changed";
+        p->leafLength.clear();
+        for (int i = v->rowCount() - 2; i >= 0; i--) {
+            p->addLeafLength(((QLabel*)v->cellWidget(i,0))->text().toInt(),
+                            ((QSpinBox*)v->cellWidget(i,1))->value());
+        }
     }
+    // Leaf levels changed
     else if (v->pValues == &(p->leafLevels)) {
-        qDebug() << "Leaf levels changed";
+        p->leafLevels.clear();
+        for (int i = v->rowCount() - 2; i >= 0; i--) {
+            p->addLeafLevels(((QLabel*)v->cellWidget(i,0))->text().toInt(),
+                            ((QSpinBox*)v->cellWidget(i,1))->value());
+        }
     }
+    // Leaf width changed
     else if (v->pValues == &(p->leafWidth)) {
-        qDebug() << "Leaf width changed";
+        p->leafWidth.clear();
+        for (int i = v->rowCount() - 2; i >= 0; i--) {
+            p->addLeafWidth(((QLabel*)v->cellWidget(i,0))->text().toInt(),
+                            ((QSpinBox*)v->cellWidget(i,1))->value());
+        }
     }
+    qDebug() << "After: " << Plant::activePlant->getBranchThicknessAt(0);
+    Scene::activeScene->initScene(Plant::activePlant);
 }

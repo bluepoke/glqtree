@@ -3,6 +3,8 @@
 #include <GL/glu.h>
 #include <QDebug>
 
+Scene* Scene::activeScene = 0;
+
 SceneObject::SceneObject(SceneObject *parent) : parent(parent)
 {
     children = new QList<SceneObject*>;

@@ -32,6 +32,7 @@ public:
 class Scene
 {
 public:
+    static Scene* activeScene;
     Scene(Plant *plant = 0);
 
     SceneObject *initScene(Plant *plant = 0);

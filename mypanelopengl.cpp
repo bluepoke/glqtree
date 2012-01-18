@@ -56,7 +56,7 @@ void MyPanelOpenGL::initializeGL() {
     glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 
     // load a scene to display
-    scene = new Scene(Plant::activePlant);
+    Scene::activeScene = new Scene(Plant::activePlant);
 }
 
 void MyPanelOpenGL::resizeGL(int width, int height){
@@ -93,11 +93,11 @@ void MyPanelOpenGL::paintGL(){
     glColor4f(1, 0, 0, 1);
 
     // render scene, starting with the root
-    if (scene->root != 0) {
+    if (Scene::activeScene->root != 0) {
         glPushMatrix();
         glRotatef(-90.0, 1.0, 0.0, 0.0);
 
-        renderObject(scene->root);
+        renderObject(Scene::activeScene->root);
         glPopMatrix();
     }
 
