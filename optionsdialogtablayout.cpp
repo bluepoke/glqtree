@@ -1,7 +1,7 @@
 #include "optionsdialogtablayout.h"
 
 OptionsDialogTabLayout::OptionsDialogTabLayout(QWidget *parent) :
-    QGridLayout(parent)
+    QGridLayout(0)
 {
     dialog = (TabbedOptionsDialog*)parent;
 }
