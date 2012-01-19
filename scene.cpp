@@ -73,7 +73,7 @@ void Scene::initScene(Plant *plant) {
 
 QList<SceneObject*> *Scene::createSceneObject(Plant *plant, SceneObject *parent, int age)
 {
-    if (age == plant->maxAge) return new QList<SceneObject*>;
+    if (age >= plant->maxAge) return new QList<SceneObject*>;
 
     QList<SceneObject*> *children = new QList<SceneObject*>;
     // create SceneObjects for all possible children
@@ -85,6 +85,13 @@ QList<SceneObject*> *Scene::createSceneObject(Plant *plant, SceneObject *parent,
 
     if (isBranching) {
         for (int i=0; i<branchCount; i++) {
+            // is growth interrupted
+            bool isGrowthInterrupted = plant->isGrowthInterruptingAt(age);
+            int delay = plant->getGrowthInterruptionAt(age);
+            if (isGrowthInterrupted) {
+                // growth is delayed. that means, following objects
+                age += delay;
+            }
             // create new branch
             SceneObject *branch = constructBranchSection(plant,parent,age);
             // apply rotation to branch
@@ -92,8 +99,9 @@ QList<SceneObject*> *Scene::createSceneObject(Plant *plant, SceneObject *parent,
                                             plant->getBranchingAngle(age),
                                             (360/branchCount*i)+plant->getBranchingRotationAt(age));
             *(branch->rotation) += *rotB;
-            // let the branch grow further (recursion)
-            QList<SceneObject*> *nextBranchChildren = createSceneObject(plant, branch, age + 1);
+            // let the branch grow further with possible interruption (recursion)
+            qDebug() << "delay = " << delay;
+            QList<SceneObject*> *nextBranchChildren = createSceneObject(plant, branch, age + 1 + delay);
             // append the children to this branch
             branch->children->append(*nextBranchChildren);
             // append this branch to the list of children
