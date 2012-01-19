@@ -92,7 +92,7 @@ void TabbedOptionsDialog::initTabs() {
     list << "Age" << "% Deviation" << "Thickness";
     tab2Layout->initValue(row++, new QStringList(list), p->maxAge,true,true,&(p->branchThickness));
     list .clear();
-    list << "Age" << "% Deviation" << "Wobbliness";
+    list << "Age" << "Probability" << "Wobbliness";
     tab2Layout->initValue(row++, new QStringList(list), p->maxAge,true,true,&(p->branchWobbliness));
     list .clear();
     list << "Age" << "Gravitation";

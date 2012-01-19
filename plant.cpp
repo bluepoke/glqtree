@@ -276,19 +276,37 @@ bool Plant::isGrowthInterruptingAt(int age) {
     return isTakingPlace(&prob);
 }
 
-void Plant::addBranchWobbliness(int age, int wobble, double rel_deviation)
+//void Plant::addBranchWobbliness(int age, int wobble, double rel_deviation)
+//{
+//    Tupel3 t(age,wobble,rel_deviation);
+//    addTupel3(&branchWobbliness,&t);
+//}
+void Plant::addBranchWobbliness(int age, int duration, double probability)
 {
-    Tupel3 t(age,wobble,rel_deviation);
+    Tupel3 t(age,duration,probability);
     addTupel3(&branchWobbliness,&t);
 }
 
+//int Plant::getBranchWobblinessAt(int age) {
+//    int wobbliness = interpolateDeviatedValue3(&branchWobbliness, &age);
+//    double prob = 0.5;
+//    bool negative = isTakingPlace(&prob);
+//    if (negative)
+//        wobbliness = -wobbliness;
+//    return wobbliness;
+//}
 int Plant::getBranchWobblinessAt(int age) {
-    int wobbliness = interpolateDeviatedValue3(&branchWobbliness, &age);
-    double prob = 0.5;
-    bool negative = isTakingPlace(&prob);
-    if (negative)
-        wobbliness = -wobbliness;
-    return wobbliness;
+    return interpolateValue3(&branchWobbliness, &age);
+}
+double Plant::getBranchWobblinessProbabilityAt(int age) {
+    return interpolateProbability3(&branchWobbliness, &age);
+}
+bool Plant::isBranchWobblinessAt(int age) {
+    double prob = getBranchWobblinessProbabilityAt(age);
+    return isTakingPlace(&prob);
+}
+int Plant::getRandomRotation360() {
+    return qrand() % 360;
 }
 
 void Plant::addLeafLevels(int age, int count)
@@ -341,7 +359,7 @@ int Plant::getLeafWidthAt(int age) {
     return interpolateValue3(&leafWidth, &age);
 }
 
-bool Plant::throwDice() {
+bool Plant::coinflip() {
     double d = 0.5;
     return isTakingPlace(&d);
 }

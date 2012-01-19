@@ -28,7 +28,7 @@ void BranchSection::render()
 //    gluQuadricNormals(qobj, GLU_SMOOTH);
 
     // build all along the positive z-axis
-    gluCylinder(qobj, radBottom, radTop, length, 15, 1);
+    gluCylinder(qobj, radBottom, radTop, length, 15, 5);
 
 //    qobj = gluNewQuadric();
 //    glPushMatrix();
@@ -96,9 +96,14 @@ QList<SceneObject*> *Scene::createSceneObject(Plant *plant, SceneObject *parent,
             // create new branch
             SceneObject *branch = constructBranchSection(plant,parent,branchAge);
             // apply rotation to branch
-            QVector3D *rotB = new QVector3D(plant->getBranchingAngle(branchAge),
-                                            plant->getBranchingAngle(branchAge),
-                                            (360/branchCount*i)+plant->getBranchingRotationAt(branchAge));
+            QVector3D *rotB;
+            if (plant->coinflip())
+            rotB = new QVector3D(0, plant->getBranchingAngle(branchAge),
+                                 (360/branchCount*i)+plant->getBranchingRotationAt(branchAge));
+            else
+                rotB = new QVector3D(plant->getBranchingAngle(branchAge), 0,
+                                     (360/branchCount*i)+plant->getBranchingRotationAt(branchAge));
+
             *(branch->rotation) += *rotB;
             // let the branch grow further with possible interruption (recursion)
             QList<SceneObject*> *nextBranchChildren = createSceneObject(plant, branch, branchAge+1);
@@ -130,8 +135,17 @@ SceneObject* Scene::constructBranchSection(Plant* plant, SceneObject* parent, in
                                              plant->getBranchLengthAt(age));
 
     // apply wobbliness
-    QVector3D *wobble = new QVector3D(plant->getBranchWobblinessAt(age),plant->getBranchWobblinessAt(age),plant->getBranchWobblinessAt(age));
-    current->rotation = wobble;
+    if (plant->isBranchWobblinessAt(age)) {
+        QVector3D *wobble;
+        if (plant->coinflip())
+            wobble = new QVector3D(0, plant->getBranchWobblinessAt(age),
+                                   plant->getRandomRotation360());
+        else
+            wobble = new QVector3D(plant->getBranchWobblinessAt(age), 0,
+                                   plant->getRandomRotation360());
+
+        current->rotation = wobble;
+    }
     current->translation = new QVector3D(0, 0, ((BranchSection*)parent)->length);
     return current;
 }

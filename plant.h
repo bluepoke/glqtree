@@ -59,7 +59,7 @@ public:
     void addMainBranch(int age, double probability);
     void addGravitationalInfluence(int age, int influence);
     void addGrowthInterruption(int age, int duration, double probability);
-    void addBranchWobbliness(int age, int wobble, double rel_deviation);
+    void addBranchWobbliness(int age, int wobble, double probability);
 
     void addLeafLevels(int age, int count);
     void addLeafCountPerLevel(int age, int count);
@@ -87,7 +87,10 @@ public:
     bool isBranchingAt(int age);
     bool continueMainBranchAt(int age);
     bool isGrowthInterruptingAt(int age);
-    bool throwDice();
+    bool coinflip();
+    double getBranchWobblinessProbabilityAt(int age);
+    bool isBranchWobblinessAt(int age);
+    int getRandomRotation360();
 signals:
     
 public slots:
