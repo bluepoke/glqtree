@@ -149,7 +149,7 @@ double interpolateProbability3(QList<Tupel3> *list, int *age) {
 }
 
 //use probability value and some random number to determine if something takes place or not
-bool isTakingPlace(double *probability) {
+bool isTakingPlace(const double *probability) {
     int threshold = *probability*RAND_MAX;
     int rnd = qrand();
     if (rnd <= threshold) {
@@ -339,6 +339,11 @@ void Plant::addLeafWidth(int age, int width)
 
 int Plant::getLeafWidthAt(int age) {
     return interpolateValue3(&leafWidth, &age);
+}
+
+bool Plant::throwDice() {
+    double d = 0.5;
+    return isTakingPlace(&d);
 }
 
 // implementations for tupels

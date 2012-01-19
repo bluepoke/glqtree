@@ -87,6 +87,7 @@ public:
     bool isBranchingAt(int age);
     bool continueMainBranchAt(int age);
     bool isGrowthInterruptingAt(int age);
+    bool throwDice();
 signals:
     
 public slots:
