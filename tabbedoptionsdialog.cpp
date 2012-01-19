@@ -26,8 +26,10 @@ TabbedOptionsDialog::TabbedOptionsDialog(QWidget *parent) :
     btnClose = new QPushButton("Close");
     btnOpen = new QPushButton("Open");
     btnSave = new QPushButton("Save");
+    btnNew = new QPushButton("New");
 
     buttonBox = new QDialogButtonBox;
+    buttonBox->addButton(btnNew, QDialogButtonBox::ActionRole);
     buttonBox->addButton(btnOpen, QDialogButtonBox::ActionRole);
     buttonBox->addButton(btnSave, QDialogButtonBox::ActionRole);
     buttonBox->addButton(btnClose, QDialogButtonBox::RejectRole);
@@ -36,6 +38,7 @@ TabbedOptionsDialog::TabbedOptionsDialog(QWidget *parent) :
     connect(btnSave, SIGNAL(clicked()), this, SLOT(saveToXML()));
     connect(btnOpen, SIGNAL(clicked()), this, SLOT(openFromXML()));
     connect(btnClose, SIGNAL(clicked()), this, SLOT(closeDialog()));
+    connect(btnNew, SIGNAL(clicked()), this, SLOT(newPlant()));
 
     // lay it all out
     QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -113,6 +116,10 @@ void TabbedOptionsDialog::saveToXML() {
     if (!(fileName.isEmpty() || fileName.isNull())) {
             PersistenceManager::writePlant(fileName,Plant::activePlant);
     }
+}
+
+void TabbedOptionsDialog::newPlant()
+{
 }
 
 void TabbedOptionsDialog::valuesChanged() {
