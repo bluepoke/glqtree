@@ -88,7 +88,8 @@ void OptionsDialogTabLayout::initValue(int row, QString valueName, int maxAge,
     if (probabilityColumn) {
         doubleSpin = new QDoubleSpinBox;
         doubleSpin->setRange(0.0, 1.0);
-        doubleSpin->setSingleStep(0.01);
+        doubleSpin->setDecimals(3);
+        doubleSpin->setSingleStep(0.001);
         doubleSpin->setValue(0.0);
         table->setCellWidget(0, column++, doubleSpin);
     }
@@ -120,7 +121,8 @@ void OptionsDialogTabLayout::initValue(int row, QString valueName, int maxAge,
         if (probabilityColumn) {
             doubleSpin = new QDoubleSpinBox;
             doubleSpin->setRange(0.0, 1.0);
-            doubleSpin->setSingleStep(0.01);
+            doubleSpin->setDecimals(3);
+            doubleSpin->setSingleStep(0.001);
             doubleSpin->setValue(tupel.probability);
             // connect any changes to the dialog close button and the graph
             connect(doubleSpin, SIGNAL(valueChanged(double)), graph, SLOT(update()));
@@ -233,7 +235,8 @@ void OptionsDialogTabLayout::addRow() {
                         if (table->probabilityColumn) {
                             doubleSpin = new QDoubleSpinBox;
                             doubleSpin->setRange(0.0, 1.0);
-                            doubleSpin->setSingleStep(0.01);
+                            doubleSpin->setDecimals(3);
+                            doubleSpin->setSingleStep(0.001);
                             doubleSpin->setValue(dProbability);
                             // connect any changes to the dialog close button and the graph
                             connect(doubleSpin, SIGNAL(valueChanged(double)), graph, SLOT(update()));
