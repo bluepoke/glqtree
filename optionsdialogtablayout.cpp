@@ -16,10 +16,10 @@ ValuesTable::ValuesTable(QWidget *parent) :
 {
 }
 
-void OptionsDialogTabLayout::initValue(int row, QString valueName, int maxAge,
-                                       bool probabilityColumn, bool valueColumn, QList<Tupel3> *values)
+void OptionsDialogTabLayout::initValue(int row, QStringList *headers, int maxAge,
+                                       bool probabilityColumn, bool valueColumn,
+                                       QList<Tupel3> *values)
 {
-
     // the table is where all changable display of values is to be done
     ValuesTable *table = new ValuesTable;
 
@@ -36,34 +36,33 @@ void OptionsDialogTabLayout::initValue(int row, QString valueName, int maxAge,
     graph->valueColumn = valueColumn;
     // and the values represented by the table
     table->pValues = values;
+//    table->headers = headers;
 
     // adding graph and table
     addWidget(graph, row, 0);
     addWidget(table, row, 1);
 
-    // list for header names
-    QStringList list;
-    list << "Age";
-
-    // decide on the column count and headers
+    // decide on the column count
     if (probabilityColumn && valueColumn) {
         table->setColumnCount(4);
-        list << "Probability" << valueName << "";
-
+        graph->valueColumnName = headers->at(2);
+        graph->probabilityColumnName = headers->at(1);
     }
     else if (!probabilityColumn && !valueColumn) {
         table->setColumnCount(2);
-        list << "";
     }
     else {
         table->setColumnCount(3);
-        list << valueName << "";
+        graph->valueColumnName = headers->at(1);
+        graph->probabilityColumnName = headers->at(1);
     }
 
     table->setRowCount(1);
     table->setRowHeight(0, ROW_HEIGHT);
+
     // headers and sorting
-    table->setHorizontalHeaderLabels(list);
+    headers->append("");
+    table->setHorizontalHeaderLabels(*headers);
     table->setSortingEnabled(false);
     table->verticalHeader()->hide();
     table->resizeColumnsToContents();
@@ -89,7 +88,7 @@ void OptionsDialogTabLayout::initValue(int row, QString valueName, int maxAge,
         doubleSpin = new QDoubleSpinBox;
         doubleSpin->setRange(0.0, 1.0);
         doubleSpin->setDecimals(3);
-        doubleSpin->setSingleStep(0.001);
+        doubleSpin->setSingleStep(0.005);
         doubleSpin->setValue(0.0);
         table->setCellWidget(0, column++, doubleSpin);
     }
@@ -122,7 +121,7 @@ void OptionsDialogTabLayout::initValue(int row, QString valueName, int maxAge,
             doubleSpin = new QDoubleSpinBox;
             doubleSpin->setRange(0.0, 1.0);
             doubleSpin->setDecimals(3);
-            doubleSpin->setSingleStep(0.001);
+            doubleSpin->setSingleStep(0.005);
             doubleSpin->setValue(tupel.probability);
             // connect any changes to the dialog close button and the graph
             connect(doubleSpin, SIGNAL(valueChanged(double)), graph, SLOT(update()));
@@ -236,7 +235,7 @@ void OptionsDialogTabLayout::addRow() {
                             doubleSpin = new QDoubleSpinBox;
                             doubleSpin->setRange(0.0, 1.0);
                             doubleSpin->setDecimals(3);
-                            doubleSpin->setSingleStep(0.001);
+                            doubleSpin->setSingleStep(0.005);
                             doubleSpin->setValue(dProbability);
                             // connect any changes to the dialog close button and the graph
                             connect(doubleSpin, SIGNAL(valueChanged(double)), graph, SLOT(update()));

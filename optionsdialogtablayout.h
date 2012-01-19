@@ -33,7 +33,7 @@ class OptionsDialogTabLayout : public QGridLayout
 public:
     explicit OptionsDialogTabLayout(QWidget *parent = 0);
     void initValues();
-    void initValue(int row = 0, QString valueName = 0, int maxAge = 0,
+    void initValue(int row = 0, QStringList *headers = 0, int maxAge = 0,
                    bool probabilityColumn = 0, bool valueColumn = 0,
                    QList<Tupel3> *values = 0);
 

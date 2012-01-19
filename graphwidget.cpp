@@ -1,4 +1,6 @@
 #include "graphwidget.h"
+#include <QDebug>
+#include "optionsdialogtablayout.h"
 
 GraphWidget::GraphWidget(QWidget *parent) :
     QWidget(parent)
@@ -16,7 +18,7 @@ void GraphWidget::paintEvent(QPaintEvent *event) {
     QPen penBlue(Qt::blue, 1, Qt::SolidLine);
     // set a font to match the margins to write on
     QFont font = this->font();
-    font.setPixelSize(MARGIN - 5);
+    font.setPixelSize(MARGIN - 7);
 
     // the painter to paint with
     QPainter painter(this);
@@ -118,7 +120,7 @@ void GraphWidget::paintEvent(QPaintEvent *event) {
         painter.save();
         painter.rotate(-90);
         painter.translate(-1 * (2 * MARGIN + HEIGHT), 0);
-        painter.drawText(QRect(MARGIN, 0, HEIGHT, MARGIN), Qt::AlignCenter, "Value");
+        painter.drawText(QRect(MARGIN, 0, HEIGHT, MARGIN), Qt::AlignCenter, valueColumnName);
     }
     else if (probabilityColumn) {
         painter.setPen(penBlue);
@@ -128,14 +130,14 @@ void GraphWidget::paintEvent(QPaintEvent *event) {
         painter.save();
         painter.rotate(-90);
         painter.translate(-1 * (2 * MARGIN + HEIGHT), 0);
-        painter.drawText(QRect(MARGIN, 0, HEIGHT, MARGIN), Qt::AlignCenter, "Probability");
+        painter.drawText(QRect(MARGIN, 0, HEIGHT, MARGIN), Qt::AlignCenter, probabilityColumnName);
     }
 
     // if necessary, put some more text on the right axis
     if (probabilityColumn && valueColumn) {
         painter.setPen(penBlue);
         painter.translate(0, WIDTH + MARGIN);
-        painter.drawText(QRect(MARGIN, 0, HEIGHT, MARGIN), Qt::AlignCenter, "Probability");
+        painter.drawText(QRect(MARGIN, 0, HEIGHT, MARGIN), Qt::AlignCenter, probabilityColumnName);
 
         painter.restore();
         painter.setPen(penBlue);

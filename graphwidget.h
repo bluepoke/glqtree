@@ -21,6 +21,8 @@ public:
     static const int MARGIN = 17;
     static const int HEIGHT = 66;
     static const int WIDTH = 100;
+    QString valueColumnName;
+    QString probabilityColumnName;
 
 private:
     static const int dataRowCount;
