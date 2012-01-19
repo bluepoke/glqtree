@@ -68,7 +68,7 @@ void MyPanelOpenGL::resizeGL(int width, int height){
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     // 40° fov, aspect ratio decided by the viewport, near and far clipping values
-    gluPerspective(40, (float)width/height, 0.01, 100000.0);
+    gluPerspective(40, (float)width/height, 10, 100000.0);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     // add a camera with vectors:(where, to, up)
