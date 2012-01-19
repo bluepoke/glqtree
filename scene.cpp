@@ -84,13 +84,13 @@ QList<SceneObject*> *Scene::createSceneObject(Plant *plant, SceneObject *parent,
     int branchCount = plant->getBranchingAt(age);
 
     if (isBranching) {
-        // which angle
-        int branchRot = plant->getBranchingRotationAt(age);
         for (int i=0; i<branchCount; i++) {
             // create new branch
             SceneObject *branch = constructBranchSection(plant,parent,age);
             // apply rotation to branch
-            QVector3D *rotB = new QVector3D(branchRot,0,360/branchCount*i);
+            QVector3D *rotB = new QVector3D(plant->getBranchingAngle(age),
+                                            plant->getBranchingAngle(age),
+                                            (360/branchCount*i)+plant->getBranchingRotationAt(age));
             *(branch->rotation) += *rotB;
             // let the branch grow further (recursion)
             QList<SceneObject*> *nextBranchChildren = createSceneObject(plant, branch, age + 1);
