@@ -38,6 +38,8 @@ public:
     void initScene(Plant *plant = 0);
     SceneObject *root;
     QWidget *oglPanel;
+private:
+    QList<SceneObject*> *createSceneObject(Plant *plant = 0, SceneObject *parent = 0, int age = 0);
 };
 
 #endif // SCENE_H

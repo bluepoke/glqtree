@@ -11,7 +11,7 @@ MyPanelOpenGL::MyPanelOpenGL(QWidget *parent) :
     // mouse navigation values
     mouseZoomDistance = 50.0f;
     // initial rotation and movement here, none by default
-    modelBaseRotation = QPointF();
+    modelBaseRotation = QPointF(15, 0);
     modelBaseMovement = QPointF();
     // initially, no accumulated rotation or movement given
     modelAccumulatedRotation = QPointF();

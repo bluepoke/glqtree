@@ -33,7 +33,7 @@ void BranchSection::render()
 //    qobj = gluNewQuadric();
 //    glPushMatrix();
 //    glTranslatef(0, 0, length);
-//    gluSphere(qobj, radTop, 15, 5);
+//    gluSphere(qobj, radTop, 35, 15);
 //    glPopMatrix();
 
 }
@@ -52,37 +52,46 @@ void Scene::initScene(Plant *plant) {
 
     // reset seed before drawing
     plant->reseed();
-    // TODO load from static plant object here
-//    qDebug() << "\n" << plant->name;
-//    qDebug() << plant->getBranchThicknessAt(0);
-//    qDebug() << plant->getBranchThicknessAt(1);
-//    qDebug() << plant->getBranchLengthAt(0);
 
+    // create a root starting at age 0
     SceneObject *root;
-    root = new BranchSection(0, plant->getBranchThicknessAt(0),
-                             plant->getBranchThicknessAt(1),
-                             plant->getBranchLengthAt(0));
+    int minAge = 0;
 
-//    // define a temp root object
-//    SceneObject *root;
-//    root = new BranchSection(0, 0.5, 0.3, 1);
-//    root->rotation = new QVector3D(0, 25, 0);
-//    root->translation = new QVector3D(-2, 0, 0);
-
-//    // example child nodes
-//    SceneObject *child;
-//    child = new BranchSection(root, 0.3, 0.2, 1.5);
-//    child->rotation = new QVector3D(-25, 15, 0);
-//    child->translation = new QVector3D(0, 0, ((BranchSection*)root)->length);
-//    root->children->append(child);
-
-//    child = new BranchSection(root, 0.3, 0.05, 2);
-//    child->rotation = new QVector3D(15, -35, 0);
-//    child->translation = new QVector3D(0, 0, ((BranchSection*)root)->length);
-//    root->children->append(child);
+    root = new BranchSection(0, plant->getBranchThicknessAt(minAge),
+                             plant->getBranchThicknessAt(minAge + 1),
+                             plant->getBranchLengthAt(minAge));
+    // try creating the successor
+    QList<SceneObject*> *children = createSceneObject(plant, root, minAge + 1);
+    // append all children
+    root->children->append(*children);
 
     // set root for scene
     Scene::root = root;
     // call redraw
     ((QGLWidget*)oglPanel)->update();
+}
+
+QList<SceneObject*> *Scene::createSceneObject(Plant *plant, SceneObject *parent, int age)
+{
+    if (age == plant->maxAge) return new QList<SceneObject*>;
+
+    QList<SceneObject*> *children = new QList<SceneObject*>;
+    // create SceneObjects for all possible children
+    // TODO decide on number of children
+    SceneObject *current = new BranchSection(parent,
+                                             ((BranchSection*)parent)->radTop,
+                                             plant->getBranchThicknessAt(age + 1),
+                                             plant->getBranchLengthAt(age));
+    // TODO decide on rotation
+    current->rotation = new QVector3D(0, 0, 0);
+    current->translation = new QVector3D(0, 0, ((BranchSection*)parent)->length);
+
+    // create all possible next children of each child
+    QList<SceneObject*> *nextChildren = createSceneObject(plant, current, age + 1);
+    current->children->append(*nextChildren);
+
+    // append all possible children to the parent's children list
+    children->append(current);
+
+    return children;
 }
