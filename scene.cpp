@@ -100,7 +100,6 @@ QList<SceneObject*> *Scene::createSceneObject(Plant *plant, SceneObject *parent,
                                             (360/branchCount*i)+plant->getBranchingRotationAt(age));
             *(branch->rotation) += *rotB;
             // let the branch grow further with possible interruption (recursion)
-            qDebug() << "delay = " << delay;
             QList<SceneObject*> *nextBranchChildren = createSceneObject(plant, branch, age + 1 + delay);
             // append the children to this branch
             branch->children->append(*nextBranchChildren);
