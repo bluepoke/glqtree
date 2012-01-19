@@ -28,7 +28,7 @@ void BranchSection::render()
 //    gluQuadricNormals(qobj, GLU_SMOOTH);
 
     // build all along the positive z-axis
-    gluCylinder(qobj, radBottom, radTop, length, 15, 5);
+    gluCylinder(qobj, radBottom, radTop, length, 15, 1);
 
 //    qobj = gluNewQuadric();
 //    glPushMatrix();
@@ -77,27 +77,69 @@ QList<SceneObject*> *Scene::createSceneObject(Plant *plant, SceneObject *parent,
 
     QList<SceneObject*> *children = new QList<SceneObject*>;
     // create SceneObjects for all possible children
-    // TODO decide on number of children
+
+    // is tree branching here?
+    bool isBranching = plant->isBranchingAt(age);
+    // how many branches
+    int branchCount = plant->getBranchingAt(age);
+
+    if (isBranching) {
+        // which angle
+        int branchRot = plant->getBranchingRotationAt(age);
+        for (int i=0; i<branchCount; i++) {
+            // create new branch
+            SceneObject *branch = constructBranchSection(plant,parent,age);
+            // apply rotation to branch
+            QVector3D *rotB = new QVector3D(branchRot,0,360/branchCount*i);
+            *(branch->rotation) += *rotB;
+            // let the branch grow further (recursion)
+            QList<SceneObject*> *nextBranchChildren = createSceneObject(plant, branch, age + 1);
+            // append the children to this branch
+            branch->children->append(*nextBranchChildren);
+            // append this branch to the list of children
+            children->append(branch);
+        }
+    }
+    // main branch
+    // is branch growing further?
+    if (!isBranching || (branchCount==0) || (plant->continueMainBranchAt(age))) {
+        SceneObject *current = new BranchSection(parent,
+                                                 ((BranchSection*)parent)->radTop,
+                                                 plant->getBranchThicknessAt(age + 1),
+                                                 plant->getBranchLengthAt(age));
+        // generate wobbliness (slight rotation)
+        QVector3D *wobble = new QVector3D(plant->getBranchWobblinessAt(age),plant->getBranchWobblinessAt(age),plant->getBranchWobblinessAt(age));
+
+        // TODO decide on rotation
+        // TODO calculate rotation
+        QVector3D *rot = new QVector3D(0,0,0);
+        // add wobble to rotation
+        QVector3D *wobblerot = new QVector3D();
+        *wobblerot = *wobble + *rot;
+
+        // apply wooble and rotation to section
+        current->rotation = wobblerot;
+        //current->rotation = new QVector3D(0, 0, 0);
+        current->translation = new QVector3D(0, 0, ((BranchSection*)parent)->length);
+
+        // create all possible next children of each child
+        QList<SceneObject*> *nextChildren = createSceneObject(plant, current, age + 1);
+        current->children->append(*nextChildren);
+
+        // append all possible children to the parent's children list
+        children->append(current);
+    }
+    return children;
+}
+
+SceneObject* Scene::constructBranchSection(Plant* plant, SceneObject* parent, int age) {
     SceneObject *current = new BranchSection(parent,
                                              ((BranchSection*)parent)->radTop,
                                              plant->getBranchThicknessAt(age + 1),
                                              plant->getBranchLengthAt(age));
-    // generate wobbliness (slight rotation)
+
     QVector3D *wobble = new QVector3D(plant->getBranchWobblinessAt(age),plant->getBranchWobblinessAt(age),plant->getBranchWobblinessAt(age));
-
-    // TODO decide on rotation
-    QVector3D *rot = new QVector3D(0,0,0);
-    // TODO add wobble to rotation
     current->rotation = wobble;
-    //current->rotation = new QVector3D(0, 0, 0);
     current->translation = new QVector3D(0, 0, ((BranchSection*)parent)->length);
-
-    // create all possible next children of each child
-    QList<SceneObject*> *nextChildren = createSceneObject(plant, current, age + 1);
-    current->children->append(*nextChildren);
-
-    // append all possible children to the parent's children list
-    children->append(current);
-
-    return children;
+    return current;
 }

@@ -40,6 +40,7 @@ public:
     QWidget *oglPanel;
 private:
     QList<SceneObject*> *createSceneObject(Plant *plant = 0, SceneObject *parent = 0, int age = 0);
+    SceneObject *constructBranchSection(Plant *plant, SceneObject *parent, int age);
 };
 
 #endif // SCENE_H
