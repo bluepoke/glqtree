@@ -50,6 +50,8 @@ void Scene::initScene(Plant *plant) {
         return;
     }
 
+    // reset seed before drawing
+    plant->reseed();
     // TODO load from static plant object here
 //    qDebug() << "\n" << plant->name;
 //    qDebug() << plant->getBranchThicknessAt(0);

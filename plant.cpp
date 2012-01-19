@@ -163,7 +163,7 @@ bool isTakingPlace(double *probability) {
 Plant::Plant(int maxAge, QString name, int seed) : name(name), seed(seed), maxAge(maxAge)
 {
     // initialize randomizer when creating new plant
-    reseed();
+    this->reseed();
 }
 
 // initialize random number generator
