@@ -82,8 +82,14 @@ QList<SceneObject*> *Scene::createSceneObject(Plant *plant, SceneObject *parent,
                                              ((BranchSection*)parent)->radTop,
                                              plant->getBranchThicknessAt(age + 1),
                                              plant->getBranchLengthAt(age));
+    // generate wobbliness (slight rotation)
+    QVector3D *wobble = new QVector3D(plant->getBranchWobblinessAt(age),plant->getBranchWobblinessAt(age),plant->getBranchWobblinessAt(age));
+
     // TODO decide on rotation
-    current->rotation = new QVector3D(0, 0, 0);
+    QVector3D *rot = new QVector3D(0,0,0);
+    // TODO add wobble to rotation
+    current->rotation = wobble;
+    //current->rotation = new QVector3D(0, 0, 0);
     current->translation = new QVector3D(0, 0, ((BranchSection*)parent)->length);
 
     // create all possible next children of each child

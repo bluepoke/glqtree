@@ -283,7 +283,12 @@ void Plant::addBranchWobbliness(int age, int wobble, double rel_deviation)
 }
 
 int Plant::getBranchWobblinessAt(int age) {
-    return interpolateDeviatedValue3(&branchWobbliness, &age);
+    int wobbliness = interpolateDeviatedValue3(&branchWobbliness, &age);
+    double prob = 0.5;
+    bool negative = isTakingPlace(&prob);
+    if (negative)
+        wobbliness = -wobbliness;
+    return wobbliness;
 }
 
 void Plant::addLeafLevels(int age, int count)
