@@ -68,7 +68,7 @@ void MyPanelOpenGL::resizeGL(int width, int height){
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     // 40° fov, aspect ratio decided by the viewport, near and far clipping values
-    gluPerspective(40, (float)width/height, 0.01, 10000.0);
+    gluPerspective(40, (float)width/height, 0.01, 100000.0);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     // add a camera with vectors:(where, to, up)
@@ -154,7 +154,7 @@ void MyPanelOpenGL::mouseMoveEvent(QMouseEvent *event) {
         // the mouse moved how far ?
         QPointF delta = event->globalPos() - mouseLastMovementPosition;
         // calculate an appropriate movement vector
-        modelAccumulatedMovement = 0.1 * QPointF(delta.x(), delta.y());
+        modelAccumulatedMovement = 0.001 * mouseZoomDistance * QPointF(delta.x(), delta.y());
     }
 
     // execute
