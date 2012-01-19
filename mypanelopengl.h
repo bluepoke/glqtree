@@ -26,13 +26,13 @@ private:
     static const float MAX_TILT_ANGLE = 90.0f;
 
     float mouseZoomDistance;
-    QPoint mouseLastPosition;
+    QPoint mouseLastRotationPosition;
+    QPoint mouseLastMovementPosition;
     QPointF modelBaseRotation;
     QPointF modelAccumulatedRotation;
+    QPointF modelBaseMovement;
+    QPointF modelAccumulatedMovement;
     Scene *scene;
-
-signals:
-    void statusChanged(QString message);
 };
 
 #endif // MYPANELOPENGL_H

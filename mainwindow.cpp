@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    // set minimum window size and load default plant
     setMinimumSize(MIN_WIDTH, MIN_HEIGHT);
     Plant::activePlant = PersistenceManager::readPlant("default.xml");
 
@@ -22,6 +23,9 @@ MainWindow::MainWindow(QWidget *parent) :
     // apply default format before creation of the QGLWidget (done in the ui setup)
     QGLFormat::setDefaultFormat(fmt);
     ui->setupUi(this);
+    // set window title and statusbar message
+    ui->statusBar->showMessage("Left-click to rotate model - right-click to move model - move mousewheel to zoom model.");
+    setWindowTitle("OpenGL-Plants");
 
     // some buttons for the button box
     btnQuit = new QPushButton("Quit");

@@ -24,6 +24,7 @@ private:
     QPushButton *btnClose;
     QPushButton *btnOpen;
     QPushButton *btnSave;
+    QPushButton *btnNew;
     void reloadTabs();
     void initTabs();
 
@@ -32,5 +33,6 @@ public slots:
     void closeDialog();
     void openFromXML();
     void saveToXML();
+    void newPlant();
 };
 #endif // TABBEDOPTIONSDIALOG_H
