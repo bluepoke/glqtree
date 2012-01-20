@@ -110,7 +110,7 @@ void MyPanelOpenGL::paintGL(){
 
 void MyPanelOpenGL::renderObject(SceneObject *obj) {
 //    glPushMatrix();
-    float modelview[16];
+    float *modelview = new float[16]();
     glGetFloatv(GL_MODELVIEW_MATRIX , modelview);
 
     // do all local transformations
@@ -135,6 +135,7 @@ void MyPanelOpenGL::renderObject(SceneObject *obj) {
         renderObject(child);
     }
     glLoadMatrixf(modelview);
+    delete modelview;
 //    glPopMatrix();
 }
 
