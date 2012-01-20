@@ -109,7 +109,9 @@ void MyPanelOpenGL::paintGL(){
 }
 
 void MyPanelOpenGL::renderObject(SceneObject *obj) {
-    glPushMatrix();
+//    glPushMatrix();
+    float modelview[16];
+    glGetFloatv(GL_MODELVIEW_MATRIX , modelview);
 
     // do all local transformations
     QVector3D *v = obj->translation;
@@ -132,8 +134,8 @@ void MyPanelOpenGL::renderObject(SceneObject *obj) {
 //        qDebug() << depth;
         renderObject(child);
     }
-
-    glPopMatrix();
+    glLoadMatrixf(modelview);
+//    glPopMatrix();
 }
 
 void MyPanelOpenGL::mouseMoveEvent(QMouseEvent *event) {
