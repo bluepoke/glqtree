@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     // set minimum window size and load default plant
     setMinimumSize(MIN_WIDTH, MIN_HEIGHT);
-    Plant::activePlant = PersistenceManager::readPlant("default.xml");
+    Plant::activePlant = PersistenceManager::readPlant("default.plant");
 
     // define a QGLFormat with multisampling and alpha blending
     QGLFormat fmt;
