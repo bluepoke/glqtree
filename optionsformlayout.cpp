@@ -130,31 +130,37 @@ void OptionsFormLayout::changeMaxAge(int maxAge)
 void OptionsFormLayout::changePrimLeafColor()
 {
     QPalette p = clrPrimLeafColor->palette();
-    QColor color = QColorDialog::getColor(p.color(clrPrimLeafColor->backgroundRole()));
-    p.setColor(p.Background,color);
-    clrPrimLeafColor->setPalette(p);
-    Plant::activePlant->primLeafColor = color;
-    Scene::activeScene->initScene(Plant::activePlant);
+    QColor color = QColorDialog::getColor(Plant::activePlant->primLeafColor);
+    if (color.isValid()) {
+        p.setColor(p.Background,color);
+        clrPrimLeafColor->setPalette(p);
+        Plant::activePlant->primLeafColor = color;
+        Scene::activeScene->initScene(Plant::activePlant);
+    }
 }
 
 void OptionsFormLayout::changeSecLeafColor()
 {
     QPalette p = clrSecLeafColor->palette();
-    QColor color = QColorDialog::getColor(p.color(clrSecLeafColor->backgroundRole()));
-    p.setColor(p.Background,color);
-    clrSecLeafColor->setPalette(p);
-    Plant::activePlant->secLeafColor = color;
-    Scene::activeScene->initScene(Plant::activePlant);
+    QColor color = QColorDialog::getColor(Plant::activePlant->secLeafColor);
+    if (color.isValid()) {
+        p.setColor(p.Background,color);
+        clrSecLeafColor->setPalette(p);
+        Plant::activePlant->secLeafColor = color;
+        Scene::activeScene->initScene(Plant::activePlant);
+    }
 }
 
 void OptionsFormLayout::changeBranchColor()
 {
     QPalette p = clrTreeColor->palette();
-    QColor color = QColorDialog::getColor(p.color(clrTreeColor->backgroundRole()));
-    p.setColor(p.Background,color);
-    clrTreeColor->setPalette(p);
-    Plant::activePlant->branchColor = color;
-    Scene::activeScene->initScene(Plant::activePlant);
+    QColor color = QColorDialog::getColor(Plant::activePlant->branchColor);
+    if (color.isValid()) {
+        p.setColor(p.Background,color);
+        clrTreeColor->setPalette(p);
+        Plant::activePlant->branchColor = color;
+        Scene::activeScene->initScene(Plant::activePlant);
+    }
 }
 
 void OptionsFormLayout::changeSlices(int slices)
