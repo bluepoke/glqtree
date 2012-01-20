@@ -18,7 +18,8 @@ SOURCES += main.cpp\
     tabbedoptionsdialog.cpp \
     optionsdialogtablayout.cpp \
     plant.cpp \
-    scene.cpp
+    scene.cpp \
+    optionsformlayout.cpp
 
 HEADERS  += mainwindow.h \
     mypanelopengl.h \
@@ -27,7 +28,8 @@ HEADERS  += mainwindow.h \
     tabbedoptionsdialog.h \
     optionsdialogtablayout.h \
     plant.h \
-    scene.h
+    scene.h \
+    optionsformlayout.h
 
 FORMS    += mainwindow.ui
 
