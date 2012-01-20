@@ -132,7 +132,7 @@ QList<SceneObject*> *Scene::createSceneObject(Plant *plant, SceneObject *parent,
     }
     // append an end cap otherwise
     else {
-        SceneObject *current = construcEndSection(parent, age);
+        SceneObject *current = constructEndSection(parent, age);
         children->append(current);
     }
     return children;
@@ -156,7 +156,7 @@ SceneObject* Scene::constructBranchSection(Plant* plant, SceneObject* parent, in
     return current;
 }
 
-SceneObject* Scene::construcEndSection(SceneObject* parent, int age)
+SceneObject* Scene::constructEndSection(SceneObject* parent, int age)
 {
     SceneObject *current = new EndSection(parent, ((BranchSection*)parent)->radTop);
     current->translation = new QVector3D(0, 0, ((BranchSection*)parent)->length);
