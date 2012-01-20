@@ -1,9 +1,4 @@
 #include "optionsformlayout.h"
-#include "plant.h"
-#include "time.h"
-#include "scene.h"
-#include <QColorDialog>
-#include <QDebug>
 
 OptionsFormLayout::OptionsFormLayout(QWidget *parent) :
     QFormLayout(parent)
@@ -25,13 +20,21 @@ OptionsFormLayout::OptionsFormLayout(QWidget *parent) :
     lyoSeed->addWidget(btnRandomSeed);
     this->addRow("Seed:",lyoSeed);
 
-    clrLeafColor = new ColorLabel("  ",0);
-    clrLeafColor->setAutoFillBackground(true);
-    QPalette palette = clrLeafColor->palette();
+    clrPrimLeafColor = new ColorLabel("  ",0);
+    clrPrimLeafColor->setAutoFillBackground(true);
+    QPalette palette = clrPrimLeafColor->palette();
     // FIXME: plant's leaf color
     palette.setColor(palette.Background,QColor(Qt::green));
-    clrLeafColor->setPalette(palette);
-    this->addRow("Leaf color",clrLeafColor);
+    clrPrimLeafColor->setPalette(palette);
+    this->addRow("Primary leaf color",clrPrimLeafColor);
+
+    clrSecLeafColor = new ColorLabel("  ",0);
+    clrSecLeafColor->setAutoFillBackground(true);
+    palette = clrSecLeafColor->palette();
+    // FIXME: plant's leaf color
+    palette.setColor(palette.Background,QColor(Qt::yellow));
+    clrSecLeafColor->setPalette(palette);
+    this->addRow("Secondary leaf color",clrSecLeafColor);
 
     clrTreeColor = new ColorLabel("  ",0);
     clrTreeColor->setAutoFillBackground(true);
@@ -95,14 +98,14 @@ OptionsFormLayout::OptionsFormLayout(QWidget *parent) :
     connect(spinSeed,SIGNAL(valueChanged(int)),this,SLOT(changeSeed(int)));
     connect(btnRandomSeed,SIGNAL(clicked()),this,SLOT(randomSeed()));
     connect(spinAge,SIGNAL(valueChanged(int)),this,SLOT(changeMaxAge(int)));
-    connect(clrLeafColor,SIGNAL(clicked()),this,SLOT(changeLeafColor()));
+    connect(clrPrimLeafColor,SIGNAL(clicked()),this,SLOT(changePrimLeafColor()));
+    connect(clrSecLeafColor,SIGNAL(clicked()),this,SLOT(changeSecLeafColor()));
     connect(clrTreeColor,SIGNAL(clicked()),this,SLOT(changeBranchColor()));
     connect(cbxLeaves,SIGNAL(toggled(bool)),this,SLOT(switchLeaves(bool)));
     connect(cbxBranchCaps,SIGNAL(toggled(bool)),this,SLOT(switchBranchCaps(bool)));
     connect(cbxConnectors,SIGNAL(toggled(bool)),this,SLOT(switchConnectors(bool)));
     connect(spinSlices,SIGNAL(valueChanged(int)),this,SLOT(changeSlices(int)));
     connect(spinSegments,SIGNAL(valueChanged(int)),this,SLOT(changeSegments(int)));
-
 
 }
 
@@ -119,12 +122,21 @@ void OptionsFormLayout::changeMaxAge(int maxAge)
     //    Scene::activeScene->initScene(Plant::activePlant);
 }
 
-void OptionsFormLayout::changeLeafColor()
+void OptionsFormLayout::changePrimLeafColor()
 {
-    QPalette p = clrLeafColor->palette();
-    QColor color = QColorDialog::getColor(p.color(clrLeafColor->backgroundRole()));
+    QPalette p = clrPrimLeafColor->palette();
+    QColor color = QColorDialog::getColor(p.color(clrPrimLeafColor->backgroundRole()));
     p.setColor(p.Background,color);
-    clrLeafColor->setPalette(p);
+    clrPrimLeafColor->setPalette(p);
+    // TODO: update color in plant
+}
+
+void OptionsFormLayout::changeSecLeafColor()
+{
+    QPalette p = clrSecLeafColor->palette();
+    QColor color = QColorDialog::getColor(p.color(clrSecLeafColor->backgroundRole()));
+    p.setColor(p.Background,color);
+    clrSecLeafColor->setPalette(p);
     // TODO: update color in plant
 }
 

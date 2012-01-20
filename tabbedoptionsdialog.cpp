@@ -1,13 +1,5 @@
 #include "tabbedoptionsdialog.h"
 #include "optionsdialogtablayout.h"
-#include <QVBoxLayout>
-#include <QFormLayout>
-#include <QLineEdit>
-#include <QMessageBox>
-#include <QFileDialog>
-#include <QDebug>
-#include "scene.h"
-#include "persistencemanager.h"
 
 class MyPanelOpenGL;
 
@@ -51,7 +43,7 @@ TabbedOptionsDialog::TabbedOptionsDialog(QWidget *parent) :
 
     // show title and make dialog modal
     setWindowTitle("Options");
-    setModal(true);
+    setModal(false);
 }
 
 void TabbedOptionsDialog::reloadTabs() {

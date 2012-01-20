@@ -7,6 +7,8 @@
 #include <QSpinBox>
 #include <QCheckBox>
 #include <QLabel>
+#include "scene.h"
+#include <QColorDialog>
 
 class ColorLabel : public QLabel
 {
@@ -39,7 +41,8 @@ private:
     QSpinBox *spinYMove;
     QSpinBox *spinZoom;
     ColorLabel *clrTreeColor;
-    ColorLabel *clrLeafColor;
+    ColorLabel *clrPrimLeafColor;
+    ColorLabel *clrSecLeafColor;
 
 signals:
     
@@ -49,7 +52,8 @@ public slots:
     void changeName(QString name);
     void changeMaxAge(int maxAge);
 
-    void changeLeafColor();
+    void changePrimLeafColor();
+    void changeSecLeafColor();
     void changeBranchColor();
 
     void changeSlices(int slices);

@@ -1,13 +1,6 @@
 #include "scene.h"
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include <QDebug>
-#include <QGLWidget>
 
 Scene* Scene::activeScene = 0;
-GLuint g_SampleTexture = 0;
-GLuint g_SampleVertexBuffer = 0;
-GLuint g_SampleIndexBuffer = 0;
 
 SceneObject::SceneObject(SceneObject *parent) : parent(parent)
 {
@@ -60,17 +53,25 @@ void Leaf::render()
 
     // left half of leaf
     glBegin(GL_TRIANGLE_STRIP);
+    glColor3f(1, 1, 0);
     glVertex3f(-width/2, 0.0f, 0.25*length);
+    glColor3f(0, 1, 0);
     glVertex3f(-width/2, 0.0f, 0.75*length);
+    glColor3f(1, 1, 0);
     glVertex3f(0.0f, 0.0f, 0.0f);
+    glColor3f(0, 1, 0);
     glVertex3f(0.0f, 0.0f, length);
     glEnd();
 
     // right half of leaf
     glBegin(GL_TRIANGLE_STRIP);
+    glColor3f(1, 1, 0);
     glVertex3f(width/2, 0.0f, 0.25*length);
+    glColor3f(1, 1, 0);
     glVertex3f(0.0f, 0.0f, 0.0f);
+    glColor3f(0, 1, 0);
     glVertex3f(width/2, 0.0f, 0.75*length);
+    glColor3f(0, 1, 0);
     glVertex3f(0.0f, 0.0f, length);
     glEnd();
 }

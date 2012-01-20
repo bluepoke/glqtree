@@ -1,9 +1,4 @@
 #include "mypanelopengl.h"
-#include <math.h>
-#include <QMouseEvent>
-#include <QDebug>
-#include <QList>
-#include "plant.h"
 
 MyPanelOpenGL::MyPanelOpenGL(QWidget *parent) :
     QGLWidget(parent)
@@ -186,7 +181,7 @@ void MyPanelOpenGL::wheelEvent(QWheelEvent *event) {
 
     // we're done
     event->accept();
-    emit cameraChanged(modelBaseMovement.x(), modelBaseMovement.y(), mouseZoomDistance);
+    emit cameraChanged(modelBaseMovement.x(), -modelBaseMovement.y(), mouseZoomDistance);
     updateGL();
 }
 
@@ -226,6 +221,6 @@ void MyPanelOpenGL::mouseReleaseEvent(QMouseEvent *event) {
 
     // we're done
     event->accept();
-    emit cameraChanged(modelBaseMovement.x(), modelBaseMovement.y(), mouseZoomDistance);
+    emit cameraChanged(modelBaseMovement.x(), -modelBaseMovement.y(), mouseZoomDistance);
     updateGL();
 }

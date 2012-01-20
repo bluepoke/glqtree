@@ -3,6 +3,9 @@
 
 #include <QVector3D>
 #include <QList>
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <QGLWidget>
 #include "plant.h"
 
 class SceneObject
@@ -62,6 +65,8 @@ private:
     SceneObject* constructBranchSection(Plant *plant, SceneObject *parent, int parentRadius, int age);
     SceneObject* constructEndSection(SceneObject *parent, int age, bool hasLeaf);
     SceneObject *constructLeaf(SceneObject *parent, int age, QVector3D *translation);
+
+
 };
 
 #endif // SCENE_H

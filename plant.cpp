@@ -1,7 +1,4 @@
 #include "plant.h"
-#include <QList>
-#include <iterator>
-#include <QDebug>
 #include "persistencemanager.h"
 
 Plant* Plant::activePlant = 0; //PersistenceManager::readPlant("default.xml");

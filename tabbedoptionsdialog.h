@@ -4,6 +4,11 @@
 #include <QDialog>
 #include <QTabWidget>
 #include <QDialogButtonBox>
+#include <QFormLayout>
+#include <QFileDialog>
+#include "scene.h"
+#include "persistencemanager.h"
+
 #include "optionsformlayout.h"
 
 class Tab : public QWidget

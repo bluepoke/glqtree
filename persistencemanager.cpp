@@ -1,8 +1,5 @@
 #include "persistencemanager.h"
-#include <QtXml/QXmlStreamReader>
-#include <QFile>
 #include <QDebug>
-#include "plant.h"
 
 // XML tag names
 static const QString P_TAG = "PLANT";

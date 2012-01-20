@@ -3,6 +3,8 @@
 
 #include <QGLWidget>
 #include "scene.h"
+#include <math.h>
+#include <QMouseEvent>
 
 class MyPanelOpenGL : public QGLWidget
 {

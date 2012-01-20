@@ -1,6 +1,9 @@
 #ifndef PERSISTENCEMANAGER_H
 #define PERSISTENCEMANAGER_H
+
 #include <QtXml/QDomDocument>
+#include <QtXml/QXmlStreamReader>
+#include <QFile>
 #include "plant.h"
 
 class PersistenceManager

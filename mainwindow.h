@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QPushButton>
 #include "tabbedoptionsdialog.h"
+#include "persistencemanager.h"
+#include "ui_mainwindow.h"
 
 namespace Ui {
     class MainWindow;

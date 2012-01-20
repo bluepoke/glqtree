@@ -2,6 +2,8 @@
 #define PLANT_H
 
 #include <QObject>
+#include <QList>
+#include <cstdlib>
 
 // classes for tupels
 

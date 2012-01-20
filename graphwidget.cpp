@@ -1,5 +1,4 @@
 #include "graphwidget.h"
-#include <QDebug>
 #include "optionsdialogtablayout.h"
 
 GraphWidget::GraphWidget(QWidget *parent) :

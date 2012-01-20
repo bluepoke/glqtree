@@ -1,7 +1,4 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
-#include <QDebug>
-#include "persistencemanager.h"
 
 static const int MIN_WIDTH = 550;
 static const int MIN_HEIGHT = 600;
