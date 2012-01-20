@@ -29,11 +29,27 @@ static const QString REL_DEV_TAG = "RELATIVE_DEVIATION";
 static const QString NAME_ATTRIB = "NAME";
 static const QString MAX_AGE_ATTRIB = "MAX_AGE";
 static const QString SEED_ATTRIB = "RANDOM_SEED";
+static const QString BRANCH_COLOR_ATTRIB = "BRANCH_COLOR";
+static const QString PRIM_LEAF_COLOR_ATTRIB = "PRIMARY_LEAF_COLOR";
+static const QString SEC_LEAF_COLOR_ATTRIB = "SECONDARY_LEAF_COLOR";
+static const QString DRAW_LEAVES_ATTRIB = "DRAW_LEAVES";
+static const QString DRAW_CAPS_ATTRIB = "DRAW_CAPS";
+static const QString DRAW_CONNECTORS_ATTRIB = "DRAW_CONNECTORS";
+static const QString SLICES_ATTRIB = "SLICES";
+static const QString SEGMENTS_ATTRIB = "SEGMENTS";
+static const QString MOVE_X_ATTRIB = "MOVEMENT_X";
+static const QString MOVE_Y_ATTRIB = "MOVEMENT_Y";
+static const QString MOVE_Z_ATTRIB = "ZOOM";
 
 // some fields to make the source code more readable
 static const Qt::CaseSensitivity CI = Qt::CaseInsensitive;
 static const QXmlStreamReader::TokenType E_START = QXmlStreamReader::StartElement;
 static const QXmlStreamReader::TokenType E_END = QXmlStreamReader::EndElement;
+
+// String constants for boolean
+static const QString TRUE_STRING = "TRUE";
+static const QString FALSE_STRING = "FALSE";
+
 
 // reads the data from the xml file fileName and returns a pointer
 // to a new Plant containing the data
@@ -302,6 +318,30 @@ bool PersistenceManager::writePlant(QString fileName, const Plant *p){
         writer->writeAttribute(NAME_ATTRIB,p->name);
         writer->writeAttribute(MAX_AGE_ATTRIB,QString::number(p->maxAge));
         writer->writeAttribute(SEED_ATTRIB,QString::number(p->seed));
+        //colors are comma separated rgb values
+        writer->writeAttribute(BRANCH_COLOR_ATTRIB,QString::number(p->branchColor.red())
+                                                   +","+
+                                                   QString::number(p->branchColor.green())
+                                                   +","+
+                                                   QString::number(p->branchColor.blue()));
+        writer->writeAttribute(PRIM_LEAF_COLOR_ATTRIB,QString::number(p->primLeafColor.red())
+                                                   +","+
+                                                   QString::number(p->primLeafColor.green())
+                                                   +","+
+                                                   QString::number(p->primLeafColor.blue()));
+        writer->writeAttribute(SEC_LEAF_COLOR_ATTRIB,QString::number(p->secLeafColor.red())
+                                                   +","+
+                                                   QString::number(p->secLeafColor.green())
+                                                   +","+
+                                                   QString::number(p->secLeafColor.blue()));
+        writer->writeAttribute(DRAW_LEAVES_ATTRIB,QString(p->drawLeaves?TRUE_STRING:FALSE_STRING));
+        writer->writeAttribute(DRAW_CAPS_ATTRIB,QString(p->drawCaps?TRUE_STRING:FALSE_STRING));
+        writer->writeAttribute(DRAW_CONNECTORS_ATTRIB,QString(p->drawConnectors?TRUE_STRING:FALSE_STRING));
+        writer->writeAttribute(SLICES_ATTRIB,QString::number(p->slices));
+        writer->writeAttribute(SEGMENTS_ATTRIB,QString::number(p->segments));
+        writer->writeAttribute(MOVE_X_ATTRIB,QString::number(p->movement.x()));
+        writer->writeAttribute(MOVE_Y_ATTRIB,QString::number(p->movement.y()));
+        writer->writeAttribute(MOVE_Z_ATTRIB,QString::number(p->movement.z()));
 
         bool writeAge = true;
 
