@@ -26,7 +26,7 @@ OptionsFormLayout::OptionsFormLayout(QWidget *parent) :
     // FIXME: plant's leaf color
     palette.setColor(palette.Background,p->primLeafColor);
     clrPrimLeafColor->setPalette(palette);
-    this->addRow("Primary leaf color",clrPrimLeafColor);
+    //this->addRow("Primary leaf color",clrPrimLeafColor);
 
     clrSecLeafColor = new ColorLabel("  ",0);
     clrSecLeafColor->setAutoFillBackground(true);
@@ -34,7 +34,12 @@ OptionsFormLayout::OptionsFormLayout(QWidget *parent) :
     // FIXME: plant's leaf color
     palette.setColor(palette.Background,p->secLeafColor);
     clrSecLeafColor->setPalette(palette);
-    this->addRow("Secondary leaf color",clrSecLeafColor);
+    //this->addRow("Secondary leaf color",clrSecLeafColor);
+
+    QHBoxLayout *lyoLeafColor = new QHBoxLayout();
+    lyoLeafColor->addWidget(clrPrimLeafColor);
+    lyoLeafColor->addWidget(clrSecLeafColor);
+    this->addRow("Leaf colors", lyoLeafColor);
 
     clrTreeColor = new ColorLabel("  ",0);
     clrTreeColor->setAutoFillBackground(true);
@@ -128,7 +133,8 @@ void OptionsFormLayout::changePrimLeafColor()
     QColor color = QColorDialog::getColor(p.color(clrPrimLeafColor->backgroundRole()));
     p.setColor(p.Background,color);
     clrPrimLeafColor->setPalette(p);
-    // TODO: update color in plant
+    Plant::activePlant->primLeafColor = color;
+    Scene::activeScene->initScene(Plant::activePlant);
 }
 
 void OptionsFormLayout::changeSecLeafColor()
@@ -137,7 +143,8 @@ void OptionsFormLayout::changeSecLeafColor()
     QColor color = QColorDialog::getColor(p.color(clrSecLeafColor->backgroundRole()));
     p.setColor(p.Background,color);
     clrSecLeafColor->setPalette(p);
-    // TODO: update color in plant
+    Plant::activePlant->secLeafColor = color;
+    Scene::activeScene->initScene(Plant::activePlant);
 }
 
 void OptionsFormLayout::changeBranchColor()
@@ -146,27 +153,38 @@ void OptionsFormLayout::changeBranchColor()
     QColor color = QColorDialog::getColor(p.color(clrTreeColor->backgroundRole()));
     p.setColor(p.Background,color);
     clrTreeColor->setPalette(p);
-    // TODO: update color in plant
+    Plant::activePlant->branchColor = color;
+    Scene::activeScene->initScene(Plant::activePlant);
 }
 
 void OptionsFormLayout::changeSlices(int slices)
 {
+    Plant::activePlant->slices = slices;
+    Scene::activeScene->initScene(Plant::activePlant);
 }
 
 void OptionsFormLayout::changeSegments(int segments)
 {
+    Plant::activePlant->segments = segments;
+    Scene::activeScene->initScene(Plant::activePlant);
 }
 
 void OptionsFormLayout::switchLeaves(bool toggle)
 {
+    Plant::activePlant->drawLeaves=toggle;
+    Scene::activeScene->initScene(Plant::activePlant);
 }
 
 void OptionsFormLayout::switchBranchCaps(bool toggle)
 {
+    Plant::activePlant->drawCaps=toggle;
+    Scene::activeScene->initScene(Plant::activePlant);
 }
 
 void OptionsFormLayout::switchConnectors(bool toggle)
 {
+    Plant::activePlant->drawConnectors=toggle;
+    Scene::activeScene->initScene(Plant::activePlant);
 }
 
 void OptionsFormLayout::changeCamera(int x, int y, int zoom)
