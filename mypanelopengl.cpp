@@ -120,13 +120,16 @@ void MyPanelOpenGL::renderObject(SceneObject *obj) {
     if (v->x() != 0) glRotatef(v->x(), 1, 0, 0);
     if (v->y() != 0) glRotatef(v->y(), 0, 1, 0);
 
-
     // render the parent
     obj->render();
     // render all children
     for(int i=0; i < obj->children->size(); i++) {
         SceneObject *child;
         child = obj->children->at(i);
+
+//        GLint depth;
+//        glGetIntegerv(GL_MODELVIEW_STACK_DEPTH, &depth);
+//        qDebug() << depth;
         renderObject(child);
     }
 
