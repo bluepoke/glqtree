@@ -161,6 +161,20 @@ Plant::Plant(int maxAge, QString name, int seed) : name(name), seed(seed), maxAg
 {
     // initialize randomizer when creating new plant
     this->reseed();
+
+    // TODO remove when reading from file
+    drawCaps = true;
+    drawLeaves = true;
+    drawConnectors = true;
+
+    slices = 15;
+    segments = 5;
+
+    branchColor = QColor(Qt::red);
+    primLeafColor = QColor(Qt::yellow);
+    secLeafColor = QColor(Qt::green);
+
+    movement = QVector3D(-600, -2250, 7000);
 }
 
 // initialize random number generator

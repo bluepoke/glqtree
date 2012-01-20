@@ -4,10 +4,11 @@ MyPanelOpenGL::MyPanelOpenGL(QWidget *parent) :
     QGLWidget(parent)
 {
     // mouse navigation values
-    mouseZoomDistance = 50.0f;
+    mouseZoomDistance = Plant::activePlant->movement.z();
     // initial rotation and movement here, none by default
     modelBaseRotation = QPointF(15, 0);
-    modelBaseMovement = QPointF();
+    modelBaseMovement = QPointF(Plant::activePlant->movement.x(),
+                                -Plant::activePlant->movement.y());
     // initially, no accumulated rotation or movement given
     modelAccumulatedRotation = QPointF();
     modelAccumulatedMovement = QPointF();
@@ -86,9 +87,6 @@ void MyPanelOpenGL::paintGL(){
     glTranslatef(modelMovement.x(), -modelMovement.y(), -mouseZoomDistance);
     glRotatef(modelRotation.x(), 1, 0, 0);
     glRotatef(modelRotation.y(), 0, 1, 0);
-
-    // load the scene in red
-    glColor4f(1, 0, 0, 1);
 
     // render scene, starting with the root
     if (Scene::activeScene->root != 0) {

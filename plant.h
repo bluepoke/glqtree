@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QList>
 #include <cstdlib>
+#include <QColor>
+#include <QVector3D>
 
 // classes for tupels
 
@@ -36,6 +38,16 @@ public:
     QString name;
     int seed;
     int maxAge;
+
+    QColor branchColor;
+    QColor primLeafColor;
+    QColor secLeafColor;
+    bool drawLeaves;
+    bool drawCaps;
+    bool drawConnectors;
+    int slices;
+    int segments;
+    QVector3D movement;
 
     QList<Tupel3> branchThickness;
     QList<Tupel3> branchLength;

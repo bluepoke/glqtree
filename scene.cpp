@@ -28,13 +28,16 @@ void BranchSection::render()
     GLUquadricObj *qobj;
     qobj = gluNewQuadric();
 
+//    not really needed
 //    gluQuadricCallback(qobj, GLU_ERROR, NULL);
 //    gluQuadricDrawStyle(qobj, GLU_FILL);
 //    gluQuadricNormals(qobj, GLU_SMOOTH);
 
     // build all along the positive z-axis
-    glColor3f(0, 0, 1);
-    gluCylinder(qobj, radBottom, radTop, length, 5, 3);
+    QColor branch = Plant::activePlant->branchColor;
+    glColor3f(branch.redF(), branch.greenF(), branch.blueF());
+    gluCylinder(qobj, radBottom, radTop, length,
+                Plant::activePlant->slices, Plant::activePlant->segments);
 }
 
 void EndSection::render()
@@ -42,36 +45,39 @@ void EndSection::render()
     GLUquadricObj *qobj;
     qobj = gluNewQuadric();
     // build an end cap
-    glColor3f(1, 0, 0);
-    gluSphere(qobj, radius, 5, 3);
+    QColor branch = Plant::activePlant->branchColor;
+    glColor3f(branch.redF(), branch.greenF(), branch.blueF());
+    gluSphere(qobj, radius,
+              Plant::activePlant->slices, Plant::activePlant->segments);
 }
 
 void Leaf::render()
 {
+    QColor prim = Plant::activePlant->primLeafColor;
+    QColor sec = Plant::activePlant->secLeafColor;
     glFrontFace(GL_CW);
-    glColor3f(0, 1, 0);
 
     // left half of leaf
     glBegin(GL_TRIANGLE_STRIP);
-    glColor3f(1, 1, 0);
+    glColor3f(prim.redF(), prim.greenF(), prim.blueF());
     glVertex3f(-width/2, 0.0f, 0.25*length);
-    glColor3f(0, 1, 0);
+    glColor3f(sec.redF(), sec.greenF(), sec.blueF());
     glVertex3f(-width/2, 0.0f, 0.75*length);
-    glColor3f(1, 1, 0);
+    glColor3f(prim.redF(), prim.greenF(), prim.blueF());
     glVertex3f(0.0f, 0.0f, 0.0f);
-    glColor3f(0, 1, 0);
+    glColor3f(sec.redF(), sec.greenF(), sec.blueF());
     glVertex3f(0.0f, 0.0f, length);
     glEnd();
 
     // right half of leaf
     glBegin(GL_TRIANGLE_STRIP);
-    glColor3f(1, 1, 0);
+    glColor3f(prim.redF(), prim.greenF(), prim.blueF());
     glVertex3f(width/2, 0.0f, 0.25*length);
-    glColor3f(1, 1, 0);
+    glColor3f(prim.redF(), prim.greenF(), prim.blueF());
     glVertex3f(0.0f, 0.0f, 0.0f);
-    glColor3f(0, 1, 0);
+    glColor3f(sec.redF(), sec.greenF(), sec.blueF());
     glVertex3f(width/2, 0.0f, 0.75*length);
-    glColor3f(0, 1, 0);
+    glColor3f(sec.redF(), sec.greenF(), sec.blueF());
     glVertex3f(0.0f, 0.0f, length);
     glEnd();
 }
@@ -83,7 +89,7 @@ Scene::Scene(Plant *plant, QWidget *oglPanel) : oglPanel(oglPanel) {
 void Scene::initScene(Plant *plant) {
     // no plant: no scene root
     if (plant == 0) {
-        Scene::root = 0;
+        root = 0;
         return;
     }
 
@@ -115,8 +121,10 @@ QList<SceneObject*> *Scene::createSceneObject(Plant *plant, SceneObject *parent,
     // apply an endcap to top branches
     if (age == plant->maxAge) {
         QList<SceneObject*> *end = new QList<SceneObject*>;
-        SceneObject *cap = constructEndSection(parent, age, true);
-        end->append(cap);
+        if (Plant::activePlant->drawCaps) {
+            SceneObject *cap = constructEndSection(parent, age, Plant::activePlant->drawLeaves);
+            end->append(cap);
+        }
         return end;
     }
 
@@ -172,13 +180,17 @@ QList<SceneObject*> *Scene::createSceneObject(Plant *plant, SceneObject *parent,
         // append the main branch to the parent's children list
         children->append(current);
         // put a cap to the branches end to smooth string wobbliness and branching angles
-        SceneObject *cap = constructEndSection(parent, age, false);
-        children->append(cap);
+        if (Plant::activePlant->drawConnectors) {
+            SceneObject *cap = constructEndSection(parent, age, Plant::activePlant->drawLeaves);
+            children->append(cap);
+        }
     }
     // append only an end cap otherwise
     else {
-        SceneObject *current = constructEndSection(parent, age, true);
-        children->append(current);
+        if (Plant::activePlant->drawCaps) {
+            SceneObject *current = constructEndSection(parent, age, Plant::activePlant->drawLeaves);
+            children->append(current);
+        }
     }
     return children;
 }
