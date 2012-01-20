@@ -132,7 +132,7 @@ void TabbedOptionsDialog::closeDialog() {
 }
 
 void TabbedOptionsDialog::openFromXML() {
-    QString fileName = QFileDialog::getOpenFileName(this,"Open plant from XML file","","XML files (*.xml)");
+    QString fileName = QFileDialog::getOpenFileName(this,"Open plant","","Plants (*.plant);;XML files (*.xml)");
     if (!(fileName.isEmpty() || fileName.isNull())) {
             Plant::activePlant = PersistenceManager::readPlant(fileName);
             Scene::activeScene->initScene(Plant::activePlant);
@@ -141,7 +141,7 @@ void TabbedOptionsDialog::openFromXML() {
 }
 
 void TabbedOptionsDialog::saveToXML() {
-    QString fileName = QFileDialog::getSaveFileName(this,"Save plant configuration to XML file","","XML files (*.xml)");
+    QString fileName = QFileDialog::getSaveFileName(this,"Save plant configuration","","Plant (*.plant);;XML file (*.xml)");
     if (!(fileName.isEmpty() || fileName.isNull())) {
             PersistenceManager::writePlant(fileName,Plant::activePlant);
     }
