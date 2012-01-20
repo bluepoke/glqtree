@@ -1,6 +1,8 @@
 #include "tabbedoptionsdialog.h"
 #include "optionsdialogtablayout.h"
 #include <QVBoxLayout>
+#include <QFormLayout>
+#include <QLineEdit>
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QDebug>
@@ -61,7 +63,8 @@ void TabbedOptionsDialog::initTabs() {
     OptionsDialogTabLayout *tab1Layout = new OptionsDialogTabLayout(this);
     OptionsDialogTabLayout *tab2Layout = new OptionsDialogTabLayout(this);
     OptionsDialogTabLayout *tab3Layout = new OptionsDialogTabLayout(this);
-    QVBoxLayout *tab4LayoutStub = new QVBoxLayout;
+    //QVBoxLayout *tab4LayoutStub = new QVBoxLayout;
+    QFormLayout *tab4LayoutStub = new QFormLayout(this);
 
     // organize tabs' contents here
     Plant *p = Plant::activePlant;
@@ -117,6 +120,23 @@ void TabbedOptionsDialog::initTabs() {
     tab3Layout->initValue(row++, new QStringList(list), p->maxAge,false,true,&(p->leafWidth));
     tabWidget->addTab(new Tab(this, tab3Layout), "Leaf Geometry");
 
+    // other options
+    QLineEdit *nameText = new QLineEdit(p->name);
+    tab4LayoutStub->addRow("Name:",nameText);
+    QSpinBox *ageBox = new QSpinBox();
+    ageBox->setMinimum(0);
+    ageBox->setMaximum(INT_MAX);
+    ageBox->setValue(p->maxAge);
+    tab4LayoutStub->addRow("Maximum age:",ageBox);
+    QSpinBox *seedBox = new QSpinBox();
+    seedBox->setMaximum(INT_MAX);
+    qDebug() << INT_MAX;
+    seedBox->setValue(p->seed);
+    QPushButton *seedRandom = new QPushButton("Random");
+    QHBoxLayout *seedLayout = new QHBoxLayout();
+    seedLayout->addWidget(seedBox,1);
+    seedLayout->addWidget(seedRandom);
+    tab4LayoutStub->addRow("Seed:",seedLayout);
     tabWidget->addTab(new Tab(this, tab4LayoutStub), "Other");
 }
 
