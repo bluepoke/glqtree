@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QTabWidget>
 #include <QDialogButtonBox>
+#include "optionsformlayout.h"
 
 class Tab : public QWidget
 {
@@ -27,6 +28,9 @@ private:
     QPushButton *btnNew;
     void reloadTabs();
     void initTabs();
+
+public:
+    OptionsFormLayout *optionsFormLayout;
 
 public slots:
     void valuesChanged();

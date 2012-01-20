@@ -69,6 +69,8 @@ OptionsFormLayout::OptionsFormLayout(QWidget *parent) :
     spinXMove = new QSpinBox();
     // FIXME: plant's setting
     spinXMove->setValue(0);
+    spinXMove->setMaximum(INT_MAX);
+    spinXMove->setMinimum(INT_MIN);
     // not editable, reacts to mouse movement
     spinXMove->setEnabled(false);
     this->addRow("Movement X",spinXMove);
@@ -76,19 +78,23 @@ OptionsFormLayout::OptionsFormLayout(QWidget *parent) :
     spinYMove = new QSpinBox();
     // FIXME: plant's setting
     spinYMove->setValue(0);
+    spinYMove->setMaximum(INT_MAX);
+    spinYMove->setMinimum(INT_MIN);
     spinYMove->setEnabled(false);
     this->addRow("Movement Y",spinYMove);
 
     spinZoom = new QSpinBox();
     // FIXME: plant's setting
     spinZoom->setValue(0);
+    spinZoom->setMaximum(INT_MAX);
+    spinZoom->setMinimum(INT_MIN);
     spinZoom->setEnabled(false);
     this->addRow("Zoom",spinZoom);
 
-    connect(txtName,SIGNAL(textChanged(QString)),this,SLOT(changeName()));
-    connect(spinSeed,SIGNAL(valueChanged(int)),this,SLOT(changeSeed()));
+    connect(txtName,SIGNAL(textChanged(QString)),this,SLOT(changeName(QString)));
+    connect(spinSeed,SIGNAL(valueChanged(int)),this,SLOT(changeSeed(int)));
     connect(btnRandomSeed,SIGNAL(clicked()),this,SLOT(randomSeed()));
-    connect(spinAge,SIGNAL(valueChanged(int)),this,SLOT(changeMaxAge()));
+    connect(spinAge,SIGNAL(valueChanged(int)),this,SLOT(changeMaxAge(int)));
     connect(clrLeafColor,SIGNAL(clicked()),this,SLOT(changeLeafColor()));
     connect(clrTreeColor,SIGNAL(clicked()),this,SLOT(changeBranchColor()));
     connect(cbxLeaves,SIGNAL(toggled(bool)),this,SLOT(switchLeaves(bool)));
@@ -96,6 +102,7 @@ OptionsFormLayout::OptionsFormLayout(QWidget *parent) :
     connect(cbxConnectors,SIGNAL(toggled(bool)),this,SLOT(switchConnectors(bool)));
     connect(spinSlices,SIGNAL(valueChanged(int)),this,SLOT(changeSlices(int)));
     connect(spinSegments,SIGNAL(valueChanged(int)),this,SLOT(changeSegments(int)));
+
 
 }
 

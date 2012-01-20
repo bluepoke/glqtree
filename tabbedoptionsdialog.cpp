@@ -1,6 +1,5 @@
 #include "tabbedoptionsdialog.h"
 #include "optionsdialogtablayout.h"
-#include "optionsformlayout.h"
 #include <QVBoxLayout>
 #include <QFormLayout>
 #include <QLineEdit>
@@ -63,10 +62,8 @@ void TabbedOptionsDialog::reloadTabs() {
 void TabbedOptionsDialog::initTabs() {
     OptionsDialogTabLayout *tab1Layout = new OptionsDialogTabLayout(this);
     OptionsDialogTabLayout *tab2Layout = new OptionsDialogTabLayout(this);
-    OptionsDialogTabLayout *tab3Layout = new OptionsDialogTabLayout(this);
-    //QVBoxLayout *tab4LayoutStub = new QVBoxLayout;
-    OptionsFormLayout *tab4LayoutStub = new OptionsFormLayout(this);
-
+    OptionsDialogTabLayout *tab3Layout = new OptionsDialogTabLayout(this);    
+    optionsFormLayout = new OptionsFormLayout(this);
     // organize tabs' contents here
     Plant *p = Plant::activePlant;
     int row = 0;
@@ -122,7 +119,7 @@ void TabbedOptionsDialog::initTabs() {
     tabWidget->addTab(new Tab(this, tab3Layout), "Leaf Geometry");
 
     // other options
-    tabWidget->addTab(new Tab(this, tab4LayoutStub), "Other");
+    tabWidget->addTab(new Tab(this, optionsFormLayout), "Other");
 }
 
 // a generic tabs
