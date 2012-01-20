@@ -5,6 +5,9 @@
 #include <QGLWidget>
 
 Scene* Scene::activeScene = 0;
+GLuint g_SampleTexture = 0;
+GLuint g_SampleVertexBuffer = 0;
+GLuint g_SampleIndexBuffer = 0;
 
 SceneObject::SceneObject(SceneObject *parent) : parent(parent)
 {
@@ -22,7 +25,8 @@ EndSection::EndSection(SceneObject *parent, double radius) : SceneObject(parent)
 {
 }
 
-Leaf::Leaf(SceneObject *parent) : SceneObject(parent)
+Leaf::Leaf(SceneObject *parent, double width, double length) : SceneObject(parent),
+    width(width), length(length)
 {
 }
 
@@ -51,11 +55,24 @@ void EndSection::render()
 
 void Leaf::render()
 {
-    GLUquadricObj *qobj;
-    qobj = gluNewQuadric();
-    // build an leaf stub
+    glFrontFace(GL_CW);
     glColor3f(0, 1, 0);
-    gluSphere(qobj, 5, 5, 3);
+
+    // left half of leaf
+    glBegin(GL_TRIANGLE_STRIP);
+    glVertex3f(-width/2, 0.0f, 0.25*length);
+    glVertex3f(-width/2, 0.0f, 0.75*length);
+    glVertex3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(0.0f, 0.0f, length);
+    glEnd();
+
+    // right half of leaf
+    glBegin(GL_TRIANGLE_STRIP);
+    glVertex3f(width/2, 0.0f, 0.25*length);
+    glVertex3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(width/2, 0.0f, 0.75*length);
+    glVertex3f(0.0f, 0.0f, length);
+    glEnd();
 }
 
 Scene::Scene(Plant *plant, QWidget *oglPanel) : oglPanel(oglPanel) {
@@ -97,7 +114,7 @@ QList<SceneObject*> *Scene::createSceneObject(Plant *plant, SceneObject *parent,
     // apply an endcap to top branches
     if (age == plant->maxAge) {
         QList<SceneObject*> *end = new QList<SceneObject*>;
-        SceneObject *cap = constructEndSection(parent, true);
+        SceneObject *cap = constructEndSection(parent, age, true);
         end->append(cap);
         return end;
     }
@@ -154,12 +171,12 @@ QList<SceneObject*> *Scene::createSceneObject(Plant *plant, SceneObject *parent,
         // append the main branch to the parent's children list
         children->append(current);
         // put a cap to the branches end to smooth string wobbliness and branching angles
-        SceneObject *cap = constructEndSection(parent, false);
+        SceneObject *cap = constructEndSection(parent, age, false);
         children->append(cap);
     }
     // append only an end cap otherwise
     else {
-        SceneObject *current = constructEndSection(parent, true);
+        SceneObject *current = constructEndSection(parent, age, true);
         children->append(current);
     }
     return children;
@@ -182,7 +199,7 @@ SceneObject* Scene::constructBranchSection(Plant* plant, SceneObject* parent, in
     return current;
 }
 
-SceneObject* Scene::constructEndSection(SceneObject* parent, bool hasLeaf)
+SceneObject* Scene::constructEndSection(SceneObject* parent, int age, bool hasLeaf)
 {
     // add a cap to a parent
     SceneObject *current = new EndSection(parent, ((BranchSection*)parent)->radTop);
@@ -192,17 +209,17 @@ SceneObject* Scene::constructEndSection(SceneObject* parent, bool hasLeaf)
     if (hasLeaf) {
         // move translation out of the object itself, to make leaves universally usable
         QVector3D *translation = new QVector3D(0, 0, ((EndSection*)current)->radius);
-        SceneObject *leaf = constructLeaf(current, translation);
+        SceneObject *leaf = constructLeaf(current, age, translation);
         current->children->append(leaf);
     }
 
     return current;
 }
 
-SceneObject* Scene::constructLeaf(SceneObject* parent, QVector3D *translation)
+SceneObject* Scene::constructLeaf(SceneObject* parent, int age, QVector3D *translation)
 {
     // construct and return a leaf
-    SceneObject *leaf = new Leaf(parent);
+    SceneObject *leaf = new Leaf(parent, Plant::activePlant->getLeafWidthAt(age), Plant::activePlant->getLeafLengthAt(age));
     leaf->translation = translation;
     return leaf;
 }

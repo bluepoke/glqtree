@@ -41,8 +41,11 @@ public:
 class Leaf : public SceneObject
 {
 public:
-    Leaf(SceneObject *parent = 0);
+    Leaf(SceneObject *parent = 0, double width = 0, double length = 0);
     void render();
+
+    double width;
+    double length;
 };
 
 class Scene
@@ -57,8 +60,8 @@ public:
 private:
     QList<SceneObject*> *createSceneObject(Plant *plant = 0, SceneObject *parent = 0, int age = 0);
     SceneObject* constructBranchSection(Plant *plant, SceneObject *parent, int parentRadius, int age);
-    SceneObject* constructEndSection(SceneObject *parent, bool hasLeaf);
-    SceneObject *constructLeaf(SceneObject *parent, QVector3D *translation);
+    SceneObject* constructEndSection(SceneObject *parent, int age, bool hasLeaf);
+    SceneObject *constructLeaf(SceneObject *parent, int age, QVector3D *translation);
 };
 
 #endif // SCENE_H
