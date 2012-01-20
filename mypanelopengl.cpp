@@ -136,7 +136,7 @@ void MyPanelOpenGL::renderObject(SceneObject *obj) {
     }
     glLoadMatrixf(modelview);
     delete modelview;
-//    glPopMatrix();
+    //    glPopMatrix();
 }
 
 void MyPanelOpenGL::mouseMoveEvent(QMouseEvent *event) {
@@ -186,6 +186,7 @@ void MyPanelOpenGL::wheelEvent(QWheelEvent *event) {
 
     // we're done
     event->accept();
+    emit cameraChanged(modelBaseMovement.x(), modelBaseMovement.y(), mouseZoomDistance);
     updateGL();
 }
 
@@ -225,5 +226,6 @@ void MyPanelOpenGL::mouseReleaseEvent(QMouseEvent *event) {
 
     // we're done
     event->accept();
+    emit cameraChanged(modelBaseMovement.x(), modelBaseMovement.y(), mouseZoomDistance);
     updateGL();
 }
