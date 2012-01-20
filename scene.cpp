@@ -32,7 +32,9 @@ void BranchSection::render()
 //    gluQuadricNormals(qobj, GLU_SMOOTH);
 
     // build all along the positive z-axis
-    gluCylinder(qobj, radBottom, radTop, length, 15, 5);
+    gluCylinder(qobj, radBottom, radTop, length, 5, 3);
+
+    qobj = gluNewQuadric();
 }
 
 void EndSection::render()
@@ -40,7 +42,7 @@ void EndSection::render()
     GLUquadricObj *qobj;
     qobj = gluNewQuadric();
     // build an end cap
-    gluSphere(qobj, radius, 15, 5);
+    gluSphere(qobj, radius, 5, 3);
 }
 
 Scene::Scene(Plant *plant, QWidget *oglPanel) : oglPanel(oglPanel) {
@@ -99,11 +101,13 @@ QList<SceneObject*> *Scene::createSceneObject(Plant *plant, SceneObject *parent,
             int branchAge = age;
             bool isGrowthInterrupted = plant->isGrowthInterruptingAt(age);
             int delay = plant->getGrowthInterruptionAt(age);
+            int parentRadius = ((BranchSection*)parent)->radTop;
             if (isGrowthInterrupted) {
                 // growth is delayed. all following objects start with higher age
                 branchAge += delay;
+                parentRadius = plant->getBranchThicknessAt(branchAge - 1);
             }
-            SceneObject *branch = constructBranchSection(plant, parent, branchAge);
+            SceneObject *branch = constructBranchSection(plant, parent, parentRadius, branchAge);
             // apply off-the-divided-axis rotation to branch:
             int randRotationAngle = plant->coinflip() * plant->getBranchingRotationAt(branchAge);
             QVector3D *rotB = new QVector3D(0, plant->getBranchingAngle(branchAge),
@@ -121,7 +125,7 @@ QList<SceneObject*> *Scene::createSceneObject(Plant *plant, SceneObject *parent,
 
     // continue main branch if needed
     if (plant->continueMainBranchAt(age)) {
-        SceneObject *current = constructBranchSection(plant, parent, age);
+        SceneObject *current = constructBranchSection(plant, parent, ((BranchSection*)parent)->radTop, age);
 
         // create all possible next children of the continued main branch
         QList<SceneObject*> *nextChildren = createSceneObject(plant, current, age + 1);
@@ -138,10 +142,9 @@ QList<SceneObject*> *Scene::createSceneObject(Plant *plant, SceneObject *parent,
     return children;
 }
 
-SceneObject* Scene::constructBranchSection(Plant* plant, SceneObject* parent, int age)
+SceneObject* Scene::constructBranchSection(Plant* plant, SceneObject* parent, int parentRadius, int age)
 {
-    SceneObject *current = new BranchSection(parent,
-                                             ((BranchSection*)parent)->radTop,
+    SceneObject *current = new BranchSection(parent, parentRadius,
                                              plant->getBranchThicknessAt(age + 1),
                                              plant->getBranchLengthAt(age));
 
