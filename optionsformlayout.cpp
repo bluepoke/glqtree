@@ -39,7 +39,7 @@ OptionsFormLayout::OptionsFormLayout(QWidget *parent) :
     // FIXME: plant's branch color
     palette.setColor(palette.Background,QColor(Qt::blue));
     clrTreeColor->setPalette(palette);
-    //this->addRow("Branch color",clrTreeColor);
+    this->addRow("Branch color",clrTreeColor);
 
     cbxLeaves = new QCheckBox("Draw leaves");
     // FIXME: plant's setting
@@ -121,14 +121,20 @@ void OptionsFormLayout::changeMaxAge(int maxAge)
 
 void OptionsFormLayout::changeLeafColor()
 {
-    //QPalette p = clrLeafColor->palette();
-    //QColor color = QColorDialog::getColor(p.color(clrLeafColor->backgroundRole()));
-   // p.setColor(p.Background,QColor(Qt::white));
-    //clrLeafColor->setPalette(p);
+    QPalette p = clrLeafColor->palette();
+    QColor color = QColorDialog::getColor(p.color(clrLeafColor->backgroundRole()));
+    p.setColor(p.Background,color);
+    clrLeafColor->setPalette(p);
+    // TODO: update color in plant
 }
 
 void OptionsFormLayout::changeBranchColor()
 {
+    QPalette p = clrTreeColor->palette();
+    QColor color = QColorDialog::getColor(p.color(clrTreeColor->backgroundRole()));
+    p.setColor(p.Background,color);
+    clrTreeColor->setPalette(p);
+    // TODO: update color in plant
 }
 
 void OptionsFormLayout::changeSlices(int slices)
