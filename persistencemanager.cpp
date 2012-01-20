@@ -37,9 +37,7 @@ static const QString DRAW_CAPS_ATTRIB = "DRAW_CAPS";
 static const QString DRAW_CONNECTORS_ATTRIB = "DRAW_CONNECTORS";
 static const QString SLICES_ATTRIB = "SLICES";
 static const QString SEGMENTS_ATTRIB = "SEGMENTS";
-static const QString MOVE_X_ATTRIB = "MOVEMENT_X";
-static const QString MOVE_Y_ATTRIB = "MOVEMENT_Y";
-static const QString MOVE_Z_ATTRIB = "ZOOM";
+static const QString MOVEMENT_ATTRIB = "MOVEMENT";
 
 // some fields to make the source code more readable
 static const Qt::CaseSensitivity CI = Qt::CaseInsensitive;
@@ -86,6 +84,66 @@ Plant* PersistenceManager::readPlant(QString fileName) {
                         // set plant's random seed
                         else if (attrib.name().toString().compare(SEED_ATTRIB,CI)==0) {
                             p->seed = attrib.value().toString().toInt();
+                        }
+                        // set branch color
+                        else if (attrib.name().toString().compare(BRANCH_COLOR_ATTRIB,CI)==0) {
+                            QStringList rgb = attrib.value().toString().split(",");
+                            p->branchColor = QColor(rgb.at(0).toInt(),
+                                                    rgb.at(1).toInt(),
+                                                    rgb.at(2).toInt());
+                        }
+                        // primary leaf color
+                        else if (attrib.name().toString().compare(PRIM_LEAF_COLOR_ATTRIB,CI)==0) {
+                            QStringList rgb = attrib.value().toString().split(",");
+                            p->primLeafColor = QColor(rgb.at(0).toInt(),
+                                                    rgb.at(1).toInt(),
+                                                    rgb.at(2).toInt());
+                        }
+                        // secondary leaf color
+                        else if (attrib.name().toString().compare(SEC_LEAF_COLOR_ATTRIB,CI)==0) {
+                            QStringList rgb = attrib.value().toString().split(",");
+                            p->secLeafColor = QColor(rgb.at(0).toInt(),
+                                                    rgb.at(1).toInt(),
+                                                    rgb.at(2).toInt());
+                        }
+                        // draw leaves
+                        else if (attrib.name().toString().compare(DRAW_LEAVES_ATTRIB,CI)==0) {
+                            if (attrib.value().toString().compare(TRUE_STRING,CI)==0) {
+                                p->drawLeaves=true;
+                            } else {
+                                p->drawLeaves=false;
+                            }
+                        }
+                        // draw caps
+                        else if (attrib.name().toString().compare(DRAW_CAPS_ATTRIB,CI)==0) {
+                            if (attrib.value().toString().compare(TRUE_STRING,CI)==0) {
+                                p->drawCaps=true;
+                            } else {
+                                p->drawCaps=false;
+                            }
+                        }
+                        // draw connectors
+                        else if (attrib.name().toString().compare(DRAW_CONNECTORS_ATTRIB,CI)==0) {
+                            if (attrib.value().toString().compare(TRUE_STRING,CI)==0) {
+                                p->drawConnectors=true;
+                            } else {
+                                p->drawConnectors=false;
+                            }
+                        }
+                        // segments
+                        else if (attrib.name().toString().compare(SEGMENTS_ATTRIB,CI)==0) {
+                            p->segments = attrib.value().toString().toInt();
+                        }
+                        // slices
+                        else if (attrib.name().toString().compare(SLICES_ATTRIB,CI)==0) {
+                            p->slices = attrib.value().toString().toInt();
+                        }
+                        // movement
+                        else if (attrib.name().toString().compare(MOVEMENT_ATTRIB,CI)==0) {
+                            QStringList xyz = attrib.value().toString().split(",");
+                            p->movement = QVector3D(xyz.at(0).toFloat(),
+                                                    xyz.at(1).toFloat(),
+                                                    xyz.at(2).toFloat());
                         }
                     }
                     // gather all the rest of the data
@@ -339,9 +397,11 @@ bool PersistenceManager::writePlant(QString fileName, const Plant *p){
         writer->writeAttribute(DRAW_CONNECTORS_ATTRIB,QString(p->drawConnectors?TRUE_STRING:FALSE_STRING));
         writer->writeAttribute(SLICES_ATTRIB,QString::number(p->slices));
         writer->writeAttribute(SEGMENTS_ATTRIB,QString::number(p->segments));
-        writer->writeAttribute(MOVE_X_ATTRIB,QString::number(p->movement.x()));
-        writer->writeAttribute(MOVE_Y_ATTRIB,QString::number(p->movement.y()));
-        writer->writeAttribute(MOVE_Z_ATTRIB,QString::number(p->movement.z()));
+        writer->writeAttribute(MOVEMENT_ATTRIB,QString::number(p->movement.x())
+                                               +","+
+                                               QString::number(p->movement.y())
+                                               +","+
+                                               QString::number(p->movement.z()));
 
         bool writeAge = true;
 
