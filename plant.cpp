@@ -197,7 +197,7 @@ void Plant::addBranching(int age, int count, double probability)
     addTupel3(&branching,&t);
 }
 
-int Plant::getBranchingAt(int age) {
+int Plant::getBranchCountAt(int age) {
     return interpolateValue3(&branching, &age);
 }
 
@@ -305,9 +305,11 @@ bool Plant::isBranchWobblinessAt(int age) {
     double prob = getBranchWobblinessProbabilityAt(age);
     return isTakingPlace(&prob);
 }
-int Plant::getRandomRotation360() {
-    return qrand() % 360;
+int Plant::getRandomRotationBetween(int low, int high) {
+    // Random number between low and high
+    return qrand() % ((high + 1) - low) + low;
 }
+
 
 void Plant::addLeafLevels(int age, int count)
 {
@@ -359,9 +361,10 @@ int Plant::getLeafWidthAt(int age) {
     return interpolateValue3(&leafWidth, &age);
 }
 
-bool Plant::coinflip() {
+int Plant::coinflip() {
     double d = 0.5;
-    return isTakingPlace(&d);
+    if (isTakingPlace(&d)) return 1;
+    return -1;
 }
 
 // implementations for tupels

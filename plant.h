@@ -71,7 +71,7 @@ public:
     int getBranchLengthAt(int age);
     int getBranchingRotationAt(int age);
     int getBranchingAngle(int age);
-    int getBranchingAt(int age);
+    int getBranchCountAt(int age);
     int getGravitationalInfluenceAt(int age);
     int getGrowthInterruptionAt(int age);
     int getBranchWobblinessAt(int age);
@@ -87,10 +87,10 @@ public:
     bool isBranchingAt(int age);
     bool continueMainBranchAt(int age);
     bool isGrowthInterruptingAt(int age);
-    bool coinflip();
+    int coinflip();
     double getBranchWobblinessProbabilityAt(int age);
     bool isBranchWobblinessAt(int age);
-    int getRandomRotation360();
+    int getRandomRotationBetween(int low, int high);
 signals:
     
 public slots:

@@ -18,6 +18,10 @@ BranchSection::BranchSection(SceneObject *parent, double radBottom, double radTo
 {
 }
 
+EndSection::EndSection(SceneObject *parent, double radius) : SceneObject(parent), radius(radius)
+{
+}
+
 void BranchSection::render()
 {
     GLUquadricObj *qobj;
@@ -29,15 +33,15 @@ void BranchSection::render()
 
     // build all along the positive z-axis
     gluCylinder(qobj, radBottom, radTop, length, 15, 5);
-
-//    qobj = gluNewQuadric();
-//    glPushMatrix();
-//    glTranslatef(0, 0, length);
-//    gluSphere(qobj, radTop, 35, 15);
-//    glPopMatrix();
-
 }
 
+void EndSection::render()
+{
+    GLUquadricObj *qobj;
+    qobj = gluNewQuadric();
+    // build an end cap
+    gluSphere(qobj, radius, 15, 5);
+}
 
 Scene::Scene(Plant *plant, QWidget *oglPanel) : oglPanel(oglPanel) {
     initScene(plant);
@@ -73,62 +77,69 @@ void Scene::initScene(Plant *plant) {
 
 QList<SceneObject*> *Scene::createSceneObject(Plant *plant, SceneObject *parent, int age)
 {
+    // end of recursion, max age reached
     if (age >= plant->maxAge) return new QList<SceneObject*>;
 
+    // will hold all possible branches of this age in addition to the main branch (if necessary)
     QList<SceneObject*> *children = new QList<SceneObject*>;
-    // create SceneObjects for all possible children
 
     // is tree branching here?
-    bool isBranching = plant->isBranchingAt(age);
-    // how many branches
-    int branchCount = plant->getBranchingAt(age);
+    bool isBranchingAtAll = plant->isBranchingAt(age);
+    int possibleBranches = plant->getBranchCountAt(age);
+    int actualBranches = possibleBranches;
 
-    if (isBranching) {
-        for (int i=0; i<branchCount; i++) {
-            // is growth interrupted
+    if (isBranchingAtAll) {
+        for (int i=0; i < possibleBranches; i++) {
+            // should a possible branch actually grow?
+            if (!plant->isBranchingAt(age)) {
+                actualBranches--;
+                break;
+            }
+            // create new branch
             int branchAge = age;
             bool isGrowthInterrupted = plant->isGrowthInterruptingAt(age);
             int delay = plant->getGrowthInterruptionAt(age);
             if (isGrowthInterrupted) {
-                // growth is delayed. that means, following objects
+                // growth is delayed. all following objects start with higher age
                 branchAge += delay;
             }
-            // create new branch
-            SceneObject *branch = constructBranchSection(plant,parent,branchAge);
-            // apply rotation to branch
-            QVector3D *rotB;
-            if (plant->coinflip())
-            rotB = new QVector3D(0, plant->getBranchingAngle(branchAge),
-                                 (360/branchCount*i)+plant->getBranchingRotationAt(branchAge));
-            else
-                rotB = new QVector3D(plant->getBranchingAngle(branchAge), 0,
-                                     (360/branchCount*i)+plant->getBranchingRotationAt(branchAge));
+            SceneObject *branch = constructBranchSection(plant, parent, branchAge);
+            // apply off-the-divided-axis rotation to branch:
+            int randRotationAngle = plant->coinflip() * plant->getBranchingRotationAt(branchAge);
+            QVector3D *rotB = new QVector3D(0, plant->getBranchingAngle(branchAge),
+                                            360/actualBranches * i + randRotationAngle);
+            branch->rotation = rotB;
 
-            *(branch->rotation) += *rotB;
             // let the branch grow further with possible interruption (recursion)
-            QList<SceneObject*> *nextBranchChildren = createSceneObject(plant, branch, branchAge+1);
+            QList<SceneObject*> *nextBranchChildren = createSceneObject(plant, branch, branchAge + 1);
             // append the children to this branch
             branch->children->append(*nextBranchChildren);
             // append this branch to the list of children
             children->append(branch);
         }
     }
-    // main branch
-    // is branch growing further? it should if there are less than 2 branches
-    if (!isBranching || (branchCount<2) || (plant->continueMainBranchAt(age))) {
-        SceneObject *current = constructBranchSection(plant,parent,age);
 
-        // create all possible next children of each child
+    // continue main branch if needed
+    if (plant->continueMainBranchAt(age)) {
+        SceneObject *current = constructBranchSection(plant, parent, age);
+
+        // create all possible next children of the continued main branch
         QList<SceneObject*> *nextChildren = createSceneObject(plant, current, age + 1);
         current->children->append(*nextChildren);
 
-        // append all possible children to the parent's children list
+        // append the main branch to the parent's children list
+        children->append(current);
+    }
+    // append an end cap otherwise
+    else {
+        SceneObject *current = construcEndSection(parent, age);
         children->append(current);
     }
     return children;
 }
 
-SceneObject* Scene::constructBranchSection(Plant* plant, SceneObject* parent, int age) {
+SceneObject* Scene::constructBranchSection(Plant* plant, SceneObject* parent, int age)
+{
     SceneObject *current = new BranchSection(parent,
                                              ((BranchSection*)parent)->radTop,
                                              plant->getBranchThicknessAt(age + 1),
@@ -136,16 +147,20 @@ SceneObject* Scene::constructBranchSection(Plant* plant, SceneObject* parent, in
 
     // apply wobbliness
     if (plant->isBranchWobblinessAt(age)) {
-        QVector3D *wobble;
-        if (plant->coinflip())
-            wobble = new QVector3D(0, plant->getBranchWobblinessAt(age),
-                                   plant->getRandomRotation360());
-        else
-            wobble = new QVector3D(plant->getBranchWobblinessAt(age), 0,
-                                   plant->getRandomRotation360());
+        QVector3D *wobble = new QVector3D(plant->getBranchWobblinessAt(age), 0,
+                                          plant->getRandomRotationBetween(1, 360));
 
         current->rotation = wobble;
     }
     current->translation = new QVector3D(0, 0, ((BranchSection*)parent)->length);
     return current;
 }
+
+SceneObject* Scene::construcEndSection(SceneObject* parent, int age)
+{
+    SceneObject *current = new EndSection(parent, ((BranchSection*)parent)->radTop);
+    current->translation = new QVector3D(0, 0, ((BranchSection*)parent)->length);
+    return current;
+}
+
+

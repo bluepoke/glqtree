@@ -29,6 +29,15 @@ public:
     double length;
 };
 
+class EndSection : public SceneObject
+{
+public:
+    EndSection(SceneObject *parent = 0, double radius = 0);
+    void render();
+
+    double radius;
+};
+
 class Scene
 {
 public:
@@ -40,7 +49,8 @@ public:
     QWidget *oglPanel;
 private:
     QList<SceneObject*> *createSceneObject(Plant *plant = 0, SceneObject *parent = 0, int age = 0);
-    SceneObject *constructBranchSection(Plant *plant, SceneObject *parent, int age);
+    SceneObject* constructBranchSection(Plant *plant, SceneObject *parent, int age);
+    SceneObject* construcEndSection(SceneObject *parent, int age);
 };
 
 #endif // SCENE_H
