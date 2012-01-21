@@ -20,6 +20,10 @@ MainWindow::MainWindow(QWidget *parent) :
     // apply default format before creation of the QGLWidget (done in the ui setup)
     QGLFormat::setDefaultFormat(fmt);
     ui->setupUi(this);
+
+    // load a scene to display
+    Scene::activeScene = new Scene(Plant::activePlant, ui->panelGL);
+
     // set window title and statusbar message
     ui->statusBar->showMessage("Left-click to rotate model - right-click to move model - move mousewheel to zoom model.");
     setWindowTitle("OpenGL-Plants");
@@ -37,9 +41,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // prepare a tabbed Options Dialog
     tabs = new TabbedOptionsDialog;
+
     // connect glpanel and optionsformlayout, and the other way around
     connect(ui->panelGL, SIGNAL(cameraChanged(int,int,int)), tabs, SLOT(changeCamera(int,int,int)));
     connect(tabs, SIGNAL(cameraChanged(int,int,int)), ui->panelGL, SLOT(changeCamera(int,int,int)));
+    // connect(Scene::activeScene, SIGNAL(statisticsChanged(int,int,int)), tabs, SLOT(changeStatistics(int,int,int)));
 }
 
 MainWindow::~MainWindow()

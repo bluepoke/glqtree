@@ -48,5 +48,6 @@ public slots:
     void saveToXML();
     void newPlant();
     void changeCamera(int x, int y, int zoom);
+    void changeStatistics(int branches, int spheres, int leaves);
 };
 #endif // TABBEDOPTIONSDIALOG_H

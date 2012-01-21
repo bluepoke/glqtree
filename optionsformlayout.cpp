@@ -1,4 +1,5 @@
 #include "optionsformlayout.h"
+#include <QDebug>
 
 OptionsFormLayout::OptionsFormLayout(QWidget *parent) :
     QFormLayout(parent)
@@ -93,6 +94,20 @@ OptionsFormLayout::OptionsFormLayout(QWidget *parent) :
     spinGrowth->setMaximum(p->maxAge);
     spinGrowth->setValue(p->growthAge);
     this->addRow("Grow until age of", spinGrowth);
+
+    Scene *s = Scene::activeScene;
+    lblBranches = new QLabel(QString::number(s->branches));
+    lblSpheres = new QLabel(QString::number(s->spheres));
+    lblLeaves =  new QLabel(QString::number(s->leaves));
+    lblPolygons = new QLabel(QString::number((s->spheres + s->branches) * p->segments * p->slices));
+    lblTriangles = new QLabel(QString::number(s->leaves * 5));
+    this->addRow(" ", new QWidget);
+    this->addRow("Statistics:", new QWidget);
+    this->addRow("Number of branches:", lblBranches);
+    this->addRow("Number of spheres:", lblSpheres);
+    this->addRow("Number of leaves:", lblLeaves);
+    this->addRow("Number of polygons:", lblPolygons);
+    this->addRow("Number of triangles:", lblTriangles);
 
     connect(txtName,SIGNAL(textChanged(QString)),this,SLOT(changeName(QString)));
     connect(spinSeed,SIGNAL(valueChanged(int)),this,SLOT(changeSeed(int)));

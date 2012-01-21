@@ -52,9 +52,6 @@ void MyPanelOpenGL::initializeGL() {
     glEnable(GL_COLOR_MATERIAL);
     // set material properties which will be assigned by glColor
     glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-
-    // load a scene to display
-    Scene::activeScene = new Scene(Plant::activePlant, this);
 }
 
 void MyPanelOpenGL::resizeGL(int width, int height){

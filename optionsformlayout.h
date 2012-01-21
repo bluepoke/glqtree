@@ -30,6 +30,11 @@ public:
     QSpinBox *spinXMove;
     QSpinBox *spinYMove;
     QSpinBox *spinZoom;
+    QLabel *lblBranches;
+    QLabel *lblSpheres;
+    QLabel *lblLeaves;
+    QLabel *lblPolygons;
+    QLabel *lblTriangles;
 
 private:
     QLineEdit *txtName;

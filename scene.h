@@ -56,6 +56,7 @@ public:
 
 class Scene
 {
+
 public:
     static Scene* activeScene;
     Scene(Plant *plant = 0, QWidget *oglPanel = 0);
@@ -64,12 +65,19 @@ public:
     SceneObject *root;
     QWidget *oglPanel;
 
+    int branches;
+    int spheres;
+    int leaves;
+
 private:
     QList<SceneObject*>* createSceneObject(Plant *plant = 0, SceneObject *parent = 0, int age = 0);
     SceneObject* constructBranchSection(Plant *plant, SceneObject *parent, int parentRadius, int age);
     SceneObject* constructEndSection(Plant *plant, SceneObject *parent, int age, bool hasLeaf);
     QList<SceneObject*>* createLeaves(Plant *plant, SceneObject *parent, int age);
     SceneObject* constructLeaf(Plant *plant, SceneObject *parent, int age, QVector3D *translation, QVector3D *rotation);
+
+signals:
+    void statisticsChanged(int b, int s, int l);
 };
 
 #endif // SCENE_H
