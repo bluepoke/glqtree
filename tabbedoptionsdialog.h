@@ -6,6 +6,7 @@
 #include <QDialogButtonBox>
 #include <QFormLayout>
 #include <QFileDialog>
+#include "newdialog.h"
 #include "scene.h"
 #include "persistencemanager.h"
 

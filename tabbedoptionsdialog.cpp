@@ -9,7 +9,7 @@ static const int MIN_HEIGHT = 600;
 TabbedOptionsDialog::TabbedOptionsDialog(QWidget *parent) :
     QDialog(parent)
 {
-    setWindowFlags(Qt::WindowContextHelpButtonHint | Qt::WindowMinMaxButtonsHint);
+    setWindowFlags(Qt::WindowMinMaxButtonsHint);
     setMinimumSize(MIN_WIDTH, MIN_HEIGHT);
 
     tabWidget = new QTabWidget;
@@ -143,6 +143,9 @@ void TabbedOptionsDialog::saveToXML() {
 
 void TabbedOptionsDialog::newPlant()
 {
+    NewDialog *newDialog = new NewDialog();
+    newDialog->setModal(true);
+    newDialog->show();
 }
 
 void TabbedOptionsDialog::valuesChanged() {

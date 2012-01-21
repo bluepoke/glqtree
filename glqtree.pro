@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     optionsdialogtablayout.cpp \
     plant.cpp \
     scene.cpp \
-    optionsformlayout.cpp
+    optionsformlayout.cpp \
+    newdialog.cpp
 
 HEADERS  += mainwindow.h \
     mypanelopengl.h \
@@ -29,7 +30,8 @@ HEADERS  += mainwindow.h \
     optionsdialogtablayout.h \
     plant.h \
     scene.h \
-    optionsformlayout.h
+    optionsformlayout.h \
+    newdialog.h
 
 FORMS    += mainwindow.ui
 
