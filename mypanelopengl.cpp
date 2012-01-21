@@ -112,8 +112,8 @@ void MyPanelOpenGL::renderObject(SceneObject *obj) {
 
     v = obj->rotation;
     if (v->z() != 0) glRotatef(v->z(), 0, 0, 1);
-    if (v->x() != 0) glRotatef(v->x(), 1, 0, 0);
     if (v->y() != 0) glRotatef(v->y(), 0, 1, 0);
+    if (v->x() != 0) glRotatef(v->x(), 1, 0, 0);
 
     // render the parent
     obj->render();
