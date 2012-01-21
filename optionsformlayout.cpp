@@ -23,7 +23,6 @@ OptionsFormLayout::OptionsFormLayout(QWidget *parent) :
     clrPrimLeafColor = new ColorLabel("  ",0);
     clrPrimLeafColor->setAutoFillBackground(true);
     QPalette palette = clrPrimLeafColor->palette();
-    // FIXME: plant's leaf color
     palette.setColor(palette.Background,p->primLeafColor);
     clrPrimLeafColor->setPalette(palette);
     //this->addRow("Primary leaf color",clrPrimLeafColor);
@@ -31,7 +30,6 @@ OptionsFormLayout::OptionsFormLayout(QWidget *parent) :
     clrSecLeafColor = new ColorLabel("  ",0);
     clrSecLeafColor->setAutoFillBackground(true);
     palette = clrSecLeafColor->palette();
-    // FIXME: plant's leaf color
     palette.setColor(palette.Background,p->secLeafColor);
     clrSecLeafColor->setPalette(palette);
     //this->addRow("Secondary leaf color",clrSecLeafColor);
@@ -44,38 +42,31 @@ OptionsFormLayout::OptionsFormLayout(QWidget *parent) :
     clrTreeColor = new ColorLabel("  ",0);
     clrTreeColor->setAutoFillBackground(true);
     palette = clrTreeColor->palette();
-    // FIXME: plant's branch color
     palette.setColor(palette.Background,p->branchColor);
     clrTreeColor->setPalette(palette);
     this->addRow("Branch color",clrTreeColor);
 
     cbxLeaves = new QCheckBox("Draw leaves");
-    // FIXME: plant's setting
     cbxLeaves->setChecked(p->drawLeaves);
     this->addRow("",cbxLeaves);
 
     cbxBranchCaps = new QCheckBox("Draw branch caps");
-    // FIXME: plant's setting
     cbxBranchCaps->setChecked(p->drawCaps);
     this->addRow("",cbxBranchCaps);
 
     cbxConnectors = new QCheckBox("Draw connectors");
-    // FIXME: plant's setting
     cbxConnectors->setChecked(p->drawConnectors);
     this->addRow("",cbxConnectors);
 
     spinSlices = new QSpinBox();
-    // FIXME: plant's setting
     spinSlices->setValue(p->slices);
     this->addRow("Slices",spinSlices);
 
     spinSegments = new QSpinBox();
-    // FIXME: plant's setting
     spinSegments->setValue(p->segments);
     this->addRow("Segments",spinSegments);
 
     spinXMove = new QSpinBox();
-    // FIXME: plant's setting
     spinXMove->setMaximum(INT_MAX);
     spinXMove->setMinimum(INT_MIN);
     spinXMove->setValue(p->movement.x());
@@ -84,7 +75,6 @@ OptionsFormLayout::OptionsFormLayout(QWidget *parent) :
     this->addRow("Movement X",spinXMove);
 
     spinYMove = new QSpinBox();
-    // FIXME: plant's setting
     spinYMove->setMaximum(INT_MAX);
     spinYMove->setMinimum(INT_MIN);
     spinYMove->setEnabled(false);
@@ -92,12 +82,17 @@ OptionsFormLayout::OptionsFormLayout(QWidget *parent) :
     this->addRow("Movement Y",spinYMove);
 
     spinZoom = new QSpinBox();
-    // FIXME: plant's setting
     spinZoom->setMaximum(INT_MAX);
     spinZoom->setMinimum(INT_MIN);
     spinZoom->setValue(p->movement.z());
     spinZoom->setEnabled(false);
     this->addRow("Zoom",spinZoom);
+
+    spinGrowth = new QSpinBox();
+    spinGrowth->setMinimum(1);
+    spinGrowth->setMaximum(p->maxAge);
+    spinGrowth->setValue(p->growthAge);
+    this->addRow("Grow until age of", spinGrowth);
 
     connect(txtName,SIGNAL(textChanged(QString)),this,SLOT(changeName(QString)));
     connect(spinSeed,SIGNAL(valueChanged(int)),this,SLOT(changeSeed(int)));
@@ -111,7 +106,7 @@ OptionsFormLayout::OptionsFormLayout(QWidget *parent) :
     connect(cbxConnectors,SIGNAL(toggled(bool)),this,SLOT(switchConnectors(bool)));
     connect(spinSlices,SIGNAL(valueChanged(int)),this,SLOT(changeSlices(int)));
     connect(spinSegments,SIGNAL(valueChanged(int)),this,SLOT(changeSegments(int)));
-
+    connect(spinGrowth,SIGNAL(valueChanged(int)),this,SLOT(changeGrowthAge(int)));
 }
 
 void OptionsFormLayout::randomSeed()
@@ -198,6 +193,12 @@ void OptionsFormLayout::changeCamera(int x, int y, int zoom)
     spinXMove->setValue(x);
     spinYMove->setValue(y);
     spinZoom->setValue(zoom);
+}
+
+void OptionsFormLayout::changeGrowthAge(int age)
+{
+    Plant::activePlant->growthAge = age;
+    Scene::activeScene->initScene(Plant::activePlant);
 }
 
 void OptionsFormLayout::changeName(QString name)

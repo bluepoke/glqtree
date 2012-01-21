@@ -54,7 +54,6 @@ static const QString FALSE_STRING = "FALSE";
 Plant* PersistenceManager::readPlant(QString fileName) {
     QFile file (fileName);
     Plant *p = new Plant(0,0,0);
-    int pMaxAge = 0;
     if (file.open(QFile::ReadOnly)) {
         QXmlStreamReader reader(&file);
         while (!reader.atEnd() && !reader.hasError()) {
@@ -79,7 +78,9 @@ Plant* PersistenceManager::readPlant(QString fileName) {
                         // set plant's maximum age
                         else if (attrib.name().toString().compare(MAX_AGE_ATTRIB,CI)==0) {
                             p->maxAge=attrib.value().toString().toInt();
-                            pMaxAge = attrib.value().toString().toInt();
+                            // growthAge is identical to maxAge
+                            // this will draw the whole tree when opening
+                            p->growthAge = p->maxAge;
                         }
                         // set plant's random seed
                         else if (attrib.name().toString().compare(SEED_ATTRIB,CI)==0) {

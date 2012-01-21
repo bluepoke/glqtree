@@ -48,6 +48,7 @@ public:
     int slices;
     int segments;
     QVector3D movement;
+    int growthAge;
 
     QList<Tupel3> branchThickness;
     QList<Tupel3> branchLength;
