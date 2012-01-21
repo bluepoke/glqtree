@@ -1,4 +1,6 @@
 #include "scene.h"
+#include <math.h>
+#define PI_180 0.01745329251994329576923690768489
 
 Scene* Scene::activeScene = 0;
 
@@ -57,28 +59,38 @@ void Leaf::render()
     QColor sec = Plant::activePlant->secLeafColor;
     glFrontFace(GL_CW);
 
+    int leafStemLength = length;
+
+    // the leaf's stem
+    glColor3f(prim.redF(), prim.greenF(), prim.blueF());
+    glBegin(GL_TRIANGLE_STRIP);
+    glVertex3f(-0.1f*width/10, 0.0f, 0.0f);
+    glVertex3f(0.0f, 0.0f, leafStemLength);
+    glVertex3f(0.1f*width/10, 0.0f, 0.0f);
+    glEnd();
+
     // left half of leaf
     glBegin(GL_TRIANGLE_STRIP);
     glColor3f(prim.redF(), prim.greenF(), prim.blueF());
-    glVertex3f(-width/2, 0.0f, 0.25*length);
+    glVertex3f(-0.5f*width, 0.0f, leafStemLength+0.25f*length);
     glColor3f(sec.redF(), sec.greenF(), sec.blueF());
-    glVertex3f(-width/2, 0.0f, 0.75*length);
+    glVertex3f(-0.5f*width, 0.0f, leafStemLength+0.75f*length);
     glColor3f(prim.redF(), prim.greenF(), prim.blueF());
-    glVertex3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(0.0f, 0.0f, leafStemLength);
     glColor3f(sec.redF(), sec.greenF(), sec.blueF());
-    glVertex3f(0.0f, 0.0f, length);
+    glVertex3f(0.0f, 0.0f, leafStemLength+length);
     glEnd();
 
     // right half of leaf
     glBegin(GL_TRIANGLE_STRIP);
     glColor3f(prim.redF(), prim.greenF(), prim.blueF());
-    glVertex3f(width/2, 0.0f, 0.25*length);
+    glVertex3f(0.5f*width, 0.0f, leafStemLength+0.25f*length);
     glColor3f(prim.redF(), prim.greenF(), prim.blueF());
-    glVertex3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(0.0f, 0.0f, leafStemLength);
     glColor3f(sec.redF(), sec.greenF(), sec.blueF());
-    glVertex3f(width/2, 0.0f, 0.75*length);
+    glVertex3f(0.5f*width, 0.0f, leafStemLength+0.75f*length);
     glColor3f(sec.redF(), sec.greenF(), sec.blueF());
-    glVertex3f(0.0f, 0.0f, length);
+    glVertex3f(0.0f, 0.0f, leafStemLength+length);
     glEnd();
 }
 
@@ -239,9 +251,10 @@ SceneObject* Scene::constructEndSection(Plant *plant, SceneObject* parent, int a
 
     // if the cap should sport a single leaf at its top (like at the end of branches, do so
     if (hasLeaf) {
-        // move translation out of the object itself, to make leaves universally usable
+        // move translation and rotation away from the object itself, to make leaves universally usable
         QVector3D *translation = new QVector3D(0, 0, ((EndSection*)current)->radius);
-        SceneObject *leaf = constructLeaf(plant, current, age, translation);
+        QVector3D *rotation = new QVector3D();
+        SceneObject *leaf = constructLeaf(plant, current, age, translation, rotation);
         current->children->append(leaf);
     }
 
@@ -252,16 +265,46 @@ QList<SceneObject*> *Scene::createLeaves(Plant *plant, SceneObject *parent, int 
 {
     QList<SceneObject*> *leaves = new QList<SceneObject*>;
 
-    // TODO, create leaves
+    int levels = plant->getLeafLevelsAt(age);
+    int countPerLevel = plant->getLeafCountPerLevelAt(age);
+    int angle = plant->getLeafAngleAt(age);
 
+    // no leaves
+    if (levels == 0 || countPerLevel == 0) return leaves;
+
+    // base rotation around the branch for each level
+    double baseRotation = 360.0 / (double)levels;
+    // adjust base rotation by number of leaves per level
+    baseRotation = baseRotation / (double)countPerLevel;
+
+    // how many levels
+    for (int level=0; level < levels; level++) {
+        // rotation for this level
+        double levelRotation = 360.0 / countPerLevel;
+        // level translation along z-axis
+        double zTranslation = ((BranchSection*)parent)->length / (levels + 1) * (level + 1);
+        // a base translation towards outside of the branch
+        double radius = ((BranchSection*)parent)->radTop;
+
+        // how many per level
+        for (int count=0; count < countPerLevel; count++) {
+            QVector3D *rotation = new QVector3D(angle, 0, levelRotation * count + baseRotation * level);
+            QVector3D *translation = new QVector3D(radius * sin(rotation->z() * PI_180), -radius * cos(rotation->z() * PI_180), zTranslation);
+            SceneObject *leaf = constructLeaf(plant, parent, age, translation, rotation);
+
+            leaves->append(leaf);
+        }
+    }
+    // all leaves done
     return leaves;
 }
 
-SceneObject* Scene::constructLeaf(Plant *plant, SceneObject* parent, int age, QVector3D *translation)
+SceneObject* Scene::constructLeaf(Plant *plant, SceneObject* parent, int age, QVector3D *translation, QVector3D *rotation)
 {
     // construct and return a leaf
     SceneObject *leaf = new Leaf(parent, plant->getLeafWidthAt(age), plant->getLeafLengthAt(age));
     leaf->translation = translation;
+    leaf->rotation = rotation;
     return leaf;
 }
 

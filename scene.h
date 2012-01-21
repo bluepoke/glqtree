@@ -66,7 +66,7 @@ private:
     SceneObject* constructBranchSection(Plant *plant, SceneObject *parent, int parentRadius, int age);
     SceneObject* constructEndSection(Plant *plant, SceneObject *parent, int age, bool hasLeaf);
     QList<SceneObject*>* createLeaves(Plant *plant, SceneObject *parent, int age);
-    SceneObject* constructLeaf(Plant *plant, SceneObject *parent, int age, QVector3D *translation);
+    SceneObject* constructLeaf(Plant *plant, SceneObject *parent, int age, QVector3D *translation, QVector3D *rotation);
 };
 
 #endif // SCENE_H
