@@ -38,6 +38,9 @@ private:
 
 signals:
     void cameraChanged(int x, int y, int zoom);
+
+public slots:
+    void changeCamera(int x, int y, int zoom);
 };
 
 #endif // MYPANELOPENGL_H

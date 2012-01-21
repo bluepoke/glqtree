@@ -6,7 +6,7 @@ MyPanelOpenGL::MyPanelOpenGL(QWidget *parent) :
     // mouse navigation values
     mouseZoomDistance = Plant::activePlant->movement.z();
     // initial rotation and movement here, none by default
-    modelBaseRotation = QPointF(15, 0);
+    modelBaseRotation = QPointF(-15, 0);
     modelBaseMovement = QPointF(Plant::activePlant->movement.x(),
                                 -Plant::activePlant->movement.y());
     // initially, no accumulated rotation or movement given
@@ -221,4 +221,16 @@ void MyPanelOpenGL::mouseReleaseEvent(QMouseEvent *event) {
     event->accept();
     emit cameraChanged(modelBaseMovement.x(), -modelBaseMovement.y(), mouseZoomDistance);
     updateGL();
+}
+
+void MyPanelOpenGL::changeCamera(int x, int y, int zoom)
+{
+    // mouse navigation values
+    mouseZoomDistance = zoom;
+    // initial rotation and movement here, none by default
+    modelBaseRotation = QPointF(-15, 0);
+    modelBaseMovement = QPointF(x, -y);
+    // initially, no accumulated rotation or movement given
+    modelAccumulatedRotation = QPointF();
+    modelAccumulatedMovement = QPointF();
 }

@@ -55,7 +55,7 @@ void TabbedOptionsDialog::initTabs() {
     OptionsDialogTabLayout *tab1Layout = new OptionsDialogTabLayout(this);
     OptionsDialogTabLayout *tab2Layout = new OptionsDialogTabLayout(this);
     OptionsDialogTabLayout *tab3Layout = new OptionsDialogTabLayout(this);    
-    optionsFormLayout = new OptionsFormLayout(this);
+    optionsFormLayout = new OptionsFormLayout;
     // organize tabs' contents here
     Plant *p = Plant::activePlant;
     int row = 0;
@@ -143,9 +143,13 @@ void TabbedOptionsDialog::saveToXML() {
 
 void TabbedOptionsDialog::newPlant()
 {
-    NewDialog *newDialog = new NewDialog();
+    NewDialog *newDialog = new NewDialog;
     newDialog->setModal(true);
-    newDialog->show();
+    int result = newDialog->exec();
+    if (result == QDialog::Accepted) {
+        reloadTabs();
+        emit cameraChanged(0, 0, 50);
+    }
 }
 
 void TabbedOptionsDialog::valuesChanged() {

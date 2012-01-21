@@ -8,12 +8,15 @@
 #include <QFormLayout>
 #include <QLineEdit>
 #include <QSpinBox>
+#include "plant.h"
+#include "scene.h"
+#include "tabbedoptionsdialog.h"
 
 class NewDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit NewDialog(QWidget *parent = 0);
+    explicit NewDialog();
 
     QDialogButtonBox *buttonBox;
     QPushButton *btnCancel;
