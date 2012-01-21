@@ -1,6 +1,4 @@
 #include "scene.h"
-#include <math.h>
-#define PI_180 0.01745329251994329576923690768489
 
 Scene* Scene::activeScene = 0;
 
@@ -65,50 +63,40 @@ void Leaf::render()
         QColor sec = Plant::activePlant->secLeafColor;
         glFrontFace(GL_CW);
 
-    int leafStemLength = length;
+        int leafStemLength = length;
 
-    // the leaf's stem
-    glColor3f(prim.redF(), prim.greenF(), prim.blueF());
-    glBegin(GL_TRIANGLE_STRIP);
-    glVertex3f(-0.1f*width/10, 0.0f, 0.0f);
-    glVertex3f(0.0f, 0.0f, leafStemLength);
-    glVertex3f(0.1f*width/10, 0.0f, 0.0f);
-    glEnd();
+        // the leaf's stem
+        glColor3f(prim.redF(), prim.greenF(), prim.blueF());
+        glBegin(GL_TRIANGLE_STRIP);
+        glVertex3f(-0.1f*width/10, 0.0f, 0.0f);
+        glVertex3f(0.0f, 0.0f, leafStemLength);
+        glVertex3f(0.1f*width/10, 0.0f, 0.0f);
+        glEnd();
 
-    // left half of leaf
-    glBegin(GL_TRIANGLE_STRIP);
-    glColor3f(prim.redF(), prim.greenF(), prim.blueF());
-    glVertex3f(-0.5f*width, 0.0f, leafStemLength+0.25f*length);
-    glColor3f(sec.redF(), sec.greenF(), sec.blueF());
-    glVertex3f(-0.5f*width, 0.0f, leafStemLength+0.75f*length);
-    glColor3f(prim.redF(), prim.greenF(), prim.blueF());
-    glVertex3f(0.0f, 0.0f, leafStemLength);
-    glColor3f(sec.redF(), sec.greenF(), sec.blueF());
-    glVertex3f(0.0f, 0.0f, leafStemLength+length);
-    glEnd();
+        // left half of leaf
+        glBegin(GL_TRIANGLE_STRIP);
+        glColor3f(prim.redF(), prim.greenF(), prim.blueF());
+        glVertex3f(-0.5f*width, 0.0f, leafStemLength+0.25f*length);
+        glColor3f(sec.redF(), sec.greenF(), sec.blueF());
+        glVertex3f(-0.5f*width, 0.0f, leafStemLength+0.75f*length);
+        glColor3f(prim.redF(), prim.greenF(), prim.blueF());
+        glVertex3f(0.0f, 0.0f, leafStemLength);
+        glColor3f(sec.redF(), sec.greenF(), sec.blueF());
+        glVertex3f(0.0f, 0.0f, leafStemLength+length);
+        glEnd();
 
-    // right half of leaf
-    glBegin(GL_TRIANGLE_STRIP);
-    glColor3f(prim.redF(), prim.greenF(), prim.blueF());
-    glVertex3f(width/2, 0.0f, 0.25*length);
-    glColor3f(prim.redF(), prim.greenF(), prim.blueF());
-    glVertex3f(0.0f, 0.0f, 0.0f);
-    glColor3f(sec.redF(), sec.greenF(), sec.blueF());
-    glVertex3f(width/2, 0.0f, 0.75*length);
-    glColor3f(sec.redF(), sec.greenF(), sec.blueF());
-    glVertex3f(0.0f, 0.0f, length);
-    glEnd();
-    // right half of leaf
-    glBegin(GL_TRIANGLE_STRIP);
-    glColor3f(prim.redF(), prim.greenF(), prim.blueF());
-    glVertex3f(0.5f*width, 0.0f, leafStemLength+0.25f*length);
-    glColor3f(prim.redF(), prim.greenF(), prim.blueF());
-    glVertex3f(0.0f, 0.0f, leafStemLength);
-    glColor3f(sec.redF(), sec.greenF(), sec.blueF());
-    glVertex3f(0.5f*width, 0.0f, leafStemLength+0.75f*length);
-    glColor3f(sec.redF(), sec.greenF(), sec.blueF());
-    glVertex3f(0.0f, 0.0f, leafStemLength+length);
-    glEnd();
+        // right half of leaf
+        glBegin(GL_TRIANGLE_STRIP);
+        glColor3f(prim.redF(), prim.greenF(), prim.blueF());
+        glVertex3f(0.5f*width, 0.0f, leafStemLength+0.25f*length);
+        glColor3f(prim.redF(), prim.greenF(), prim.blueF());
+        glVertex3f(0.0f, 0.0f, leafStemLength);
+        glColor3f(sec.redF(), sec.greenF(), sec.blueF());
+        glVertex3f(0.5f*width, 0.0f, leafStemLength+0.75f*length);
+        glColor3f(sec.redF(), sec.greenF(), sec.blueF());
+        glVertex3f(0.0f, 0.0f, leafStemLength+length);
+        glEnd();
+    }
 }
 
 Scene::Scene(Plant *plant, QWidget *oglPanel) : oglPanel(oglPanel) {

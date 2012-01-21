@@ -7,6 +7,8 @@
 #include <GL/glu.h>
 #include <QGLWidget>
 #include "plant.h"
+#include <math.h>
+#define PI_180 0.01745329251994329576923690768489
 
 class SceneObject
 {
