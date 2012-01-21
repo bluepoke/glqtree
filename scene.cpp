@@ -121,8 +121,8 @@ QList<SceneObject*> *Scene::createSceneObject(Plant *plant, SceneObject *parent,
     // apply an endcap to top branches
     if (age == plant->maxAge) {
         QList<SceneObject*> *end = new QList<SceneObject*>;
-        if (Plant::activePlant->drawCaps) {
-            SceneObject *cap = constructEndSection(parent, age, Plant::activePlant->drawLeaves);
+        if (plant->drawCaps) {
+            SceneObject *cap = constructEndSection(plant, parent, age, plant->drawLeaves);
             end->append(cap);
         }
         return end;
@@ -143,27 +143,38 @@ QList<SceneObject*> *Scene::createSceneObject(Plant *plant, SceneObject *parent,
                 actualBranches--;
                 break;
             }
+
             // create new branch
             int branchAge = age;
             bool isGrowthInterrupted = plant->isGrowthInterruptingAt(age);
             int delay = plant->getGrowthInterruptionAt(age);
             int parentRadius = ((BranchSection*)parent)->radTop;
+
             if (isGrowthInterrupted) {
                 // growth is delayed. all following objects start with higher age
                 branchAge += delay;
                 parentRadius = plant->getBranchThicknessAt(branchAge - 1);
             }
+
             SceneObject *branch = constructBranchSection(plant, parent, parentRadius, branchAge);
+
             // apply off-the-divided-axis rotation to branch:
             int randRotationAngle = plant->coinflip() * plant->getBranchingRotationAt(branchAge);
-            QVector3D *rotB = new QVector3D(0, plant->getBranchingAngle(branchAge),
+            branch->rotation = new QVector3D(0, plant->getBranchingAngle(branchAge),
                                             360/actualBranches * i + randRotationAngle);
-            branch->rotation = rotB;
 
             // let the branch grow further with possible interruption (recursion)
             QList<SceneObject*> *nextBranchChildren = createSceneObject(plant, branch, branchAge + 1);
-            // append the children to this branch
+            // append the next branches' children to this branch
             branch->children->append(*nextBranchChildren);
+
+            // create leaves for this branch if any
+            if (plant->drawLeaves)
+            {
+                QList<SceneObject*> *leaves = createLeaves(plant, branch, branchAge);
+                branch->children->append(*leaves);
+            }
+
             // append this branch to the list of children
             children->append(branch);
         }
@@ -171,24 +182,32 @@ QList<SceneObject*> *Scene::createSceneObject(Plant *plant, SceneObject *parent,
 
     // continue main branch if needed
     if (plant->continueMainBranchAt(age)) {
-        SceneObject *current = constructBranchSection(plant, parent, ((BranchSection*)parent)->radTop, age);
+        SceneObject *mainBranch = constructBranchSection(plant, parent, ((BranchSection*)parent)->radTop, age);
 
         // create all possible next children of the continued main branch
-        QList<SceneObject*> *nextChildren = createSceneObject(plant, current, age + 1);
-        current->children->append(*nextChildren);
+        QList<SceneObject*> *nextChildren = createSceneObject(plant, mainBranch, age + 1);
+        mainBranch->children->append(*nextChildren);
 
-        // append the main branch to the parent's children list
-        children->append(current);
+        // create leaves for the mainbranch if any
+        if (plant->drawLeaves)
+        {
+            QList<SceneObject*> *leaves = createLeaves(plant, mainBranch, age);
+            mainBranch->children->append(*leaves);
+        }
+
+        // append the continued main branch to the parent's children list
+        children->append(mainBranch);
+
         // put a cap to the branches end to smooth string wobbliness and branching angles
-        if (Plant::activePlant->drawConnectors) {
-            SceneObject *cap = constructEndSection(parent, age, false);
+        if (plant->drawConnectors) {
+            SceneObject *cap = constructEndSection(plant, parent, age, false);
             children->append(cap);
         }
     }
     // append only an end cap otherwise
     else {
-        if (Plant::activePlant->drawCaps) {
-            SceneObject *current = constructEndSection(parent, age, Plant::activePlant->drawLeaves);
+        if (plant->drawCaps) {
+            SceneObject *current = constructEndSection(plant, parent, age, plant->drawLeaves);
             children->append(current);
         }
     }
@@ -212,7 +231,7 @@ SceneObject* Scene::constructBranchSection(Plant* plant, SceneObject* parent, in
     return current;
 }
 
-SceneObject* Scene::constructEndSection(SceneObject* parent, int age, bool hasLeaf)
+SceneObject* Scene::constructEndSection(Plant *plant, SceneObject* parent, int age, bool hasLeaf)
 {
     // add a cap to a parent
     SceneObject *current = new EndSection(parent, ((BranchSection*)parent)->radTop);
@@ -222,17 +241,26 @@ SceneObject* Scene::constructEndSection(SceneObject* parent, int age, bool hasLe
     if (hasLeaf) {
         // move translation out of the object itself, to make leaves universally usable
         QVector3D *translation = new QVector3D(0, 0, ((EndSection*)current)->radius);
-        SceneObject *leaf = constructLeaf(current, age, translation);
+        SceneObject *leaf = constructLeaf(plant, current, age, translation);
         current->children->append(leaf);
     }
 
     return current;
 }
 
-SceneObject* Scene::constructLeaf(SceneObject* parent, int age, QVector3D *translation)
+QList<SceneObject*> *Scene::createLeaves(Plant *plant, SceneObject *parent, int age)
+{
+    QList<SceneObject*> *leaves = new QList<SceneObject*>;
+
+    // TODO, create leaves
+
+    return leaves;
+}
+
+SceneObject* Scene::constructLeaf(Plant *plant, SceneObject* parent, int age, QVector3D *translation)
 {
     // construct and return a leaf
-    SceneObject *leaf = new Leaf(parent, Plant::activePlant->getLeafWidthAt(age), Plant::activePlant->getLeafLengthAt(age));
+    SceneObject *leaf = new Leaf(parent, plant->getLeafWidthAt(age), plant->getLeafLengthAt(age));
     leaf->translation = translation;
     return leaf;
 }
