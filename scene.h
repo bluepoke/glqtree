@@ -63,10 +63,11 @@ public:
     QWidget *oglPanel;
 
 private:
-    QList<SceneObject*> *createSceneObject(Plant *plant = 0, SceneObject *parent = 0, int age = 0);
+    QList<SceneObject*>* createSceneObject(Plant *plant = 0, SceneObject *parent = 0, int age = 0);
     SceneObject* constructBranchSection(Plant *plant, SceneObject *parent, int parentRadius, int age);
-    SceneObject* constructEndSection(SceneObject *parent, int age, bool hasLeaf);
-    SceneObject *constructLeaf(SceneObject *parent, int age, QVector3D *translation);
+    SceneObject* constructEndSection(Plant *plant, SceneObject *parent, int age, bool hasLeaf);
+    QList<SceneObject*>* createLeaves(Plant *plant, SceneObject *parent, int age);
+    SceneObject* constructLeaf(Plant *plant, SceneObject *parent, int age, QVector3D *translation);
 };
 
 #endif // SCENE_H
