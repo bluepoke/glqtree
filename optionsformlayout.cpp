@@ -122,6 +122,14 @@ OptionsFormLayout::OptionsFormLayout(QWidget *parent) :
     connect(spinSlices,SIGNAL(valueChanged(int)),this,SLOT(changeSlices(int)));
     connect(spinSegments,SIGNAL(valueChanged(int)),this,SLOT(changeSegments(int)));
     connect(spinGrowth,SIGNAL(valueChanged(int)),this,SLOT(changeGrowthAge(int)));
+
+    connect(spinAge, SIGNAL(valueChanged(int)), this, SLOT(updateStats()));
+    connect(cbxLeaves, SIGNAL(toggled(bool)), this, SLOT(updateStats()));
+    connect(cbxBranchCaps, SIGNAL(toggled(bool)), this, SLOT(updateStats()));
+    connect(cbxConnectors, SIGNAL(toggled(bool)), this, SLOT(updateStats()));
+    connect(spinSlices, SIGNAL(valueChanged(int)), this, SLOT(updateStats()));
+    connect(spinSegments, SIGNAL(valueChanged(int)), this, SLOT(updateStats()));
+    connect(spinGrowth, SIGNAL(valueChanged(int)), this, SLOT(updateStats()));
 }
 
 void OptionsFormLayout::randomSeed()
@@ -207,6 +215,18 @@ void OptionsFormLayout::changeGrowthAge(int age)
 {
     Plant::activePlant->growthAge = age;
     Scene::activeScene->initScene(Plant::activePlant);
+}
+
+void OptionsFormLayout::updateStats()
+{
+    lblBranches->setText(QString::number(Scene::activeScene->branches));
+    lblSpheres->setText(QString::number(Scene::activeScene->spheres));
+    lblLeaves->setText(QString::number(Scene::activeScene->leaves));
+    lblPolygons->setText(QString::number((Scene::activeScene->spheres +
+                                          Scene::activeScene->branches) *
+                                         Plant::activePlant->segments *
+                                         Plant::activePlant->slices));
+    lblTriangles->setText(QString::number(Scene::activeScene->leaves * 5));
 }
 
 void OptionsFormLayout::changeName(QString name)

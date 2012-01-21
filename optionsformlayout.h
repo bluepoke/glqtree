@@ -71,6 +71,7 @@ public slots:
     void switchConnectors(bool toggle);
 
     void changeGrowthAge(int age);
+    void updateStats();
 };
 
 #endif // OPTIONSFORMLAYOUT_H

@@ -45,7 +45,6 @@ MainWindow::MainWindow(QWidget *parent) :
     // connect glpanel and optionsformlayout, and the other way around
     connect(ui->panelGL, SIGNAL(cameraChanged(int,int,int)), tabs, SLOT(changeCamera(int,int,int)));
     connect(tabs, SIGNAL(cameraChanged(int,int,int)), ui->panelGL, SLOT(changeCamera(int,int,int)));
-    // connect(Scene::activeScene, SIGNAL(statisticsChanged(int,int,int)), tabs, SLOT(changeStatistics(int,int,int)));
 }
 
 MainWindow::~MainWindow()

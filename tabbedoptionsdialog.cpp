@@ -160,16 +160,6 @@ void TabbedOptionsDialog::changeCamera(int x, int y, int zoom)
     optionsFormLayout->spinZoom->setValue(zoom);
 }
 
-void TabbedOptionsDialog::changeStatistics(int branches, int spheres, int leaves)
-{
-    optionsFormLayout->lblBranches->setText(QString::number(branches));
-    optionsFormLayout->lblSpheres->setText(QString::number(spheres));
-    optionsFormLayout->lblLeaves->setText(QString::number(leaves));
-    optionsFormLayout->lblPolygons->setText(QString::number((spheres + branches) *
-                                                                Plant::activePlant->segments *
-                                                                Plant::activePlant->slices));
-}
-
 void TabbedOptionsDialog::valuesChanged() {
     Plant *p = Plant::activePlant;
     ValuesTable *v = (ValuesTable*)QObject::sender()->parent()->parent();

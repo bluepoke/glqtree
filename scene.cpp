@@ -134,7 +134,6 @@ void Scene::initScene(Plant *plant) {
     Scene::root = root;
     // call redraw
     ((QGLWidget*)oglPanel)->update();
-//    emit statisticsChanged(branches, spheres, leaves);
 }
 
 QList<SceneObject*> *Scene::createSceneObject(Plant *plant, SceneObject *parent, int age)
@@ -178,6 +177,8 @@ QList<SceneObject*> *Scene::createSceneObject(Plant *plant, SceneObject *parent,
                 branchAge += delay;
                 parentRadius = plant->getBranchThicknessAt(branchAge - 1);
             }
+
+            // TODO if growth interruption results in branches > maxAge we should NOT create children
 
             SceneObject *branch = constructBranchSection(plant, parent, parentRadius, branchAge);
 

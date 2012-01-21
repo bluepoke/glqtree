@@ -1,6 +1,7 @@
 #ifndef SCENE_H
 #define SCENE_H
 
+#include <QObject>
 #include <QVector3D>
 #include <QList>
 #include <GL/gl.h>
@@ -75,9 +76,6 @@ private:
     SceneObject* constructEndSection(Plant *plant, SceneObject *parent, int age, bool hasLeaf);
     QList<SceneObject*>* createLeaves(Plant *plant, SceneObject *parent, int age);
     SceneObject* constructLeaf(Plant *plant, SceneObject *parent, int age, QVector3D *translation, QVector3D *rotation);
-
-signals:
-    void statisticsChanged(int b, int s, int l);
 };
 
 #endif // SCENE_H
