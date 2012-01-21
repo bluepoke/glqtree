@@ -36,7 +36,6 @@ void OptionsDialogTabLayout::initValue(int row, QStringList *headers, int maxAge
     graph->valueColumn = valueColumn;
     // and the values represented by the table
     table->pValues = values;
-//    table->headers = headers;
 
     // adding graph and table
     addWidget(graph, row, 0);
@@ -259,6 +258,7 @@ void OptionsDialogTabLayout::addRow() {
                         // add the row
                         int column = 0;
                         table->insertRow(next);
+                        table->setRowHeight(next, ROW_HEIGHT);
                         table->setCellWidget(next, column++, lbl);
                         if (table->probabilityColumn) {
                             table->setCellWidget(next, column++, doubleSpin);
