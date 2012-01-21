@@ -47,6 +47,6 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::showOptionsDialog() {
-    tabs->show();
+    tabs->isVisible() ? tabs->hide() : tabs->show();
 }
 

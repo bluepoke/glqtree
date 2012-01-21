@@ -181,7 +181,7 @@ QList<SceneObject*> *Scene::createSceneObject(Plant *plant, SceneObject *parent,
         children->append(current);
         // put a cap to the branches end to smooth string wobbliness and branching angles
         if (Plant::activePlant->drawConnectors) {
-            SceneObject *cap = constructEndSection(parent, age, Plant::activePlant->drawLeaves);
+            SceneObject *cap = constructEndSection(parent, age, false);
             children->append(cap);
         }
     }
