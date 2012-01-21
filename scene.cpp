@@ -199,7 +199,7 @@ QList<SceneObject*> *Scene::createSceneObject(Plant *plant, SceneObject *parent,
         SceneObject *mainBranch = constructBranchSection(plant, parent, ((BranchSection*)parent)->radTop, age);
         // do not render if age is larger than deserved growth
         if (age > plant->growthAge) {
-            current->isRendered = false;
+            mainBranch->isRendered = false;
         }
         // create all possible next children of the continued main branch
         QList<SceneObject*> *nextChildren = createSceneObject(plant, mainBranch, age + 1);
