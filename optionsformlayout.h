@@ -43,6 +43,7 @@ private:
     ColorLabel *clrTreeColor;
     ColorLabel *clrPrimLeafColor;
     ColorLabel *clrSecLeafColor;
+    QSpinBox *spinGrowth;
 
 signals:
     
@@ -64,6 +65,8 @@ public slots:
     void switchConnectors(bool toggle);
 
     void changeCamera(int x, int y, int zoom);
+
+    void changeGrowthAge(int age);
 };
 
 #endif // OPTIONSFORMLAYOUT_H

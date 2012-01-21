@@ -7,6 +7,7 @@ SceneObject::SceneObject(SceneObject *parent) : parent(parent)
     children = new QList<SceneObject*>;
     rotation = new QVector3D;
     translation = new QVector3D;
+    isRendered = true;
 }
 
 BranchSection::BranchSection(SceneObject *parent, double radBottom, double radTop, double length) :
@@ -25,61 +26,67 @@ Leaf::Leaf(SceneObject *parent, double width, double length) : SceneObject(paren
 
 void BranchSection::render()
 {
-    GLUquadricObj *qobj;
-    qobj = gluNewQuadric();
+    if (isRendered) {
+        GLUquadricObj *qobj;
+        qobj = gluNewQuadric();
 
-//    not really needed
-//    gluQuadricCallback(qobj, GLU_ERROR, NULL);
-//    gluQuadricDrawStyle(qobj, GLU_FILL);
-//    gluQuadricNormals(qobj, GLU_SMOOTH);
+        //    not really needed
+        //    gluQuadricCallback(qobj, GLU_ERROR, NULL);
+        //    gluQuadricDrawStyle(qobj, GLU_FILL);
+        //    gluQuadricNormals(qobj, GLU_SMOOTH);
 
-    // build all along the positive z-axis
-    QColor branch = Plant::activePlant->branchColor;
-    glColor3f(branch.redF(), branch.greenF(), branch.blueF());
-    gluCylinder(qobj, radBottom, radTop, length,
-                Plant::activePlant->slices, Plant::activePlant->segments);
+        // build all along the positive z-axis
+        QColor branch = Plant::activePlant->branchColor;
+        glColor3f(branch.redF(), branch.greenF(), branch.blueF());
+        gluCylinder(qobj, radBottom, radTop, length,
+                    Plant::activePlant->slices, Plant::activePlant->segments);
+    }
 }
 
 void EndSection::render()
 {
-    GLUquadricObj *qobj;
-    qobj = gluNewQuadric();
-    // build an end cap
-    QColor branch = Plant::activePlant->branchColor;
-    glColor3f(branch.redF(), branch.greenF(), branch.blueF());
-    gluSphere(qobj, radius,
-              Plant::activePlant->slices, Plant::activePlant->segments);
+    if (isRendered) {
+        GLUquadricObj *qobj;
+        qobj = gluNewQuadric();
+        // build an end cap
+        QColor branch = Plant::activePlant->branchColor;
+        glColor3f(branch.redF(), branch.greenF(), branch.blueF());
+        gluSphere(qobj, radius,
+                  Plant::activePlant->slices, Plant::activePlant->segments);
+    }
 }
 
 void Leaf::render()
 {
-    QColor prim = Plant::activePlant->primLeafColor;
-    QColor sec = Plant::activePlant->secLeafColor;
-    glFrontFace(GL_CW);
+    if (isRendered) {
+        QColor prim = Plant::activePlant->primLeafColor;
+        QColor sec = Plant::activePlant->secLeafColor;
+        glFrontFace(GL_CW);
 
-    // left half of leaf
-    glBegin(GL_TRIANGLE_STRIP);
-    glColor3f(prim.redF(), prim.greenF(), prim.blueF());
-    glVertex3f(-width/2, 0.0f, 0.25*length);
-    glColor3f(sec.redF(), sec.greenF(), sec.blueF());
-    glVertex3f(-width/2, 0.0f, 0.75*length);
-    glColor3f(prim.redF(), prim.greenF(), prim.blueF());
-    glVertex3f(0.0f, 0.0f, 0.0f);
-    glColor3f(sec.redF(), sec.greenF(), sec.blueF());
-    glVertex3f(0.0f, 0.0f, length);
-    glEnd();
+        // left half of leaf
+        glBegin(GL_TRIANGLE_STRIP);
+        glColor3f(prim.redF(), prim.greenF(), prim.blueF());
+        glVertex3f(-width/2, 0.0f, 0.25*length);
+        glColor3f(sec.redF(), sec.greenF(), sec.blueF());
+        glVertex3f(-width/2, 0.0f, 0.75*length);
+        glColor3f(prim.redF(), prim.greenF(), prim.blueF());
+        glVertex3f(0.0f, 0.0f, 0.0f);
+        glColor3f(sec.redF(), sec.greenF(), sec.blueF());
+        glVertex3f(0.0f, 0.0f, length);
+        glEnd();
 
-    // right half of leaf
-    glBegin(GL_TRIANGLE_STRIP);
-    glColor3f(prim.redF(), prim.greenF(), prim.blueF());
-    glVertex3f(width/2, 0.0f, 0.25*length);
-    glColor3f(prim.redF(), prim.greenF(), prim.blueF());
-    glVertex3f(0.0f, 0.0f, 0.0f);
-    glColor3f(sec.redF(), sec.greenF(), sec.blueF());
-    glVertex3f(width/2, 0.0f, 0.75*length);
-    glColor3f(sec.redF(), sec.greenF(), sec.blueF());
-    glVertex3f(0.0f, 0.0f, length);
-    glEnd();
+        // right half of leaf
+        glBegin(GL_TRIANGLE_STRIP);
+        glColor3f(prim.redF(), prim.greenF(), prim.blueF());
+        glVertex3f(width/2, 0.0f, 0.25*length);
+        glColor3f(prim.redF(), prim.greenF(), prim.blueF());
+        glVertex3f(0.0f, 0.0f, 0.0f);
+        glColor3f(sec.redF(), sec.greenF(), sec.blueF());
+        glVertex3f(width/2, 0.0f, 0.75*length);
+        glColor3f(sec.redF(), sec.greenF(), sec.blueF());
+        glVertex3f(0.0f, 0.0f, length);
+        glEnd();
+    }
 }
 
 Scene::Scene(Plant *plant, QWidget *oglPanel) : oglPanel(oglPanel) {
@@ -123,6 +130,10 @@ QList<SceneObject*> *Scene::createSceneObject(Plant *plant, SceneObject *parent,
         QList<SceneObject*> *end = new QList<SceneObject*>;
         if (Plant::activePlant->drawCaps) {
             SceneObject *cap = constructEndSection(parent, age, Plant::activePlant->drawLeaves);
+            // do not render if age is larger than deserved
+            if (age > plant->growthAge) {
+                cap->isRendered=false;
+            }
             end->append(cap);
         }
         return end;
@@ -154,6 +165,10 @@ QList<SceneObject*> *Scene::createSceneObject(Plant *plant, SceneObject *parent,
                 parentRadius = plant->getBranchThicknessAt(branchAge - 1);
             }
             SceneObject *branch = constructBranchSection(plant, parent, parentRadius, branchAge);
+            // do not render if age is larger than deserved growth
+            if (age > plant->growthAge) {
+                branch->isRendered = false;
+            }
             // apply off-the-divided-axis rotation to branch:
             int randRotationAngle = plant->coinflip() * plant->getBranchingRotationAt(branchAge);
             QVector3D *rotB = new QVector3D(0, plant->getBranchingAngle(branchAge),
@@ -172,7 +187,10 @@ QList<SceneObject*> *Scene::createSceneObject(Plant *plant, SceneObject *parent,
     // continue main branch if needed
     if (plant->continueMainBranchAt(age)) {
         SceneObject *current = constructBranchSection(plant, parent, ((BranchSection*)parent)->radTop, age);
-
+        // do not render if age is larger than deserved growth
+        if (age > plant->growthAge) {
+            current->isRendered = false;
+        }
         // create all possible next children of the continued main branch
         QList<SceneObject*> *nextChildren = createSceneObject(plant, current, age + 1);
         current->children->append(*nextChildren);
@@ -218,6 +236,10 @@ SceneObject* Scene::constructEndSection(SceneObject* parent, int age, bool hasLe
     SceneObject *current = new EndSection(parent, ((BranchSection*)parent)->radTop);
     current->translation = new QVector3D(0, 0, ((BranchSection*)parent)->length);
 
+    if (age>Plant::activePlant->growthAge) {
+        current->isRendered=false;
+    }
+
     // if the cap should sport a single leaf at its top (like at the end of branches, do so
     if (hasLeaf) {
         // move translation out of the object itself, to make leaves universally usable
@@ -233,6 +255,9 @@ SceneObject* Scene::constructLeaf(SceneObject* parent, int age, QVector3D *trans
 {
     // construct and return a leaf
     SceneObject *leaf = new Leaf(parent, Plant::activePlant->getLeafWidthAt(age), Plant::activePlant->getLeafLengthAt(age));
+    if (age>Plant::activePlant->growthAge) {
+        leaf->isRendered=false;
+    }
     leaf->translation = translation;
     return leaf;
 }

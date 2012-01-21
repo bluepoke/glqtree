@@ -18,6 +18,7 @@ public:
     SceneObject *parent;
     QVector3D *rotation;
     QVector3D *translation;
+    bool isRendered;
 };
 
 class BranchSection : public SceneObject
