@@ -27,6 +27,10 @@ class OptionsFormLayout : public QFormLayout
     Q_OBJECT
 public:
     explicit OptionsFormLayout(QWidget *parent = 0);
+    QSpinBox *spinXMove;
+    QSpinBox *spinYMove;
+    QSpinBox *spinZoom;
+
 private:
     QLineEdit *txtName;
     QSpinBox *spinAge;
@@ -37,9 +41,6 @@ private:
     QCheckBox *cbxLeaves;
     QCheckBox *cbxBranchCaps;
     QCheckBox *cbxConnectors;
-    QSpinBox *spinXMove;
-    QSpinBox *spinYMove;
-    QSpinBox *spinZoom;
     ColorLabel *clrTreeColor;
     ColorLabel *clrPrimLeafColor;
     ColorLabel *clrSecLeafColor;
@@ -63,8 +64,6 @@ public slots:
     void switchLeaves(bool toggle);
     void switchBranchCaps(bool toggle);
     void switchConnectors(bool toggle);
-
-    void changeCamera(int x, int y, int zoom);
 
     void changeGrowthAge(int age);
 };

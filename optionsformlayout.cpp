@@ -188,13 +188,6 @@ void OptionsFormLayout::switchConnectors(bool toggle)
     Scene::activeScene->initScene(Plant::activePlant);
 }
 
-void OptionsFormLayout::changeCamera(int x, int y, int zoom)
-{
-    spinXMove->setValue(x);
-    spinYMove->setValue(y);
-    spinZoom->setValue(zoom);
-}
-
 void OptionsFormLayout::changeGrowthAge(int age)
 {
     Plant::activePlant->growthAge = age;

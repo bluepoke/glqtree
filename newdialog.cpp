@@ -87,13 +87,13 @@ void NewDialog::newPlant()
     p->drawLeaves = true;
     p->slices = 15;
     p->segments = 5;
-    p->movement = QVector3D(0, 0, 50);
+    p->movement = QVector3D(0, -200, 750);
     p->growthAge = max;
 
-    p->addBranchThickness(0, 0, 0);
-    p->addBranchThickness(max, 0, 0);
-    p->addBranchLength(0, 0, 0);
-    p->addBranchLength(max, 0, 0);
+    p->addBranchThickness(0, 20, 0);
+    p->addBranchThickness(max, 1, 0);
+    p->addBranchLength(0, 20, 0);
+    p->addBranchLength(max, 20, 0);
     p->addBranching(0, 0, 0);
     p->addBranching(max, 0, 0);
     p->addBranchingAngle(0, 0, 0);

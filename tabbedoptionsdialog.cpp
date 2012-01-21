@@ -1,3 +1,4 @@
+
 #include "tabbedoptionsdialog.h"
 #include "optionsdialogtablayout.h"
 
@@ -148,8 +149,16 @@ void TabbedOptionsDialog::newPlant()
     int result = newDialog->exec();
     if (result == QDialog::Accepted) {
         reloadTabs();
-        emit cameraChanged(0, 0, 50);
+        emit cameraChanged(Plant::activePlant->movement.x(), Plant::activePlant->movement.y(),
+                           Plant::activePlant->movement.z());
     }
+}
+
+void TabbedOptionsDialog::changeCamera(int x, int y, int zoom)
+{
+    optionsFormLayout->spinXMove->setValue(x);
+    optionsFormLayout->spinYMove->setValue(y);
+    optionsFormLayout->spinZoom->setValue(zoom);
 }
 
 void TabbedOptionsDialog::valuesChanged() {

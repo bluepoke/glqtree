@@ -24,7 +24,6 @@ class TabbedOptionsDialog : public QDialog
     Q_OBJECT
 public:
     explicit TabbedOptionsDialog(QWidget *parent = 0);
-    void reloadTabs();
 
 private:
     QTabWidget *tabWidget;
@@ -34,6 +33,7 @@ private:
     QPushButton *btnSave;
     QPushButton *btnNew;
     void initTabs();
+    void reloadTabs();
 
 public:
     OptionsFormLayout *optionsFormLayout;
@@ -47,5 +47,6 @@ public slots:
     void openFromXML();
     void saveToXML();
     void newPlant();
+    void changeCamera(int x, int y, int zoom);
 };
 #endif // TABBEDOPTIONSDIALOG_H

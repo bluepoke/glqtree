@@ -103,18 +103,30 @@
 	</GRAVITATIONAL_INFLUENCE>
 	<LEAF_LEVELS>
 		<MIN>
-			<VALUE>5</VALUE>
+			<VALUE>0</VALUE>
 		</MIN>
+		<TUPEL>
+			<AGE>40</AGE>
+			<VALUE>3</VALUE>
+		</TUPEL>
 		<MAX>
-			<VALUE>22</VALUE>
+			<VALUE>3</VALUE>
 		</MAX>
 	</LEAF_LEVELS>
 	<LEAF_COUNT_PER_LEVEL>
 		<MIN>
-			<VALUE>1</VALUE>
+			<VALUE>0</VALUE>
 		</MIN>
+		<TUPEL>
+			<AGE>35</AGE>
+			<VALUE>0</VALUE>
+		</TUPEL>
+		<TUPEL>
+			<AGE>40</AGE>
+			<VALUE>3</VALUE>
+		</TUPEL>
 		<MAX>
-			<VALUE>5</VALUE>
+			<VALUE>3</VALUE>
 		</MAX>
 	</LEAF_COUNT_PER_LEVEL>
 	<LEAF_ANGLE>
@@ -122,7 +134,7 @@
 			<VALUE>5</VALUE>
 		</MIN>
 		<MAX>
-			<VALUE>34</VALUE>
+			<VALUE>45</VALUE>
 		</MAX>
 	</LEAF_ANGLE>
 	<LEAF_LENGTH>
@@ -130,7 +142,7 @@
 			<VALUE>3</VALUE>
 		</MIN>
 		<MAX>
-			<VALUE>14</VALUE>
+			<VALUE>60</VALUE>
 		</MAX>
 	</LEAF_LENGTH>
 	<LEAF_WIDTH>
@@ -138,7 +150,7 @@
 			<VALUE>3</VALUE>
 		</MIN>
 		<MAX>
-			<VALUE>34</VALUE>
+			<VALUE>30</VALUE>
 		</MAX>
 	</LEAF_WIDTH>
 </PLANT>

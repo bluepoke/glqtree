@@ -38,7 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // prepare a tabbed Options Dialog
     tabs = new TabbedOptionsDialog;
     // connect glpanel and optionsformlayout, and the other way around
-    connect(ui->panelGL, SIGNAL(cameraChanged(int,int,int)), tabs->optionsFormLayout, SLOT(changeCamera(int,int,int)));
+    connect(ui->panelGL, SIGNAL(cameraChanged(int,int,int)), tabs, SLOT(changeCamera(int,int,int)));
     connect(tabs, SIGNAL(cameraChanged(int,int,int)), ui->panelGL, SLOT(changeCamera(int,int,int)));
 }
 
