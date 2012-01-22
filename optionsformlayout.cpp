@@ -123,6 +123,7 @@ OptionsFormLayout::OptionsFormLayout(QWidget *parent) :
     connect(spinSegments,SIGNAL(valueChanged(int)),this,SLOT(changeSegments(int)));
     connect(spinGrowth,SIGNAL(valueChanged(int)),this,SLOT(changeGrowthAge(int)));
 
+    connect(btnRandomSeed, SIGNAL(clicked()), this, SLOT(updateStats()));
     connect(spinAge, SIGNAL(valueChanged(int)), this, SLOT(updateStats()));
     connect(cbxLeaves, SIGNAL(toggled(bool)), this, SLOT(updateStats()));
     connect(cbxBranchCaps, SIGNAL(toggled(bool)), this, SLOT(updateStats()));

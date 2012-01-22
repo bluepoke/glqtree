@@ -163,7 +163,7 @@ QList<SceneObject*> *Scene::createSceneObject(Plant *plant, SceneObject *parent,
             // should a possible branch actually grow?
             if (!plant->isBranchingAt(age)) {
                 actualBranches--;
-                break;
+                continue;
             }
 
             // create new branch
@@ -176,16 +176,20 @@ QList<SceneObject*> *Scene::createSceneObject(Plant *plant, SceneObject *parent,
                 // growth is delayed. all following objects start with higher age
                 branchAge += delay;
                 parentRadius = plant->getBranchThicknessAt(branchAge - 1);
+                if (branchAge > plant->maxAge) {
+                    // if growth interruption results in branches > maxAge
+                    // then there is no branch as well
+                    actualBranches--;
+                    continue;
+                }
             }
-
-            // TODO if growth interruption results in branches > maxAge we should NOT create children
 
             SceneObject *branch = constructBranchSection(plant, parent, parentRadius, branchAge);
 
             // apply off-the-divided-axis rotation to branch:
             int randRotationAngle = plant->coinflip() * plant->getBranchingRotationAt(branchAge);
             branch->rotation = new QVector3D(0, plant->getBranchingAngle(branchAge),
-                                            360/actualBranches * i + randRotationAngle);
+                                             360/actualBranches * i + randRotationAngle);
 
             // let the branch grow further with possible interruption (recursion)
             QList<SceneObject*> *nextBranchChildren = createSceneObject(plant, branch, branchAge + 1);
@@ -240,8 +244,6 @@ QList<SceneObject*> *Scene::createSceneObject(Plant *plant, SceneObject *parent,
 
 SceneObject* Scene::constructBranchSection(Plant* plant, SceneObject* parent, int parentRadius, int age)
 {
-//    if (age > plant->maxAge) qDebug() << "nothing should be done here: " << age;
-
     SceneObject *current = new BranchSection(parent, parentRadius,
                                              plant->getBranchThicknessAt(age + 1),
                                              plant->getBranchLengthAt(age));
