@@ -1,4 +1,5 @@
 #include "optionsformlayout.h"
+#include "tabbedoptionsdialog.h"
 #include <QDebug>
 
 OptionsFormLayout::OptionsFormLayout(QWidget *parent) :
@@ -11,7 +12,12 @@ OptionsFormLayout::OptionsFormLayout(QWidget *parent) :
     spinAge->setMinimum(0);
     spinAge->setMaximum(INT_MAX);
     spinAge->setValue(p->maxAge);
-    this->addRow("Maximum age:",spinAge);
+
+    QPushButton *applyMaxAge = new QPushButton("Apply");
+    QHBoxLayout *lyoMaxAge = new QHBoxLayout();
+    lyoMaxAge->addWidget(spinAge,1);
+    lyoMaxAge->addWidget(applyMaxAge);
+    this->addRow("Maximum age:",lyoMaxAge);
     spinSeed = new QSpinBox();
     spinSeed->setMaximum(INT_MAX);
     spinSeed->setValue(p->seed);
@@ -112,7 +118,7 @@ OptionsFormLayout::OptionsFormLayout(QWidget *parent) :
     connect(txtName,SIGNAL(textChanged(QString)),this,SLOT(changeName(QString)));
     connect(spinSeed,SIGNAL(valueChanged(int)),this,SLOT(changeSeed(int)));
     connect(btnRandomSeed,SIGNAL(clicked()),this,SLOT(randomSeed()));
-    connect(spinAge,SIGNAL(valueChanged(int)),this,SLOT(changeMaxAge(int)));
+    connect(applyMaxAge,SIGNAL(clicked()),this,SLOT(changeMaxAge()));
     connect(clrPrimLeafColor,SIGNAL(clicked()),this,SLOT(changePrimLeafColor()));
     connect(clrSecLeafColor,SIGNAL(clicked()),this,SLOT(changeSecLeafColor()));
     connect(clrTreeColor,SIGNAL(clicked()),this,SLOT(changeBranchColor()));
@@ -139,11 +145,11 @@ void OptionsFormLayout::randomSeed()
     // no need to call redraw because spinner emits change signal
 }
 
-void OptionsFormLayout::changeMaxAge(int maxAge)
+void OptionsFormLayout::changeMaxAge()
 {
-    // TODO: rescale ages
-//    Plant::activePlant->maxAge = spinAge->value();
-    //    Scene::activeScene->initScene(Plant::activePlant);
+    Plant::activePlant->scaleMaxAgeTo(spinAge->value());
+    Scene::activeScene->initScene(Plant::activePlant);
+    emit treeRescaled();
 }
 
 void OptionsFormLayout::changePrimLeafColor()

@@ -66,6 +66,8 @@ public:
     QList<Tupel3> leafLength;
     QList<Tupel3> leafWidth;
 
+    QList<QList<Tupel3>*> dataList;
+
     void addBranchThickness(int age, int thickness, double rel_deviation);
     void addBranchLength(int age, int length, double rel_deviation);
     void addBranching(int age, int count, double probability);
@@ -106,6 +108,7 @@ public:
     double getBranchWobblinessProbabilityAt(int age);
     bool isBranchWobblinessAt(int age);
     int getRandomRotationBetween(int low, int high);
+    void scaleMaxAgeTo(int age);
 signals:
     
 public slots:

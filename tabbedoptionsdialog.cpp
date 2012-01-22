@@ -115,6 +115,7 @@ void TabbedOptionsDialog::initTabs() {
 
     // other options
     tabWidget->addTab(new Tab(this, optionsFormLayout), "Other");
+    connect(optionsFormLayout,SIGNAL(treeRescaled()),this,SLOT(refreshData()));
 }
 
 // a generic tabs
@@ -164,6 +165,11 @@ void TabbedOptionsDialog::changeCamera(int x, int y, int zoom)
     optionsFormLayout->spinYMove->setValue(y);
     optionsFormLayout->spinZoom->setValue(zoom);
     Plant::activePlant->movement = QVector3D(x, y, zoom);
+}
+
+void TabbedOptionsDialog::refreshData()
+{
+    reloadTabs();
 }
 
 void TabbedOptionsDialog::valuesChanged() {

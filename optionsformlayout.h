@@ -52,12 +52,13 @@ private:
     QSpinBox *spinGrowth;
 
 signals:
+    void treeRescaled();
     
 public slots:
     void randomSeed();
     void changeSeed(int seed);
     void changeName(QString name);
-    void changeMaxAge(int maxAge);
+    void changeMaxAge();
 
     void changePrimLeafColor();
     void changeSecLeafColor();

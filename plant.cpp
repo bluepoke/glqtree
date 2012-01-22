@@ -161,6 +161,22 @@ Plant::Plant(int maxAge, QString name, int seed) : name(name), seed(seed), maxAg
 {
     // initialize randomizer when creating new plant
     this->reseed();
+    // keep list of pointers to data
+    // this is more comfortable if we need to apply
+    // a similar change to all Lists
+    dataList.append(&branching);
+    dataList.append(&branchThickness);
+    dataList.append(&branchLength);
+    dataList.append(&branchingAngle);
+    dataList.append(&branchingRotation);
+    dataList.append(&mainBranch);
+    dataList.append(&growthInterruption);
+    dataList.append(&branchWobbliness);
+    dataList.append(&leafLevels);
+    dataList.append(&leafCountPerLevel);
+    dataList.append(&leafAngle);
+    dataList.append(&leafLength);
+    dataList.append(&leafWidth);
 }
 
 // initialize random number generator
@@ -305,6 +321,56 @@ bool Plant::isBranchWobblinessAt(int age) {
 int Plant::getRandomRotationBetween(int low, int high) {
     // Random number between low and high
     return qrand() % ((high + 1) - low) + low;
+}
+
+// scale data lists from one age to another
+void Plant::scaleMaxAgeTo(int age)
+{
+    double scaleFactor = ((double)age)/((double)this->maxAge);
+    Tupel3 newTupel;
+    QList<Tupel3> *list;
+    for (int i=0; i<dataList.size(); i++) {
+        // get list from list of lists
+        list = dataList.at(i);
+        // rescale all ages in list
+        // but remove all tupels that have duplicate age
+        int previousAge = -1;
+        for (int j=0; j<list->size(); j++) {
+            // keep first entry untouched
+            if (j==0) {
+                previousAge = list->at(j).age;
+                continue;
+            }
+            // get old tupel
+            newTupel = list->at(j);
+            // set last value to new max age
+            if (j==list->size()-1) {
+                newTupel.age = age;
+                list->replace(j,newTupel);
+                // check if previous is duplicate
+                // but only if there are more than 2 entries
+                if (list->size()>2) {
+                    if (list->at(j-1).age==newTupel.age) {
+                        list->removeAt(j-1);
+                    }
+                }
+                continue;
+            }
+            // scale age
+            newTupel.age = newTupel.age*scaleFactor;
+            // remove old tupel if new age is already in list
+            if (newTupel.age==previousAge) {
+                list->removeAt(j);
+                // remember to decrease counter
+                j--;
+            } else {
+                // replace old tupel with new one
+                list->replace(j,newTupel);
+            }
+        }
+    }
+    this->maxAge = age;
+    this->growthAge = growthAge*scaleFactor;
 }
 
 
