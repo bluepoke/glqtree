@@ -9,7 +9,7 @@ static const QString B_TAG = "BRANCHING";
 static const QString B_ANGLE_TAG = "BRANCHING_ANGLE";
 static const QString B_ROT_TAG = "BRANCHING_ROTATION";
 static const QString MAIN_B_TAG = "MAIN_BRANCH";
-static const QString GRAV_TAG = "GRAVITATIONAL_INFLUENCE";
+//static const QString GRAV_TAG = "GRAVITATIONAL_INFLUENCE";
 static const QString GROWTH_INTERRUT_TAG = "GROWTH_INTERRUPTION";
 static const QString WOBBLE_TAG = "WOBBLINESS";
 static const QString L_LEVELS_TAG = "LEAF_LEVELS";
@@ -276,14 +276,14 @@ Plant* PersistenceManager::readPlant(QString fileName) {
                                 }
                             }
 
-                            // <GRAVITATIONAL_INFLUENCE>
-                            else if (tagName.compare(GRAV_TAG,CI)==0) {
-                                p->addGravitationalInfluence(0,minValue);
-                                p->addGravitationalInfluence(p->maxAge,maxValue);
-                                for (int i=0; i<tupelAges.size(); i++) {
-                                    p->addGravitationalInfluence(tupelAges.at(i),tupelValues.at(i));
-                                }
-                            }
+//                            // <GRAVITATIONAL_INFLUENCE>
+//                            else if (tagName.compare(GRAV_TAG,CI)==0) {
+//                                p->addGravitationalInfluence(0,minValue);
+//                                p->addGravitationalInfluence(p->maxAge,maxValue);
+//                                for (int i=0; i<tupelAges.size(); i++) {
+//                                    p->addGravitationalInfluence(tupelAges.at(i),tupelValues.at(i));
+//                                }
+//                            }
                             // <GROWTH_INTERRUPTION>
                             else if (tagName.compare(GROWTH_INTERRUT_TAG,CI)==0) {
                                 p->addGrowthInterruption(0,minValue,minProb);
@@ -613,30 +613,30 @@ bool PersistenceManager::writePlant(QString fileName, const Plant *p){
         // </WOBBLINESS>
         writer->writeEndElement();
 
-        // <GRAVITATIONAL_INFLUENCE>
-        writer->writeStartElement(GRAV_TAG);
-        for (int i=0; i<p->gravitationalInfluence.size(); i++) {
-            if (i==0) {
-                // <MIN>
-                writer->writeStartElement(MIN_TAG);
-                writeAge=false;
-            } else if (i==p->gravitationalInfluence.size()-1) {
-                // <MAX>
-                writer->writeStartElement(MAX_TAG);
-                writeAge=false;
-            } else {
-                // <TUPEL>
-                writer->writeStartElement(TUPEL_TAG);
-                writeAge=true;
-            }
-            if (writeAge) {
-                writer->writeTextElement(AGE_TAG,QString::number(p->gravitationalInfluence.at(i).age));
-            }
-            writer->writeTextElement(V_TAG,QString::number(p->gravitationalInfluence.at(i).value));
-            writer->writeEndElement();
-        }
-        // </GRAVITATIONAL_INFLUENCE>
-        writer->writeEndElement();
+//        // <GRAVITATIONAL_INFLUENCE>
+//        writer->writeStartElement(GRAV_TAG);
+//        for (int i=0; i<p->gravitationalInfluence.size(); i++) {
+//            if (i==0) {
+//                // <MIN>
+//                writer->writeStartElement(MIN_TAG);
+//                writeAge=false;
+//            } else if (i==p->gravitationalInfluence.size()-1) {
+//                // <MAX>
+//                writer->writeStartElement(MAX_TAG);
+//                writeAge=false;
+//            } else {
+//                // <TUPEL>
+//                writer->writeStartElement(TUPEL_TAG);
+//                writeAge=true;
+//            }
+//            if (writeAge) {
+//                writer->writeTextElement(AGE_TAG,QString::number(p->gravitationalInfluence.at(i).age));
+//            }
+//            writer->writeTextElement(V_TAG,QString::number(p->gravitationalInfluence.at(i).value));
+//            writer->writeEndElement();
+//        }
+//        // </GRAVITATIONAL_INFLUENCE>
+//        writer->writeEndElement();
 
         // <LEAF_LEVELS>
         writer->writeStartElement(L_LEVELS_TAG);

@@ -69,9 +69,9 @@ void TabbedOptionsDialog::initTabs() {
     list .clear();
     list << "Age" << "% Deviation" << "Rotation";
     tab1Layout->initValue(row++, new QStringList(list), p->maxAge, true, true, &(p->branchingRotation));
-    list .clear();
-    list << "Age" << "% Continuity";
-    tab1Layout->initValue(row++, new QStringList(list), p->maxAge, true, false, &(p->mainBranch));
+//    list .clear();
+//    list << "Age" << "% Continuity";
+//    tab1Layout->initValue(row++, new QStringList(list), p->maxAge, true, false, &(p->mainBranch));
     list .clear();
     list << "Age" << "Probability" << "Interruption";
     tab1Layout->initValue(row++, new QStringList(list), p->maxAge, true, true,&(p->growthInterruption));
@@ -88,8 +88,11 @@ void TabbedOptionsDialog::initTabs() {
     list << "Age" << "Probability" << "Wobbliness";
     tab2Layout->initValue(row++, new QStringList(list), p->maxAge,true,true,&(p->branchWobbliness));
     list .clear();
-    list << "Age" << "Gravitation";
-    tab2Layout->initValue(row++, new QStringList(list), p->maxAge,false,true,&(p->gravitationalInfluence));
+    list << "Age" << "% Continuity";
+    tab2Layout->initValue(row++, new QStringList(list), p->maxAge, true, false, &(p->mainBranch));
+//    list .clear();
+//    list << "Age" << "Gravitation";
+//    tab2Layout->initValue(row++, new QStringList(list), p->maxAge,false,true,&(p->gravitationalInfluence));
     tabWidget->addTab(new Tab(this,tab2Layout), "Branch Geometry");
 
     row = 0;
@@ -131,6 +134,8 @@ void TabbedOptionsDialog::openFromXML() {
             Plant::activePlant = PersistenceManager::readPlant(fileName);
             Scene::activeScene->initScene(Plant::activePlant);
             reloadTabs();
+            emit cameraChanged(Plant::activePlant->movement.x(), Plant::activePlant->movement.y(),
+                               Plant::activePlant->movement.z());
     }
 }
 
@@ -158,6 +163,7 @@ void TabbedOptionsDialog::changeCamera(int x, int y, int zoom)
     optionsFormLayout->spinXMove->setValue(x);
     optionsFormLayout->spinYMove->setValue(y);
     optionsFormLayout->spinZoom->setValue(zoom);
+    Plant::activePlant->movement = QVector3D(x, y, zoom);
 }
 
 void TabbedOptionsDialog::valuesChanged() {
@@ -218,14 +224,14 @@ void TabbedOptionsDialog::valuesChanged() {
                             ((QDoubleSpinBox*)v->cellWidget(i,1))->value());
         }
     }
-    // Grav. influence changed
-    else if (v->pValues == &(p->gravitationalInfluence)) {
-        p->gravitationalInfluence.clear();
-        for (int i = v->rowCount() - 2; i >= 0; i--) {
-            p->addGravitationalInfluence(((QLabel*)v->cellWidget(i,0))->text().toInt(),
-                            ((QSpinBox*)v->cellWidget(i,1))->value());
-        }
-    }
+//    // Grav. influence changed
+//    else if (v->pValues == &(p->gravitationalInfluence)) {
+//        p->gravitationalInfluence.clear();
+//        for (int i = v->rowCount() - 2; i >= 0; i--) {
+//            p->addGravitationalInfluence(((QLabel*)v->cellWidget(i,0))->text().toInt(),
+//                            ((QSpinBox*)v->cellWidget(i,1))->value());
+//        }
+//    }
     // Growth interruption changed
     else if (v->pValues == &(p->growthInterruption)) {
         p->growthInterruption.clear();

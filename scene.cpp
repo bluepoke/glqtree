@@ -1,5 +1,4 @@
 #include "scene.h"
-#include <QDebug>
 
 Scene* Scene::activeScene = 0;
 

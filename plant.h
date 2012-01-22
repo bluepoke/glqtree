@@ -56,7 +56,7 @@ public:
     QList<Tupel3> branchingAngle;
     QList<Tupel3> branchingRotation;
     QList<Tupel3> mainBranch;
-    QList<Tupel3> gravitationalInfluence;
+//    QList<Tupel3> gravitationalInfluence;
     QList<Tupel3> growthInterruption;
     QList<Tupel3> branchWobbliness;
 
@@ -72,7 +72,7 @@ public:
     void addBranchingAngle(int age, int angle, double rel_deviation);
     void addBranchingRotation(int age, int angle, double rel_deviation);
     void addMainBranch(int age, double probability);
-    void addGravitationalInfluence(int age, int influence);
+//    void addGravitationalInfluence(int age, int influence);
     void addGrowthInterruption(int age, int duration, double probability);
     void addBranchWobbliness(int age, int wobble, double probability);
 
@@ -87,7 +87,7 @@ public:
     int getBranchingRotationAt(int age);
     int getBranchingAngle(int age);
     int getBranchCountAt(int age);
-    int getGravitationalInfluenceAt(int age);
+//    int getGravitationalInfluenceAt(int age);
     int getGrowthInterruptionAt(int age);
     int getBranchWobblinessAt(int age);
     int getLeafLevelsAt(int age);

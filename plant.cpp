@@ -244,15 +244,15 @@ bool Plant::continueMainBranchAt(int age)
     return isTakingPlace(&prob);
 }
 
-void Plant::addGravitationalInfluence(int age, int influence)
-{
-    Tupel3 t(age,influence,0);
-    addTupel3(&gravitationalInfluence,&t);
-}
+//void Plant::addGravitationalInfluence(int age, int influence)
+//{
+//    Tupel3 t(age,influence,0);
+//    addTupel3(&gravitationalInfluence,&t);
+//}
 
-int Plant::getGravitationalInfluenceAt(int age) {
-    return interpolateValue3(&gravitationalInfluence, &age);
-}
+//int Plant::getGravitationalInfluenceAt(int age) {
+//    return interpolateValue3(&gravitationalInfluence, &age);
+//}
 
 void Plant::addGrowthInterruption(int age, int duration, double probability)
 {

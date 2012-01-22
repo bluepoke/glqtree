@@ -104,8 +104,8 @@ void NewDialog::newPlant()
     p->addMainBranch(max, 1);
     p->addGrowthInterruption(0, 0, 0);
     p->addGrowthInterruption(max, 0, 0);
-    p->addGravitationalInfluence(0, 0);
-    p->addGravitationalInfluence(max, 0);
+//    p->addGravitationalInfluence(0, 0);
+//    p->addGravitationalInfluence(max, 0);
     p->addBranchWobbliness(0, 0, 0);
     p->addBranchWobbliness(max, 0, 0);
     p->addLeafAngle(0, 0);
