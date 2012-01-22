@@ -68,31 +68,42 @@ void Leaf::render()
         // the leaf's stem
         glColor3f(prim.redF(), prim.greenF(), prim.blueF());
         glBegin(GL_TRIANGLE_STRIP);
+        glNormal3f(0, 1, 0);
         glVertex3f(-0.1f*width/10, 0.0f, 0.0f);
+        glNormal3f(0, 1, 0);
         glVertex3f(0.0f, 0.0f, leafStemLength);
+        glNormal3f(0, 1, 0);
         glVertex3f(0.1f*width/10, 0.0f, 0.0f);
         glEnd();
 
         // left half of leaf
         glBegin(GL_TRIANGLE_STRIP);
+        glNormal3f(0, 1, 0);
         glColor3f(prim.redF(), prim.greenF(), prim.blueF());
         glVertex3f(-0.5f*width, 0.0f, leafStemLength+0.25f*length);
+        glNormal3f(0, 1, 0);
         glColor3f(sec.redF(), sec.greenF(), sec.blueF());
         glVertex3f(-0.5f*width, 0.0f, leafStemLength+0.75f*length);
+        glNormal3f(0, 1, 0);
         glColor3f(prim.redF(), prim.greenF(), prim.blueF());
         glVertex3f(0.0f, 0.0f, leafStemLength);
+        glNormal3f(0, 1, 0);
         glColor3f(sec.redF(), sec.greenF(), sec.blueF());
         glVertex3f(0.0f, 0.0f, leafStemLength+length);
         glEnd();
 
         // right half of leaf
         glBegin(GL_TRIANGLE_STRIP);
+        glNormal3f(0, 1, 0);
         glColor3f(prim.redF(), prim.greenF(), prim.blueF());
         glVertex3f(0.5f*width, 0.0f, leafStemLength+0.25f*length);
+        glNormal3f(0, 1, 0);
         glColor3f(prim.redF(), prim.greenF(), prim.blueF());
         glVertex3f(0.0f, 0.0f, leafStemLength);
+        glNormal3f(0, 1, 0);
         glColor3f(sec.redF(), sec.greenF(), sec.blueF());
         glVertex3f(0.5f*width, 0.0f, leafStemLength+0.75f*length);
+        glNormal3f(0, 1, 0);
         glColor3f(sec.redF(), sec.greenF(), sec.blueF());
         glVertex3f(0.0f, 0.0f, leafStemLength+length);
         glEnd();
