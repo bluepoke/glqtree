@@ -103,9 +103,16 @@ int interpolateDeviatedValue3(QList<Tupel3> *list, int *age) {
     // therefore we fetch a random number from range [0,2*deviationRange)
     // and shift the result to the left by deviationRange.
     // it is not really exact and symmetric but it is sufficient for this application
-    if (deviationRange == 0) return interpolatedTupel.value;
+
+    // call qrand() once even if we don't need the value
+    // this avoids a massive change of the tree when switching from
+    // 0 probability to non-Zero probability
+    int rnd = qrand();
+    if (deviationRange == 0) {
+        return interpolatedTupel.value;
+    }
     // otherwise...
-    int deviation = qrand()%(2*deviationRange) - deviationRange;
+    int deviation = rnd%(2*deviationRange) - deviationRange;
     // add deviation to exact value
     return interpolatedTupel.value + deviation;
 }
