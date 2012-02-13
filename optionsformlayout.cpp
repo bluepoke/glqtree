@@ -53,6 +53,13 @@ OptionsFormLayout::OptionsFormLayout(QWidget *parent) :
     clrTreeColor->setPalette(palette);
     this->addRow("Branch color",clrTreeColor);
 
+    clrBackgroundColor = new ColorLabel("  ",0);
+    clrBackgroundColor->setAutoFillBackground(true);
+    palette = clrBackgroundColor->palette();
+    palette.setColor(palette.Background,p->backgroundColor);
+    clrBackgroundColor->setPalette(palette);
+    this->addRow("Background color", clrBackgroundColor);
+
     cbxLeaves = new QCheckBox("Draw leaves");
     cbxLeaves->setChecked(p->drawLeaves);
     this->addRow("",cbxLeaves);
@@ -121,6 +128,7 @@ OptionsFormLayout::OptionsFormLayout(QWidget *parent) :
     connect(applyMaxAge,SIGNAL(clicked()),this,SLOT(changeMaxAge()));
     connect(clrPrimLeafColor,SIGNAL(clicked()),this,SLOT(changePrimLeafColor()));
     connect(clrSecLeafColor,SIGNAL(clicked()),this,SLOT(changeSecLeafColor()));
+    connect(clrBackgroundColor,SIGNAL(clicked()),this,SLOT(changeBackgroundColor()));
     connect(clrTreeColor,SIGNAL(clicked()),this,SLOT(changeBranchColor()));
     connect(cbxLeaves,SIGNAL(toggled(bool)),this,SLOT(switchLeaves(bool)));
     connect(cbxBranchCaps,SIGNAL(toggled(bool)),this,SLOT(switchBranchCaps(bool)));
@@ -184,6 +192,18 @@ void OptionsFormLayout::changeBranchColor()
         p.setColor(p.Background,color);
         clrTreeColor->setPalette(p);
         Plant::activePlant->branchColor = color;
+        Scene::activeScene->initScene(Plant::activePlant);
+    }
+}
+
+void OptionsFormLayout::changeBackgroundColor()
+{
+    QPalette p = clrBackgroundColor->palette();
+    QColor color = QColorDialog::getColor(Plant::activePlant->backgroundColor);
+    if (color.isValid()) {
+        p.setColor(p.Background,color);
+        clrBackgroundColor->setPalette(p);
+        Plant::activePlant->backgroundColor = color;
         Scene::activeScene->initScene(Plant::activePlant);
     }
 }

@@ -69,6 +69,9 @@ void MyPanelOpenGL::resizeGL(int width, int height){
 }
 
 void MyPanelOpenGL::paintGL(){
+    QColor c = Plant::activePlant->backgroundColor;
+    glClearColor(c.redF(), c.greenF(), c.blueF(), 1.0);
+
     // basic display settings
     glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glShadeModel (GL_SMOOTH);

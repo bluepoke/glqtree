@@ -32,6 +32,7 @@ static const QString SEED_ATTRIB = "RANDOM_SEED";
 static const QString BRANCH_COLOR_ATTRIB = "BRANCH_COLOR";
 static const QString PRIM_LEAF_COLOR_ATTRIB = "PRIMARY_LEAF_COLOR";
 static const QString SEC_LEAF_COLOR_ATTRIB = "SECONDARY_LEAF_COLOR";
+static const QString BACKGROUND_COLOR = "BACKGROUND_COLOR";
 static const QString DRAW_LEAVES_ATTRIB = "DRAW_LEAVES";
 static const QString DRAW_CAPS_ATTRIB = "DRAW_CAPS";
 static const QString DRAW_CONNECTORS_ATTRIB = "DRAW_CONNECTORS";
@@ -106,6 +107,13 @@ Plant* PersistenceManager::readPlant(QString fileName) {
                             p->secLeafColor = QColor(rgb.at(0).toInt(),
                                                     rgb.at(1).toInt(),
                                                     rgb.at(2).toInt());
+                        }
+                        // background color
+                        else if (attrib.name().toString().compare(BACKGROUND_COLOR,CI)==0) {
+                            QStringList rgb = attrib.value().toString().split(",");
+                            p->backgroundColor = QColor(rgb.at(0).toInt(),
+                                                        rgb.at(1).toInt(),
+                                                        rgb.at(2).toInt());
                         }
                         // draw leaves
                         else if (attrib.name().toString().compare(DRAW_LEAVES_ATTRIB,CI)==0) {
@@ -393,6 +401,11 @@ bool PersistenceManager::writePlant(QString fileName, const Plant *p){
                                                    QString::number(p->secLeafColor.green())
                                                    +","+
                                                    QString::number(p->secLeafColor.blue()));
+        writer->writeAttribute(BACKGROUND_COLOR,QString::number(p->backgroundColor.red())
+                                                   +","+
+                                                   QString::number(p->backgroundColor.green())
+                                                   +","+
+                                                   QString::number(p->backgroundColor.blue()));
         writer->writeAttribute(DRAW_LEAVES_ATTRIB,QString(p->drawLeaves?TRUE_STRING:FALSE_STRING));
         writer->writeAttribute(DRAW_CAPS_ATTRIB,QString(p->drawCaps?TRUE_STRING:FALSE_STRING));
         writer->writeAttribute(DRAW_CONNECTORS_ATTRIB,QString(p->drawConnectors?TRUE_STRING:FALSE_STRING));
