@@ -49,6 +49,7 @@ private:
     ColorLabel *clrTreeColor;
     ColorLabel *clrPrimLeafColor;
     ColorLabel *clrSecLeafColor;
+    ColorLabel *clrBackgroundColor;
     QSpinBox *spinGrowth;
 
 signals:
@@ -63,6 +64,7 @@ public slots:
     void changePrimLeafColor();
     void changeSecLeafColor();
     void changeBranchColor();
+    void changeBackgroundColor();
 
     void changeSlices(int slices);
     void changeSegments(int segments);

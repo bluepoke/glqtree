@@ -42,6 +42,7 @@ public:
     QColor branchColor;
     QColor primLeafColor;
     QColor secLeafColor;
+    QColor backgroundColor;
     bool drawLeaves;
     bool drawCaps;
     bool drawConnectors;
