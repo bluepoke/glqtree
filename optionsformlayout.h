@@ -9,6 +9,7 @@
 #include <QLabel>
 #include "scene.h"
 #include <QColorDialog>
+#include <QTimer>
 
 class ColorLabel : public QLabel
 {
@@ -51,6 +52,11 @@ private:
     ColorLabel *clrSecLeafColor;
     ColorLabel *clrBackgroundColor;
     QSpinBox *spinGrowth;
+    QCheckBox *cbxGrowth;
+    QTimer *timer;
+    int growthDelay;
+    int growthDelayCounter;
+    bool growUpwards;
 
 signals:
     void treeRescaled();
@@ -74,6 +80,8 @@ public slots:
     void switchConnectors(bool toggle);
 
     void changeGrowthAge(int age);
+    void animateGrowth(bool toggle);
+    void doAnimation();
     void updateStats();
 };
 

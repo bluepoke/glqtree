@@ -5,6 +5,9 @@
 OptionsFormLayout::OptionsFormLayout(QWidget *parent) :
     QFormLayout(parent)
 {
+    growthDelay = 5;
+    growthDelayCounter = 0;
+    growUpwards = true;
     Plant *p = Plant::activePlant;
     txtName= new QLineEdit(p->name);
     this->addRow("Name:",txtName);
@@ -102,11 +105,15 @@ OptionsFormLayout::OptionsFormLayout(QWidget *parent) :
     spinZoom->setEnabled(false);
     this->addRow("Zoom",spinZoom);
 
+    QHBoxLayout *lyoGrowth = new QHBoxLayout();
     spinGrowth = new QSpinBox();
     spinGrowth->setMinimum(1);
     spinGrowth->setMaximum(p->maxAge);
     spinGrowth->setValue(p->growthAge);
-    this->addRow("Grow until age of", spinGrowth);
+    cbxGrowth = new QCheckBox("animate");
+    lyoGrowth->addWidget(spinGrowth);
+    lyoGrowth->addWidget(cbxGrowth);
+    this->addRow("Grow until age of", lyoGrowth);
 
     Scene *s = Scene::activeScene;
     lblBranches = new QLabel(QString::number(s->branches));
@@ -136,6 +143,7 @@ OptionsFormLayout::OptionsFormLayout(QWidget *parent) :
     connect(spinSlices,SIGNAL(valueChanged(int)),this,SLOT(changeSlices(int)));
     connect(spinSegments,SIGNAL(valueChanged(int)),this,SLOT(changeSegments(int)));
     connect(spinGrowth,SIGNAL(valueChanged(int)),this,SLOT(changeGrowthAge(int)));
+    connect(cbxGrowth,SIGNAL(toggled(bool)),this,SLOT(animateGrowth(bool)));
 
     connect(btnRandomSeed, SIGNAL(clicked()), this, SLOT(updateStats()));
 //    connect(spinAge, SIGNAL(valueChanged(int)), this, SLOT(updateStats()));
@@ -244,6 +252,19 @@ void OptionsFormLayout::changeGrowthAge(int age)
     Scene::activeScene->initScene(Plant::activePlant);
 }
 
+void OptionsFormLayout::animateGrowth(bool toggle)
+{
+    if (toggle) {
+        spinGrowth->setEnabled(false);
+        timer = new QTimer();
+        connect(timer,SIGNAL(timeout()),this,SLOT(doAnimation()));
+        timer->start(100);
+    } else {
+        timer->stop();
+        spinGrowth->setEnabled(true);
+    }
+}
+
 void OptionsFormLayout::updateStats()
 {
     lblBranches->setText(QString::number(Scene::activeScene->branches));
@@ -278,4 +299,33 @@ ColorLabel::ColorLabel( const QString & text, QWidget * parent )
 void ColorLabel::mousePressEvent ( QMouseEvent * event )
 {
     emit clicked();
+}
+
+void OptionsFormLayout::doAnimation()
+{
+    int age = spinGrowth->value();
+
+    // delay animation at maximum growth
+    if (age == spinGrowth->maximum() && growthDelayCounter < growthDelay) {
+        growthDelayCounter++;
+        return;
+    }
+
+    growthDelayCounter = 0;
+
+    if (age == spinGrowth->minimum()) {
+        growUpwards = true;
+    }
+
+    if (age == spinGrowth->maximum()) {
+        growUpwards = false;
+    }
+
+    if (growUpwards) {
+        age++;
+    } else {
+        age--;
+    }
+
+    spinGrowth->setValue(age);
 }
