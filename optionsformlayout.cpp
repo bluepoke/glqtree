@@ -268,7 +268,6 @@ void OptionsFormLayout::animateGrowth(bool toggle)
 
 void OptionsFormLayout::updateStats()
 {
-    qDebug("update");
     lblBranches->setText(QString::number(Scene::activeScene->branches));
     lblSpheres->setText(QString::number(Scene::activeScene->spheres));
     lblLeaves->setText(QString::number(Scene::activeScene->leaves));
