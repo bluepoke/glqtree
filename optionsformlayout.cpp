@@ -8,7 +8,6 @@ OptionsFormLayout::OptionsFormLayout(QWidget *parent) :
     growthDelay = 5;
     growthDelayCounter = 0;
     growUpwards = true;
-    Plant *p = Plant::activePlant;
     txtName= new QLineEdit(Plant::activePlant->name);
     this->addRow("Name:",txtName);
     spinAge = new QSpinBox();
