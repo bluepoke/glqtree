@@ -173,59 +173,58 @@ void TabbedOptionsDialog::refreshData()
 }
 
 void TabbedOptionsDialog::valuesChanged() {
-    Plant *p = Plant::activePlant;
     ValuesTable *v = (ValuesTable*)QObject::sender()->parent()->parent();
 
     // Branching changed
-    if (v->pValues == &(p->branching)) {
-        p->branching.clear();
+    if (v->pValues == &(Plant::activePlant->branching)) {
+        Plant::activePlant->branching.clear();
         for (int i = v->rowCount() - 2; i >= 0; i--) {
-            p->addBranching(((QLabel*)v->cellWidget(i,0))->text().toInt(),
+            Plant::activePlant->addBranching(((QLabel*)v->cellWidget(i,0))->text().toInt(),
                             ((QSpinBox*)v->cellWidget(i,2))->value(),
                             ((QDoubleSpinBox*)v->cellWidget(i,1))->value());
         }
     }
     // Branching angle changed
-    else if (v->pValues == &(p->branchingAngle)) {
-        p->branchingAngle.clear();
+    else if (v->pValues == &(Plant::activePlant->branchingAngle)) {
+        Plant::activePlant->branchingAngle.clear();
         for (int i = v->rowCount() - 2; i >= 0; i--) {
-            p->addBranchingAngle(((QLabel*)v->cellWidget(i,0))->text().toInt(),
+            Plant::activePlant->addBranchingAngle(((QLabel*)v->cellWidget(i,0))->text().toInt(),
                             ((QSpinBox*)v->cellWidget(i,2))->value(),
                             ((QDoubleSpinBox*)v->cellWidget(i,1))->value());
         }
     }
     // Branching rotatiton changed
-    else if (v->pValues == &(p->branchingRotation)) {
-        p->branchingRotation.clear();
+    else if (v->pValues == &(Plant::activePlant->branchingRotation)) {
+        Plant::activePlant->branchingRotation.clear();
         for (int i = v->rowCount() - 2; i >= 0; i--) {
-            p->addBranchingRotation(((QLabel*)v->cellWidget(i,0))->text().toInt(),
+            Plant::activePlant->addBranchingRotation(((QLabel*)v->cellWidget(i,0))->text().toInt(),
                             ((QSpinBox*)v->cellWidget(i,2))->value(),
                             ((QDoubleSpinBox*)v->cellWidget(i,1))->value());
         }
     }
     // Branch length changed
-    else if (v->pValues == &(p->branchLength)) {
-        p->branchLength.clear();
+    else if (v->pValues == &(Plant::activePlant->branchLength)) {
+        Plant::activePlant->branchLength.clear();
         for (int i = v->rowCount() - 2; i >= 0; i--) {
-            p->addBranchLength(((QLabel*)v->cellWidget(i,0))->text().toInt(),
+            Plant::activePlant->addBranchLength(((QLabel*)v->cellWidget(i,0))->text().toInt(),
                             ((QSpinBox*)v->cellWidget(i,2))->value(),
                             ((QDoubleSpinBox*)v->cellWidget(i,1))->value());
         }
     }
     // Thickness changed
-    else if (v->pValues == &(p->branchThickness)) {
-        p->branchThickness.clear();
+    else if (v->pValues == &(Plant::activePlant->branchThickness)) {
+        Plant::activePlant->branchThickness.clear();
         for (int i = v->rowCount() - 2; i >= 0; i--) {
-            p->addBranchThickness(((QLabel*)v->cellWidget(i,0))->text().toInt(),
+            Plant::activePlant->addBranchThickness(((QLabel*)v->cellWidget(i,0))->text().toInt(),
                             ((QSpinBox*)v->cellWidget(i,2))->value(),
                             ((QDoubleSpinBox*)v->cellWidget(i,1))->value());
         }
     }
     // Wobbliness changed
-    else if (v->pValues == &(p->branchWobbliness)) {
-        p->branchWobbliness.clear();
+    else if (v->pValues == &(Plant::activePlant->branchWobbliness)) {
+        Plant::activePlant->branchWobbliness.clear();
         for (int i = v->rowCount() - 2; i >= 0; i--) {
-            p->addBranchWobbliness(((QLabel*)v->cellWidget(i,0))->text().toInt(),
+            Plant::activePlant->addBranchWobbliness(((QLabel*)v->cellWidget(i,0))->text().toInt(),
                             ((QSpinBox*)v->cellWidget(i,2))->value(),
                             ((QDoubleSpinBox*)v->cellWidget(i,1))->value());
         }
@@ -239,59 +238,59 @@ void TabbedOptionsDialog::valuesChanged() {
 //        }
 //    }
     // Growth interruption changed
-    else if (v->pValues == &(p->growthInterruption)) {
-        p->growthInterruption.clear();
+    else if (v->pValues == &(Plant::activePlant->growthInterruption)) {
+        Plant::activePlant->growthInterruption.clear();
         for (int i = v->rowCount() - 2; i >= 0; i--) {
-            p->addGrowthInterruption(((QLabel*)v->cellWidget(i,0))->text().toInt(),
+            Plant::activePlant->addGrowthInterruption(((QLabel*)v->cellWidget(i,0))->text().toInt(),
                             ((QSpinBox*)v->cellWidget(i,2))->value(),
                             ((QDoubleSpinBox*)v->cellWidget(i,1))->value());
         }
     }
     // Main branch changed
-    else if (v->pValues == &(p->mainBranch)) {
-        p->mainBranch.clear();
+    else if (v->pValues == &(Plant::activePlant->mainBranch)) {
+        Plant::activePlant->mainBranch.clear();
         for (int i = v->rowCount() - 2; i >= 0; i--) {
-            p->addMainBranch(((QLabel*)v->cellWidget(i,0))->text().toInt(),
+            Plant::activePlant->addMainBranch(((QLabel*)v->cellWidget(i,0))->text().toInt(),
                             ((QDoubleSpinBox*)v->cellWidget(i,1))->value());
         }
     }
     // Leaf angle changed
-    else if (v->pValues == &(p->leafAngle)) {
-        p->leafAngle.clear();
+    else if (v->pValues == &(Plant::activePlant->leafAngle)) {
+        Plant::activePlant->leafAngle.clear();
         for (int i = v->rowCount() - 2; i >= 0; i--) {
-            p->addLeafAngle(((QLabel*)v->cellWidget(i,0))->text().toInt(),
+            Plant::activePlant->addLeafAngle(((QLabel*)v->cellWidget(i,0))->text().toInt(),
                             ((QSpinBox*)v->cellWidget(i,1))->value());
         }
     }
     // Leaf count p. lvl changed
-    else if (v->pValues == &(p->leafCountPerLevel)) {
-        p->leafCountPerLevel.clear();
+    else if (v->pValues == &(Plant::activePlant->leafCountPerLevel)) {
+        Plant::activePlant->leafCountPerLevel.clear();
         for (int i = v->rowCount() - 2; i >= 0; i--) {
-            p->addLeafCountPerLevel(((QLabel*)v->cellWidget(i,0))->text().toInt(),
+            Plant::activePlant->addLeafCountPerLevel(((QLabel*)v->cellWidget(i,0))->text().toInt(),
                             ((QSpinBox*)v->cellWidget(i,1))->value());
         }
     }
     // Leaf length changed
-    else if (v->pValues == &(p->leafLength)) {
-        p->leafLength.clear();
+    else if (v->pValues == &(Plant::activePlant->leafLength)) {
+        Plant::activePlant->leafLength.clear();
         for (int i = v->rowCount() - 2; i >= 0; i--) {
-            p->addLeafLength(((QLabel*)v->cellWidget(i,0))->text().toInt(),
+            Plant::activePlant->addLeafLength(((QLabel*)v->cellWidget(i,0))->text().toInt(),
                             ((QSpinBox*)v->cellWidget(i,1))->value());
         }
     }
     // Leaf levels changed
-    else if (v->pValues == &(p->leafLevels)) {
-        p->leafLevels.clear();
+    else if (v->pValues == &(Plant::activePlant->leafLevels)) {
+        Plant::activePlant->leafLevels.clear();
         for (int i = v->rowCount() - 2; i >= 0; i--) {
-            p->addLeafLevels(((QLabel*)v->cellWidget(i,0))->text().toInt(),
+            Plant::activePlant->addLeafLevels(((QLabel*)v->cellWidget(i,0))->text().toInt(),
                             ((QSpinBox*)v->cellWidget(i,1))->value());
         }
     }
     // Leaf width changed
-    else if (v->pValues == &(p->leafWidth)) {
-        p->leafWidth.clear();
+    else if (v->pValues == &(Plant::activePlant->leafWidth)) {
+        Plant::activePlant->leafWidth.clear();
         for (int i = v->rowCount() - 2; i >= 0; i--) {
-            p->addLeafWidth(((QLabel*)v->cellWidget(i,0))->text().toInt(),
+            Plant::activePlant->addLeafWidth(((QLabel*)v->cellWidget(i,0))->text().toInt(),
                             ((QSpinBox*)v->cellWidget(i,1))->value());
         }
     }
