@@ -30,7 +30,6 @@ void BranchSection::render()
         GLUquadricObj *qobj;
         qobj = gluNewQuadric();
         Scene::activeScene->branches++;
-        qDebug() << "rendering branch " << Scene::activeScene->branches;
 
         //    not really needed
         //    gluQuadricCallback(qobj, GLU_ERROR, NULL);
