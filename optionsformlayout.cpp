@@ -9,12 +9,12 @@ OptionsFormLayout::OptionsFormLayout(QWidget *parent) :
     growthDelayCounter = 0;
     growUpwards = true;
     Plant *p = Plant::activePlant;
-    txtName= new QLineEdit(p->name);
+    txtName= new QLineEdit(Plant::activePlant->name);
     this->addRow("Name:",txtName);
     spinAge = new QSpinBox();
     spinAge->setMinimum(0);
     spinAge->setMaximum(INT_MAX);
-    spinAge->setValue(p->maxAge);
+    spinAge->setValue(Plant::activePlant->maxAge);
 
     QPushButton *applyMaxAge = new QPushButton("Apply");
     QHBoxLayout *lyoMaxAge = new QHBoxLayout();
@@ -23,7 +23,7 @@ OptionsFormLayout::OptionsFormLayout(QWidget *parent) :
     this->addRow("Maximum age:",lyoMaxAge);
     spinSeed = new QSpinBox();
     spinSeed->setMaximum(INT_MAX);
-    spinSeed->setValue(p->seed);
+    spinSeed->setValue(Plant::activePlant->seed);
     btnRandomSeed = new QPushButton("Random");
     QHBoxLayout *lyoSeed = new QHBoxLayout();
     lyoSeed->addWidget(spinSeed,1);
@@ -33,14 +33,14 @@ OptionsFormLayout::OptionsFormLayout(QWidget *parent) :
     clrPrimLeafColor = new ColorLabel("  ",0);
     clrPrimLeafColor->setAutoFillBackground(true);
     QPalette palette = clrPrimLeafColor->palette();
-    palette.setColor(palette.Background,p->primLeafColor);
+    palette.setColor(palette.Background,Plant::activePlant->primLeafColor);
     clrPrimLeafColor->setPalette(palette);
     //this->addRow("Primary leaf color",clrPrimLeafColor);
 
     clrSecLeafColor = new ColorLabel("  ",0);
     clrSecLeafColor->setAutoFillBackground(true);
     palette = clrSecLeafColor->palette();
-    palette.setColor(palette.Background,p->secLeafColor);
+    palette.setColor(palette.Background,Plant::activePlant->secLeafColor);
     clrSecLeafColor->setPalette(palette);
     //this->addRow("Secondary leaf color",clrSecLeafColor);
 
@@ -52,41 +52,41 @@ OptionsFormLayout::OptionsFormLayout(QWidget *parent) :
     clrTreeColor = new ColorLabel("  ",0);
     clrTreeColor->setAutoFillBackground(true);
     palette = clrTreeColor->palette();
-    palette.setColor(palette.Background,p->branchColor);
+    palette.setColor(palette.Background,Plant::activePlant->branchColor);
     clrTreeColor->setPalette(palette);
     this->addRow("Branch color",clrTreeColor);
 
     clrBackgroundColor = new ColorLabel("  ",0);
     clrBackgroundColor->setAutoFillBackground(true);
     palette = clrBackgroundColor->palette();
-    palette.setColor(palette.Background,p->backgroundColor);
+    palette.setColor(palette.Background,Plant::activePlant->backgroundColor);
     clrBackgroundColor->setPalette(palette);
     this->addRow("Background color", clrBackgroundColor);
 
     cbxLeaves = new QCheckBox("Draw leaves");
-    cbxLeaves->setChecked(p->drawLeaves);
+    cbxLeaves->setChecked(Plant::activePlant->drawLeaves);
     this->addRow("",cbxLeaves);
 
     cbxBranchCaps = new QCheckBox("Draw branch caps");
-    cbxBranchCaps->setChecked(p->drawCaps);
+    cbxBranchCaps->setChecked(Plant::activePlant->drawCaps);
     this->addRow("",cbxBranchCaps);
 
     cbxConnectors = new QCheckBox("Draw connectors");
-    cbxConnectors->setChecked(p->drawConnectors);
+    cbxConnectors->setChecked(Plant::activePlant->drawConnectors);
     this->addRow("",cbxConnectors);
 
     spinSlices = new QSpinBox();
-    spinSlices->setValue(p->slices);
+    spinSlices->setValue(Plant::activePlant->slices);
     this->addRow("Slices",spinSlices);
 
     spinSegments = new QSpinBox();
-    spinSegments->setValue(p->segments);
+    spinSegments->setValue(Plant::activePlant->segments);
     this->addRow("Segments",spinSegments);
 
     spinXMove = new QSpinBox();
     spinXMove->setMaximum(INT_MAX);
     spinXMove->setMinimum(INT_MIN);
-    spinXMove->setValue(p->movement.x());
+    spinXMove->setValue(Plant::activePlant->movement.x());
     // not editable, reacts to mouse movement
     spinXMove->setEnabled(false);
     this->addRow("Movement X",spinXMove);
@@ -95,21 +95,21 @@ OptionsFormLayout::OptionsFormLayout(QWidget *parent) :
     spinYMove->setMaximum(INT_MAX);
     spinYMove->setMinimum(INT_MIN);
     spinYMove->setEnabled(false);
-    spinYMove->setValue(p->movement.y());
+    spinYMove->setValue(Plant::activePlant->movement.y());
     this->addRow("Movement Y",spinYMove);
 
     spinZoom = new QSpinBox();
     spinZoom->setMaximum(INT_MAX);
     spinZoom->setMinimum(INT_MIN);
-    spinZoom->setValue(p->movement.z());
+    spinZoom->setValue(Plant::activePlant->movement.z());
     spinZoom->setEnabled(false);
     this->addRow("Zoom",spinZoom);
 
     QHBoxLayout *lyoGrowth = new QHBoxLayout();
     spinGrowth = new QSpinBox();
     spinGrowth->setMinimum(1);
-    spinGrowth->setMaximum(p->maxAge);
-    spinGrowth->setValue(p->growthAge);
+    spinGrowth->setMaximum(Plant::activePlant->maxAge);
+    spinGrowth->setValue(Plant::activePlant->growthAge);
     cbxGrowth = new QCheckBox("animate");
     lyoGrowth->addWidget(spinGrowth);
     lyoGrowth->addWidget(cbxGrowth);
@@ -119,7 +119,7 @@ OptionsFormLayout::OptionsFormLayout(QWidget *parent) :
     lblBranches = new QLabel(QString::number(s->branches));
     lblSpheres = new QLabel(QString::number(s->spheres));
     lblLeaves =  new QLabel(QString::number(s->leaves));
-    lblPolygons = new QLabel(QString::number((s->spheres + s->branches) * p->segments * p->slices));
+    lblPolygons = new QLabel(QString::number((s->spheres + s->branches) * Plant::activePlant->segments * Plant::activePlant->slices));
     lblTriangles = new QLabel(QString::number(s->leaves * 5));
     this->addRow(" ", new QWidget);
     this->addRow("Statistics:", new QWidget);
