@@ -22,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     // load a scene to display
-    Scene::activeScene = new Scene(Plant::activePlant, ui->panelGL);
+    Scene::activeScene = new Scene(ui->panelGL);
 
     // set window title and statusbar message
     ui->statusBar->showMessage("Left-click to rotate model - right-click to move model - move mousewheel to zoom model.");

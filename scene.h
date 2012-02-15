@@ -21,7 +21,7 @@ public:
     SceneObject *parent;
     QVector3D *rotation;
     QVector3D *translation;
-    bool isRendered;
+    int age;
 };
 
 class BranchSection : public SceneObject
@@ -60,16 +60,16 @@ class Scene
 
 public:
     static Scene* activeScene;
-    Scene(Plant *plant = 0, QWidget *oglPanel = 0);
-
-    void initScene(Plant *plant = 0);
+    Scene(QWidget *oglPanel = 0);
     SceneObject *root;
     QWidget *oglPanel;
 
     int branches;
     int spheres;
     int leaves;
+    void update();
 
+    void initScene();
 private:
     QList<SceneObject*>* createSceneObject(Plant *plant = 0, SceneObject *parent = 0, int age = 0);
     SceneObject* constructBranchSection(Plant *plant, SceneObject *parent, int parentRadius, int age);

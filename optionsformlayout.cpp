@@ -152,7 +152,7 @@ OptionsFormLayout::OptionsFormLayout(QWidget *parent) :
     connect(cbxConnectors, SIGNAL(toggled(bool)), this, SLOT(updateStats()));
     connect(spinSlices, SIGNAL(valueChanged(int)), this, SLOT(updateStats()));
     connect(spinSegments, SIGNAL(valueChanged(int)), this, SLOT(updateStats()));
-    connect(spinGrowth, SIGNAL(valueChanged(int)), this, SLOT(updateStats()));
+    //connect(spinGrowth, SIGNAL(valueChanged(int)), this, SLOT(updateStats()));
 }
 
 void OptionsFormLayout::randomSeed()
@@ -164,7 +164,7 @@ void OptionsFormLayout::randomSeed()
 void OptionsFormLayout::changeMaxAge()
 {
     Plant::activePlant->scaleMaxAgeTo(spinAge->value());
-    Scene::activeScene->initScene(Plant::activePlant);
+    Scene::activeScene->initScene();
     emit treeRescaled();
 }
 
@@ -176,7 +176,7 @@ void OptionsFormLayout::changePrimLeafColor()
         p.setColor(p.Background,color);
         clrPrimLeafColor->setPalette(p);
         Plant::activePlant->primLeafColor = color;
-        Scene::activeScene->initScene(Plant::activePlant);
+        Scene::activeScene->initScene();
     }
 }
 
@@ -188,7 +188,7 @@ void OptionsFormLayout::changeSecLeafColor()
         p.setColor(p.Background,color);
         clrSecLeafColor->setPalette(p);
         Plant::activePlant->secLeafColor = color;
-        Scene::activeScene->initScene(Plant::activePlant);
+        Scene::activeScene->initScene();
     }
 }
 
@@ -200,7 +200,7 @@ void OptionsFormLayout::changeBranchColor()
         p.setColor(p.Background,color);
         clrTreeColor->setPalette(p);
         Plant::activePlant->branchColor = color;
-        Scene::activeScene->initScene(Plant::activePlant);
+        Scene::activeScene->initScene();
     }
 }
 
@@ -212,44 +212,45 @@ void OptionsFormLayout::changeBackgroundColor()
         p.setColor(p.Background,color);
         clrBackgroundColor->setPalette(p);
         Plant::activePlant->backgroundColor = color;
-        Scene::activeScene->initScene(Plant::activePlant);
+        Scene::activeScene->initScene();
     }
 }
 
 void OptionsFormLayout::changeSlices(int slices)
 {
     Plant::activePlant->slices = slices;
-    Scene::activeScene->initScene(Plant::activePlant);
+    Scene::activeScene->initScene();
 }
 
 void OptionsFormLayout::changeSegments(int segments)
 {
     Plant::activePlant->segments = segments;
-    Scene::activeScene->initScene(Plant::activePlant);
+    Scene::activeScene->initScene();
 }
 
 void OptionsFormLayout::switchLeaves(bool toggle)
 {
     Plant::activePlant->drawLeaves=toggle;
-    Scene::activeScene->initScene(Plant::activePlant);
+    Scene::activeScene->initScene();
 }
 
 void OptionsFormLayout::switchBranchCaps(bool toggle)
 {
     Plant::activePlant->drawCaps=toggle;
-    Scene::activeScene->initScene(Plant::activePlant);
+    Scene::activeScene->initScene();
 }
 
 void OptionsFormLayout::switchConnectors(bool toggle)
 {
     Plant::activePlant->drawConnectors=toggle;
-    Scene::activeScene->initScene(Plant::activePlant);
+    Scene::activeScene->initScene();
 }
 
 void OptionsFormLayout::changeGrowthAge(int age)
 {
     Plant::activePlant->growthAge = age;
-    Scene::activeScene->initScene(Plant::activePlant);
+    Scene::activeScene->update();
+    updateStats();
 }
 
 void OptionsFormLayout::animateGrowth(bool toggle)
@@ -267,6 +268,7 @@ void OptionsFormLayout::animateGrowth(bool toggle)
 
 void OptionsFormLayout::updateStats()
 {
+    qDebug("update");
     lblBranches->setText(QString::number(Scene::activeScene->branches));
     lblSpheres->setText(QString::number(Scene::activeScene->spheres));
     lblLeaves->setText(QString::number(Scene::activeScene->leaves));
@@ -285,7 +287,7 @@ void OptionsFormLayout::changeName(QString name)
 void OptionsFormLayout::changeSeed(int seed)
 {
     Plant::activePlant->seed = seed;
-    Scene::activeScene->initScene(Plant::activePlant);
+    Scene::activeScene->initScene();
 }
 
 

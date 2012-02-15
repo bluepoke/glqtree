@@ -133,7 +133,7 @@ void TabbedOptionsDialog::openFromXML() {
     QString fileName = QFileDialog::getOpenFileName(this,"Open plant","","Plants (*.plant);;XML files (*.xml)");
     if (!(fileName.isEmpty() || fileName.isNull())) {
             Plant::activePlant = PersistenceManager::readPlant(fileName);
-            Scene::activeScene->initScene(Plant::activePlant);
+            Scene::activeScene->initScene();
             reloadTabs();
             emit cameraChanged(Plant::activePlant->movement.x(), Plant::activePlant->movement.y(),
                                Plant::activePlant->movement.z());
@@ -296,5 +296,5 @@ void TabbedOptionsDialog::valuesChanged() {
         }
     }
     // rebuild scene
-    Scene::activeScene->initScene(Plant::activePlant);
+    Scene::activeScene->initScene();
 }

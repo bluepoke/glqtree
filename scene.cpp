@@ -1,4 +1,5 @@
 #include "scene.h"
+#include <QDebug>
 
 Scene* Scene::activeScene = 0;
 
@@ -7,7 +8,6 @@ SceneObject::SceneObject(SceneObject *parent) : parent(parent)
     children = new QList<SceneObject*>;
     rotation = new QVector3D;
     translation = new QVector3D;
-    isRendered = true;
 }
 
 BranchSection::BranchSection(SceneObject *parent, double radBottom, double radTop, double length) :
@@ -26,9 +26,11 @@ Leaf::Leaf(SceneObject *parent, double width, double length) : SceneObject(paren
 
 void BranchSection::render()
 {
-    if (isRendered) {
+    if (this->age <= Plant::activePlant->growthAge) {
         GLUquadricObj *qobj;
         qobj = gluNewQuadric();
+        Scene::activeScene->branches++;
+        qDebug() << "rendering branch " << Scene::activeScene->branches;
 
         //    not really needed
         //    gluQuadricCallback(qobj, GLU_ERROR, NULL);
@@ -45,7 +47,7 @@ void BranchSection::render()
 
 void EndSection::render()
 {
-    if (isRendered) {
+    if (this->age <= Plant::activePlant->growthAge) {
         GLUquadricObj *qobj;
         qobj = gluNewQuadric();
         // build an end cap
@@ -53,12 +55,13 @@ void EndSection::render()
         glColor3f(branch.redF(), branch.greenF(), branch.blueF());
         gluSphere(qobj, radius,
                   Plant::activePlant->slices, Plant::activePlant->segments);
+        Scene::activeScene->spheres++;
     }
 }
 
 void Leaf::render()
 {
-    if (isRendered) {
+    if (this->age <= Plant::activePlant->growthAge) {
         QColor prim = Plant::activePlant->primLeafColor;
         QColor sec = Plant::activePlant->secLeafColor;
         glFrontFace(GL_CW);
@@ -107,42 +110,47 @@ void Leaf::render()
         glColor3f(sec.redF(), sec.greenF(), sec.blueF());
         glVertex3f(0.0f, 0.0f, leafStemLength+length);
         glEnd();
+
+        Scene::activeScene->leaves++;
     }
 }
 
-Scene::Scene(Plant *plant, QWidget *oglPanel) : oglPanel(oglPanel) {
-    initScene(plant);
+Scene::Scene(QWidget *oglPanel) : oglPanel(oglPanel) {
+    initScene();
 }
 
-void Scene::initScene(Plant *plant) {
+void Scene::initScene() {
     // no plant: no scene root
-    if (plant == 0) {
+    if (Plant::activePlant == 0) {
         root = 0;
         return;
     }
 
-    branches = 0;
-    spheres = 0;
-    leaves = 0;
-
     // reset seed before drawing
-    plant->reseed();
+    Plant::activePlant->reseed();
 
     // create a root starting at age 0
     SceneObject *root;
     int minAge = 0;
 
-    root = new BranchSection(0, plant->getBranchThicknessAt(minAge),
-                             plant->getBranchThicknessAt(minAge + 1),
-                             plant->getBranchLengthAt(minAge));
+    root = new BranchSection(0, Plant::activePlant->getBranchThicknessAt(minAge),
+                             Plant::activePlant->getBranchThicknessAt(minAge + 1),
+                             Plant::activePlant->getBranchLengthAt(minAge));
     // try creating the successor
-    QList<SceneObject*> *children = createSceneObject(plant, root, minAge + 1);
+    QList<SceneObject*> *children = createSceneObject(Plant::activePlant, root, minAge + 1);
     // append all children
     root->children->append(*children);
 
     // set root for scene
     Scene::root = root;
     // call redraw
+    update();
+}
+
+void Scene::update() {
+    branches = 0;
+    spheres = 0;
+    leaves = 0;
     ((QGLWidget*)oglPanel)->update();
 }
 
@@ -257,14 +265,15 @@ SceneObject* Scene::constructBranchSection(Plant* plant, SceneObject* parent, in
     SceneObject *current = new BranchSection(parent, parentRadius,
                                              plant->getBranchThicknessAt(age + 1),
                                              plant->getBranchLengthAt(age));
+    current->age = age;
 
-    // do not render if age is larger than deserved growth
-    if (age > plant->growthAge) {
-        current->isRendered = false;
-    } else {
-        // for statistical value only
-        branches++;
-    }
+//    // do not render if age is larger than deserved growth
+//    if (age <= Scene::activeScene->drawUntilAge) {
+//        current->isRendered = false;
+//    } else {
+//        // for statistical value only
+//        branches++;
+//    }
 
     // apply wobbliness
     if (plant->isBranchWobblinessAt(age)) {
@@ -281,15 +290,16 @@ SceneObject* Scene::constructEndSection(Plant *plant, SceneObject* parent, int a
 {
     // add a cap to a parent
     SceneObject *end = new EndSection(parent, ((BranchSection*)parent)->radTop);
+    end->age = age;
     end->translation = new QVector3D(0, 0, ((BranchSection*)parent)->length);
 
-    // do not render if age is larger than deserved growth
-    if (age > plant->growthAge) {
-        end->isRendered=false;
-    } else {
-        // for statistical value only
-        spheres++;
-    }
+//    // do not render if age is larger than deserved growth
+//    if (age > plant->growthAge) {
+//        end->isRendered=false;
+//    } else {
+//        // for statistical value only
+//        spheres++;
+//    }
 
     // if the cap should sport a single leaf at its top (like at the end of branches, do so
     if (hasLeaf) {
@@ -345,14 +355,14 @@ SceneObject* Scene::constructLeaf(Plant *plant, SceneObject* parent, int age, QV
 {
     // construct and return a leaf
     SceneObject *leaf = new Leaf(parent, plant->getLeafWidthAt(age), plant->getLeafLengthAt(age));
-
-    // do not render if age is larger than deserved growth
-    if (age > plant->growthAge) {
-        leaf->isRendered=false;
-     } else {
-        // for statistical value only
-        leaves++;
-    }
+    leaf->age = age;
+//    // do not render if age is larger than deserved growth
+//    if (age > plant->growthAge) {
+//        leaf->isRendered=false;
+//     } else {
+//        // for statistical value only
+//        leaves++;
+//    }
 
     leaf->translation = translation;
     leaf->rotation = rotation;

@@ -120,6 +120,6 @@ void NewDialog::newPlant()
     p->addLeafWidth(max, 0);
 
     Plant::activePlant = p;
-    Scene::activeScene->initScene(p);
+    Scene::activeScene->initScene();
     done(QDialog::Accepted);
 }
