@@ -147,9 +147,6 @@ void Scene::initScene() {
 }
 
 void Scene::update() {
-    branches = 0;
-    spheres = 0;
-    leaves = 0;
     ((QGLWidget*)oglPanel)->update();
 }
 

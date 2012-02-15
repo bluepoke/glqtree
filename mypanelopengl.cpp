@@ -94,7 +94,14 @@ void MyPanelOpenGL::paintGL(){
         glPushMatrix();
         glRotatef(-90.0, 1.0, 0.0, 0.0);
 
+        Scene::activeScene->branches = 0;
+        Scene::activeScene->spheres = 0;
+        Scene::activeScene->leaves = 0;
+
         renderObject(Scene::activeScene->root);
+
+        emit renderingDone();
+
         glPopMatrix();
     }
 

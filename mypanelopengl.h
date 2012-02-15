@@ -38,6 +38,7 @@ private:
 
 signals:
     void cameraChanged(int x, int y, int zoom);
+    void renderingDone();
 
 public slots:
     void changeCamera(int x, int y, int zoom);

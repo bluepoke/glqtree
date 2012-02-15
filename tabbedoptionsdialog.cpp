@@ -172,6 +172,10 @@ void TabbedOptionsDialog::refreshData()
     reloadTabs();
 }
 
+void TabbedOptionsDialog::updateCounts() {
+    optionsFormLayout->updateStats();
+}
+
 void TabbedOptionsDialog::valuesChanged() {
     Plant *p = Plant::activePlant;
     ValuesTable *v = (ValuesTable*)QObject::sender()->parent()->parent();
